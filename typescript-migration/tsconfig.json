@@ -6,26 +6,11 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "isolatedModules": false,
-    "noEmitOnError": false,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "exactOptionalPropertyTypes": false,
-    "types": ["jest", "node"]
+    "moduleResolution": "node"
   },
   "include": [
-    "src/**/*"
+    "src/punycode.ts"
   ],
   "exclude": [
     "node_modules",
