@@ -5,7 +5,9 @@
     "lib": ["ES5", "DOM"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
+    "strict": false,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
     "declaration": true,
     "moduleResolution": "node"
   },

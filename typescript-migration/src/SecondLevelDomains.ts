@@ -12,6 +12,8 @@
  *
  */
 
+
+
 // Define the SecondLevelDomains interface
 interface SecondLevelDomainsInterface {
   list: { [key: string]: string };

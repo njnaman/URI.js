@@ -3,10 +3,23 @@
  * TypeScript migration
  */
 
-declare var exports: any;
-declare var define: any;
+interface PunycodeInterface {
+  decode(input: string): string;
 
-;(function(root: any) {
+  encode(input: string): string;
+
+  toASCII(input: string): string;
+
+  toUnicode(input: string): string;
+
+  ucs2: {
+    decode(input: string): number[];
+    encode(input: number[]): string;
+  };
+  version: string;
+}
+
+;(function (root: any) {
 
   /** Detect free variables */
   var freeExports = typeof exports == 'object' && exports &&
@@ -25,7 +38,7 @@ declare var define: any;
   /**
    * The `punycode` object.
    */
-  var punycode: any,
+  var punycode: PunycodeInterface,
 
     /** Highest positive signed 32-bit float value */
     maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
@@ -137,7 +150,7 @@ declare var define: any;
    * Creates a string based on an array of numeric code points.
    */
   function ucs2encode(array: number[]): string {
-    return map(array, function(value: number) {
+    return map(array, function (value: number) {
       var output = '';
       if (value > 0xFFFF) {
         value -= 0x10000;
@@ -403,7 +416,7 @@ declare var define: any;
    * converted to Unicode.
    */
   function toUnicode(input: string): string {
-    return mapDomain(input, function(string: string) {
+    return mapDomain(input, function (string: string) {
       return regexPunycode.test(string)
         ? decode(string.slice(4).toLowerCase())
         : string;
@@ -417,7 +430,7 @@ declare var define: any;
    * ASCII.
    */
   function toASCII(input: string): string {
-    return mapDomain(input, function(string: string) {
+    return mapDomain(input, function (string: string) {
       return regexNonASCII.test(string)
         ? 'xn--' + encode(string)
         : string;
@@ -454,7 +467,7 @@ declare var define: any;
     typeof define.amd == 'object' &&
     define.amd
   ) {
-    define('punycode', function() {
+    define('punycode', function () {
       return punycode;
     });
   } else if (freeExports && freeModule) {
