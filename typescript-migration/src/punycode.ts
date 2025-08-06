@@ -4,32 +4,6 @@
  */
 
 import {PunycodeInterface} from './types';
-
-// Detect free variables for compatibility
-const freeExports = typeof exports === 'object' && exports && !exports.nodeType && exports;
-const freeModule = typeof module === 'object' && module && !(module as any).nodeType && module;
-const freeGlobal = typeof global === 'object' && global;
-
-// Set global reference if available
-let root: any = typeof globalThis !== 'undefined' ? globalThis :
-  typeof window !== 'undefined' ? window :
-    typeof global !== 'undefined' ? global : {};
-
-if (
-  freeGlobal &&
-  ((freeGlobal as any).global === freeGlobal ||
-    (freeGlobal as any).window === freeGlobal ||
-    (freeGlobal as any).self === freeGlobal)
-) {
-  root = freeGlobal;
-}
-
-// AMD define function declaration
-declare const define: {
-  (name: string, factory: () => any): void;
-  amd?: any;
-} | undefined;
-
 // The `punycode` object
 let punycode: PunycodeInterface;
 
@@ -389,33 +363,5 @@ punycode = {
   toASCII,
   toUnicode
 };
-
-// Export for different module systems while maintaining TypeScript compatibility
-// Handle AMD (if define is available)
-if (typeof define == 'function' &&
-  typeof define.amd == 'object' &&
-  define.amd) {
-  define('punycode', function () {
-    return punycode;
-  });
-} else if (freeExports && freeModule) {
-  // Handle Node.js/CommonJS
-  if (module.exports === freeExports) {
-    // Node.js, io.js, or RingoJS v0.8.0+
-    freeModule.exports = punycode;
-  } else {
-    // Narwhal or RingoJS v0.7.0-
-    for (const key in punycode) {
-      if (punycode.hasOwnProperty(key)) {
-        (freeExports as any)[key] = (punycode as any)[key];
-      }
-    }
-  }
-} else // Handle browser globals
-if (typeof window !== 'undefined') {
-  (window as any).punycode = punycode;
-} else if (root) {
-  root.punycode = punycode;
-}
 
 export default punycode;
