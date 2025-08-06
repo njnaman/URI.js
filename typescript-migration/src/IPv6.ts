@@ -12,7 +12,7 @@
  *
  */
 
-import type { IPv6 } from './types';
+import type {IPv6} from './types';
 
 // save current IPv6 variable, if any
 const _IPv6 = (typeof global !== 'undefined' && (global as any).IPv6) || undefined;
@@ -30,48 +30,122 @@ function bestPresentation(address: string): string {
   // string search variable
   let _address = address.toLowerCase();
   const segments = _address.split(':');
-  const length = segments.length;
-  const total = 8;
+  let length = segments.length;
+  let total = 8;
 
-  // trim colons (::)
+  // trim colons (:: or ::a:b:c… or …a:b:c::)
   if (segments[0] === '' && segments[1] === '' && segments[2] === '') {
-    // ::/128
+    // must have been ::
+    // remove first two items
     segments.shift();
     segments.shift();
   } else if (segments[0] === '' && segments[1] === '') {
-    // ::1/128
+    // must have been ::xxxx
+    // remove the first item
     segments.shift();
   } else if (segments[length - 1] === '' && segments[length - 2] === '') {
-    // 1::/128
+    // must have been xxxx::
     segments.pop();
   }
 
-  const newLength = segments.length;
-  let i: number;
+  length = segments.length;
+
+  // adjust total segments for IPv4 trailer
+  if (segments[length - 1].indexOf('.') !== -1) {
+    // found a "." which means IPv4
+    total = 7;
+  }
 
   // fill empty segments them with "0000"
-  if (newLength < total) {
-    for (i = 1; i <= total - newLength; i++) {
-      segments.splice(segments.indexOf(''), 0, '0000');
+  let pos;
+  for (pos = 0; pos < length; pos++) {
+    if (segments[pos] === '') {
+      break;
     }
   }
 
+  if (pos < total) {
+    segments.splice(pos, 1, '0000');
+    while (segments.length < total) {
+      segments.splice(pos, 0, '0000');
+    }
+  }
+
+
   // strip leading zeros
-  for (i = 0; i < total; i++) {
-    segments[i] = ('0000' + segments[i]).substr(-4);
+  let _segments;
+  for (let i = 0; i < total; i++) {
+    _segments = segments[i].split('');
+    for (let j = 0; j < 3 ; j++) {
+      if (_segments[0] === '0' && _segments.length > 1) {
+        _segments.splice(0,1);
+      } else {
+        break;
+      }
+    }
+
+    segments[i] = _segments.join('');
   }
 
-  _address = segments.join(':');
+  // find longest sequence of zeroes and coalesce them into one segment
+  let best = -1;
+  let _best = 0;
+  let _current = 0;
+  let current = -1;
+  let inzeroes = false;
+  // i; already declared
 
-  // find longest sequence of zero segments and mark it for compression
-  const _segments = _address.match(/((^|:)(0(:|$)){2,})/g);
-  const _compress = _segments ? _segments.sort((a, b) => b.length - a.length)[0] : '';
-
-  if (_compress.length > 5) {
-    _address = _address.replace(_compress, '::');
+  for (let i = 0; i < total; i++) {
+    if (inzeroes) {
+      if (segments[i] === '0') {
+        _current += 1;
+      } else {
+        inzeroes = false;
+        if (_current > _best) {
+          best = current;
+          _best = _current;
+        }
+      }
+    } else {
+      if (segments[i] === '0') {
+        inzeroes = true;
+        current = i;
+        _current = 1;
+      }
+    }
   }
 
-  return _address;
+  if (_current > _best) {
+    best = current;
+    _best = _current;
+  }
+
+  if (_best > 1) {
+    segments.splice(best, _best, '');
+  }
+
+  length = segments.length;
+
+  // assemble remaining segments
+  let result = '';
+  if (segments[0] === '')  {
+    result = ':';
+  }
+
+  for (let i = 0; i < length; i++) {
+    result += segments[i];
+    if (i === length - 1) {
+      break;
+    }
+
+    result += ':';
+  }
+
+  if (segments[length - 1] === '') {
+    result += ':';
+  }
+
+  return result;
 }
 
 function noConflict(): IPv6 {
@@ -87,4 +161,4 @@ const IPv6: IPv6 = {
   noConflict: noConflict
 };
 
-export default IPv6; 
+export default IPv6;
