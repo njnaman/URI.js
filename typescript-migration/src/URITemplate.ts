@@ -12,7 +12,7 @@
  *
  */
 
-interface URITemplateOperator {
+export interface URITemplateOperator {
   prefix: string;
   separator: string;
   named: boolean;
@@ -20,34 +20,34 @@ interface URITemplateOperator {
   encode: string;
 }
 
-interface URITemplateVariable {
+export interface URITemplateVariable {
   name: string;
   explode: boolean;
   maxlength?: number;
 }
 
-interface URITemplateExpression {
+export interface URITemplateExpression {
   expression: string;
   operator: string;
   variables: URITemplateVariable[];
 }
 
-interface URITemplateData {
+export interface URITemplateData {
   [key: string]: any;
 }
 
-interface URITemplateExpandOptions {
+export interface URITemplateExpandOptions {
   strict?: boolean;
 }
 
-interface URITemplateDataValue {
+export interface URITemplateDataValue {
   type: number;
   val: Array<[string | undefined, string]>;
   encode: Array<[string | undefined, string]>;
   encodeReserved: Array<[string | undefined, string]>;
 }
 
-interface URITemplateInterface {
+export interface URITemplateInterface {
   new (expression: string): URITemplateInterface;
   (expression: string): URITemplateInterface;
 
@@ -70,32 +70,16 @@ interface URITemplateInterface {
   noConflict(): URITemplateInterface;
 }
 
-interface DataInterface {
+export interface DataInterface {
   data: URITemplateData;
   cache: { [key: string]: URITemplateDataValue };
   get(key: string): URITemplateDataValue;
 }
 
-(function (root: any, factory: (URI: any, root?: any) => URITemplateInterface) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    module.exports = factory(require('./URI'));
-  } else if (typeof define === 'function' && (define as any).amd) {
-    // AMD. Register as an anonymous module.
-    define(['./URI'], factory);
-  } else {
-    // Browser globals (root is window)
-    root.URITemplate = factory(root.URI, root);
-  }
-}(this, function (URI: any, root?: any): URITemplateInterface {
-  'use strict';
-  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-  /*jshint camelcase: false */
+import URI from './URI';
 
-  // save current URITemplate variable, if any
-  const _URITemplate = root && root.URITemplate;
+// FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+/*jshint camelcase: false */
 
   const hasOwn = Object.prototype.hasOwnProperty;
 
@@ -383,10 +367,7 @@ interface DataInterface {
   };
 
   URITemplate.noConflict = function(): URITemplateInterface {
-    if (root.URITemplate === URITemplate) {
-      root.URITemplate = _URITemplate;
-    }
-
+    // In ES module context, noConflict is not needed but kept for API compatibility
     return <URITemplateInterface>URITemplate;
   };
 
@@ -574,13 +555,12 @@ interface DataInterface {
     return d;
   };
 
-  // hook into URI for fluid access
-  URI.expand = function(expression: string, data: URITemplateData): any {
-    const template = new (URITemplate as any)(expression);
-    const expansion = template.expand(data);
+// hook into URI for fluid access
+(URI as any).expand = function(expression: string, data: URITemplateData): any {
+  const template = new (URITemplate as any)(expression);
+  const expansion = template.expand(data);
 
-    return new URI(expansion);
-  };
+  return new (URI as any)(expansion);
+};
 
-  return URITemplate as any;
-}));
+export default URITemplate as any;

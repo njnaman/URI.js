@@ -299,29 +299,14 @@ interface URIConstructor {
   noConflict(removeAll?: boolean): URIProto | { URI: URIProto; URITemplate?: any; IPv6?: IPv6; SecondLevelDomains?: any };
 }
 
-declare const URIClass: URIConstructor;
+// Import dependencies
+import punycode, { PunycodeInterface } from './punycode';
+import IPv6Impl, { IPv6 } from './IPv6';
+import SLD, { SecondLevelDomainsInterface } from './SecondLevelDomains';
 
-(function (root: any, factory: (punycode: PunycodeInterface, IPv6: IPv6, SLD: SecondLevelDomainsInterface, root?: any) => URIConstructor) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
-  } else if (typeof define === 'function' && (define as any).amd) {
-    // AMD. Register as an anonymous module.
-    define(['./punycode', './IPv6', './SecondLevelDomains'], factory);
-  } else {
-    // Browser globals (root is window)
-    root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains, root);
-  }
-}(this, function (punycode: PunycodeInterface, IPv6: IPv6, SLD: SecondLevelDomainsInterface, root?: any): URIConstructor {
-  'use strict';
-  /*global location, escape, unescape */
-  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-  /*jshint camelcase: false */
-
-  // save current URI variable, if any
-  const _URI = root && root.URI;
+/*global location, escape, unescape */
+// FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+/*jshint camelcase: false */
 
   function URI(url?: string, base?: string): any {
     const _urlSupplied = arguments.length >= 1;
@@ -375,6 +360,9 @@ declare const URIClass: URIConstructor;
 
     return self;
   }
+
+  // Use URI as URIClass for internal references
+  const URIClass = URI as any;
 
   function isInteger(value: string): boolean {
     return /^[0-9]+$/.test(value);
@@ -1437,28 +1425,7 @@ declare const URIClass: URIConstructor;
 
    // Add noConflict method
   URIClass.noConflict = function(removeAll?: boolean): any {
-    if (removeAll) {
-      const unconflicted: any = {
-        URI: this.noConflict()
-      };
-
-      if (root.URITemplate && typeof root.URITemplate.noConflict === 'function') {
-        unconflicted.URITemplate = root.URITemplate.noConflict();
-      }
-
-      if (root.IPv6 && typeof root.IPv6.noConflict === 'function') {
-        unconflicted.IPv6 = root.IPv6.noConflict();
-      }
-
-      if (root.SecondLevelDomains && typeof root.SecondLevelDomains.noConflict === 'function') {
-        unconflicted.SecondLevelDomains = root.SecondLevelDomains.noConflict();
-      }
-
-      return unconflicted;
-    } else if (root.URI === this) {
-      root.URI = _URI;
-    }
-
+    // In ES module context, noConflict is not needed but kept for API compatibility
     return this;
   };
 
@@ -2317,8 +2284,8 @@ declare const URIClass: URIConstructor;
     if (this._parts.hostname) {
       if (this.is('IDN') && punycode) {
         this._parts.hostname = punycode.toASCII(this._parts.hostname);
-      } else if (this.is('IPv6') && IPv6) {
-        this._parts.hostname = IPv6.best(this._parts.hostname);
+              } else if (this.is('IPv6') && IPv6Impl) {
+          this._parts.hostname = IPv6Impl.best(this._parts.hostname);
       }
 
       this._parts.hostname = this._parts.hostname.toLowerCase();
@@ -2709,5 +2676,4 @@ declare const URIClass: URIConstructor;
     return this;
   };
 
-  return URI as any;
-}));
+export default URI as any;

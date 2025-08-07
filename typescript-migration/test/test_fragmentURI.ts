@@ -1,10 +1,10 @@
 // TypeScript version of test_fragmentURI.js
-import { URI } from '../src/URI.fragmentURI';
+import URI from '../src/URI.fragmentURI';
 
 describe('URI.fragmentURI', () => {
   test('storing URLs in fragment', () => {
     let u = new URI('http://example.org');
-    let f: URI;
+    let f: any;
   
     // var uri = URI('http://example.org/#!/foo/bar/baz.html');
     // var furi = uri.fragment(true);
@@ -18,7 +18,7 @@ describe('URI.fragmentURI', () => {
     expect(u.fragment(true)).toBeInstanceOf(URI);
   
     u = new URI('http://example.org/#!/foo/bar/baz.html');
-    f = u.fragment(true) as URI;
+    f = u.fragment(true);
     expect(f.pathname()).toBe('/foo/bar/baz.html');
     expect(f.filename()).toBe('baz.html');
   
@@ -29,7 +29,7 @@ describe('URI.fragmentURI', () => {
   });
 
   test('fragmentPrefix', () => {
-    let u: URI;
+    let u: any;
   
     (URI as any).fragmentPrefix = '?';
     u = new URI('http://example.org');

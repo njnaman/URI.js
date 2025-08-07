@@ -3,7 +3,7 @@
  * TypeScript migration
  */
 
-interface PunycodeInterface {
+export interface PunycodeInterface {
   decode(input: string): string;
 
   encode(input: string): string;
@@ -19,26 +19,10 @@ interface PunycodeInterface {
   version: string;
 }
 
-;(function (root: any) {
-
-  /** Detect free variables */
-  var freeExports = typeof exports == 'object' && exports &&
-    !(exports as any).nodeType && exports;
-  var freeModule = typeof module == 'object' && module &&
-    !(module as any).nodeType && module;
-  var freeGlobal = typeof global == 'object' && global;
-  if (
-    (freeGlobal as any).global === freeGlobal ||
-    (freeGlobal as any).window === freeGlobal ||
-    (freeGlobal as any).self === freeGlobal
-  ) {
-    root = freeGlobal;
-  }
-
-  /**
-   * The `punycode` object.
-   */
-  var punycode: PunycodeInterface,
+/**
+ * The `punycode` object.
+ */
+let punycode: PunycodeInterface,
 
     /** Highest positive signed 32-bit float value */
     maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
@@ -459,30 +443,4 @@ interface PunycodeInterface {
     'toUnicode': toUnicode
   };
 
-  /** Expose `punycode` */
-  // Some AMD build optimizers, like r.js, check for specific condition patterns
-  // like the following:
-  if (
-    typeof define == 'function' &&
-    typeof define.amd == 'object' &&
-    define.amd
-  ) {
-    define('punycode', function () {
-      return punycode;
-    });
-  } else if (freeExports && freeModule) {
-    if (module.exports == freeExports) {
-      // in Node.js, io.js, or RingoJS v0.8.0+
-      freeModule.exports = punycode;
-    } else {
-      // in Narwhal or RingoJS v0.7.0-
-      for (key in punycode) {
-        punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
-      }
-    }
-  } else {
-    // in Rhino or a web browser
-    root.punycode = punycode;
-  }
-
-}(this));
+export default punycode;

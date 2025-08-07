@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "none",
+    "module": "umd",
     "lib": ["ES5", "DOM"],
     "outDir": "./dist",
     "strict": false,
     "noImplicitThis": false,
     "noImplicitAny": false,
     "declaration": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*",

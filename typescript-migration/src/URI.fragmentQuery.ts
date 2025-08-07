@@ -25,7 +25,7 @@
 // uri.toString() === "http://example.org/#?bar=foo&name=value2";
 
 // Extended interface for fragment query functionality
-interface URIFragmentQueryExtended {
+export interface URIFragmentQueryExtended {
   fragmentPrefix(prefix: string): any;
   fragment(returnParsed: true): any;
   fragment(data: any): any;
@@ -43,21 +43,7 @@ interface URIFragmentQueryExtended {
   setHash(data: any, build?: boolean): any;
 }
 
-(function (root: any, factory: (URI: any) => any) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    module.exports = factory(require('./URI'));
-  } else if (typeof define === 'function' && (define as any).amd) {
-    // AMD. Register as an anonymous module.
-    define(['./URI'], factory);
-  } else {
-    // Browser globals (root is window)
-    factory(root.URI);
-  }
-}(this, function (URI: any): any {
-  'use strict';
+import URI from './URI';
 
   const p = URI.prototype;
   // old fragment handler we need to wrap
@@ -140,6 +126,5 @@ interface URIFragmentQueryExtended {
   p.removeHash = p.removeFragment;
   p.setHash = p.setFragment;
 
-  // extending existing object rather than defining something new
-  return URI;
-}));
+// extending existing object rather than defining something new
+export default URI;

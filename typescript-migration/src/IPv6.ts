@@ -13,37 +13,18 @@
  */
 
 // Define the IPv6 interface
-interface IPv6 {
+export interface IPv6 {
   best: (address: string) => string;
   noConflict: () => IPv6;
 }
 
-(function (root: any, factory: (root?: any) => IPv6) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    module.exports = factory();
-  } else if (typeof define === 'function' && (define as any).amd) {
-    // AMD. Register as an anonymous module.
-    define(factory);
-  } else {
-    // Browser globals (root is window)
-    root.IPv6 = factory(root);
-  }
-}(this, function (root?: any): IPv6 {
-  'use strict';
+/*
+var _in = "fe80:0000:0000:0000:0204:61ff:fe9d:f156";
+var _out = IPv6.best(_in);
+var _expected = "fe80::204:61ff:fe9d:f156";
 
-  /*
-  var _in = "fe80:0000:0000:0000:0204:61ff:fe9d:f156";
-  var _out = IPv6.best(_in);
-  var _expected = "fe80::204:61ff:fe9d:f156";
-
-  console.log(_in, _out, _expected, _out === _expected);
-  */
-
-  // save current IPv6 variable, if any
-  const _IPv6 = root && root.IPv6;
+console.log(_in, _out, _expected, _out === _expected);
+*/
 
   function bestPresentation(address: string): string {
     // based on:
@@ -176,19 +157,14 @@ interface IPv6 {
     return result;
   }
 
-  function noConflict(): IPv6 {
-    /*jshint validthis: true */
-    if (root && root.IPv6 === IPv6) {
-      root.IPv6 = _IPv6;
-    }
+function noConflict(): IPv6 {
+  // In ES module context, noConflict is not needed but kept for API compatibility
+  return IPv6Impl;
+}
 
-    return IPv6;
-  }
+const IPv6Impl: IPv6 = {
+  best: bestPresentation,
+  noConflict: noConflict
+};
 
-  const IPv6: IPv6 = {
-    best: bestPresentation,
-    noConflict: noConflict
-  };
-
-  return IPv6;
-}));
+export default IPv6Impl;

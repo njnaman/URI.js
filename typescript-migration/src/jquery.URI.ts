@@ -12,7 +12,7 @@
  *
  */
 
-interface JQueryStatic {
+export interface JQueryStatic {
   (selector: any): JQuery;
   each(obj: any, callback: (index: any, value: any) => void): void;
   attrHooks: { [key: string]: any };
@@ -20,7 +20,7 @@ interface JQueryStatic {
   fn: any;
 }
 
-interface JQuery {
+export interface JQuery {
   first(): JQuery;
   get(index: number): Element;
   data(key: string): any;
@@ -30,31 +30,21 @@ interface JQuery {
   uri(uri: string | any): any;
 }
 
-interface CompareFunction {
+export interface CompareFunction {
   (value: string, target: string, property?: string): boolean;
 }
 
-interface URICompareFunctions {
+export interface URICompareFunctions {
   [key: string]: CompareFunction | ((uri: any, target: string) => boolean);
 }
 
-(function (root: any, factory: ($: JQueryStatic, URI: any) => JQueryStatic) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    module.exports = factory(require('jquery'), require('./URI'));
-  } else if (typeof define === 'function' && (define as any).amd) {
-    // AMD. Register as an anonymous module.
-    define(['jquery', './URI'], factory);
-  } else {
-    // Browser globals (root is window)
-    factory(root.jQuery, root.URI);
-  }
-}(this, function ($: JQueryStatic, URI: any): JQueryStatic {
-  'use strict';
-  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-  /*jshint camelcase: false */
+import URI from './URI';
+
+// FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+/*jshint camelcase: false */
+
+// Note: jQuery should be imported externally when using this module
+export function initializeJQueryURI($: JQueryStatic): JQueryStatic {
 
   const comparable: { [key: string]: boolean } = {};
   const compare: URICompareFunctions = {
@@ -257,4 +247,4 @@ interface URICompareFunctions {
   // extending existing object rather than defining something new,
   // return jQuery anyway
   return $;
-}));
+}

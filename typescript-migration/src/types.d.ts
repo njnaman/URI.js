@@ -1,7 +1,4 @@
 // Global type declarations for URI.js TypeScript migration
 
-// Global AMD/UMD define function
+// Global AMD/UMD define function (kept for legacy compatibility)
 declare var define: any;
-
-// Global module variable
-declare var module: any;

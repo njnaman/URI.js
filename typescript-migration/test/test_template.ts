@@ -1,5 +1,5 @@
 // TypeScript version of test_template.js
-import { URITemplate } from '../src/URITemplate';
+import URITemplate from '../src/URITemplate';
 
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
@@ -225,7 +225,7 @@ describe('URITemplate', () => {
     test(levelName, () => {
       let combinedExpression = '';
       let combinedExpansion = '';
-      let template: URITemplate;
+      let template: any;
       let expansion: string;
 
       Object.keys(data.expressions).forEach((type) => {

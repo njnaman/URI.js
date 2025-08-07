@@ -7,7 +7,7 @@
  */
 
 // TypeScript version of test_jim.js
-import { URI } from '../src/URI';
+import URI from '../src/URI';
 
 describe('injection', () => {
   test('protocol', () => {

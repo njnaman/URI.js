@@ -1,5 +1,5 @@
 // TypeScript version of test_fragmentQuery.js
-import { URI } from '../src/URI.fragmentQuery';
+import URI from '../src/URI.fragmentQuery';
 
 describe('URI.fragmentQuery', () => {
   test('storing query-data in fragment', () => {
@@ -39,7 +39,7 @@ describe('URI.fragmentQuery', () => {
   });
 
   test('fragmentPrefix', () => {
-    let u: URI;
+    let u: any;
 
     (URI as any).fragmentPrefix = '!';
     u = new URI('http://example.org');
