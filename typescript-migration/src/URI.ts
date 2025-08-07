@@ -737,210 +737,63 @@ declare const URIClass: URIConstructor;
     }
   };
 
-  // Add missing static query manipulation methods
-  URIClass.addQuery = function(data: QueryData, name: string | QueryData, value?: string | string[]): void {
-    if (typeof name === 'object') {
-      for (const key in name) {
-        if (hasOwn.call(name, key)) {
-          URIClass.addQuery(data, key, (name as any)[key]);
-        }
-      }
-    } else if (typeof name === 'string') {
-      if (data[name] === undefined) {
-        data[name] = value;
-        return;
-      } else if (typeof data[name] === 'string') {
-        data[name] = [data[name] as string];
-      }
+  const _parts = {'encode':'encode', 'decode':'decode'};
 
-      if (!isArray(value)) {
-        value = [value as string];
+  const generateAccessor = function(_group: string, _part: string): (str: string) => string {
+    return function(string: string): string {
+      try {
+        return URIClass[_part](string + '').replace(URIClass.characters[_group][_part].expression, function(c: string) {
+          return URIClass.characters[_group][_part].map[c];
+        });
+      } catch (e) {
+        // we're not going to mess with weird encodings,
+        // give up and return the undecoded original string
+        // see https://github.com/medialize/URI.js/issues/87
+        // see https://github.com/medialize/URI.js/issues/92
+        return string;
       }
-
-      data[name] = ((data[name] as string[]) || []).concat(value as string[]);
-    } else {
-      throw new TypeError('URI.addQuery() accepts an object, string as the name parameter');
-    }
+    };
   };
+  for (const _part in _parts) {
+    URIClass[_part + 'PathSegment'] = generateAccessor('pathname', _parts[_part]);
+    URIClass[_part + 'UrnPathSegment'] = generateAccessor('urnpath', _parts[_part]);
+  }
 
-  URIClass.setQuery = function(data: QueryData, name: string | QueryData, value?: string | null): void {
-    if (typeof name === 'object') {
-      for (const key in name) {
-        if (hasOwn.call(name, key)) {
-          URIClass.setQuery(data, key, (name as any)[key]);
-        }
-      }
-    } else if (typeof name === 'string') {
-      data[name] = value === undefined ? null : value;
-    } else {
-      throw new TypeError('URI.setQuery() accepts an object, string as the name parameter');
-    }
-  };
-
-  URIClass.removeQuery = function(data: QueryData, name?: string | string[] | RegExp | QueryData, value?: string | RegExp): void {
-    let i: number, length: number, key: string;
-
-    if (isArray(name)) {
-      for (i = 0, length = (name as string[]).length; i < length; i++) {
-        data[(name as string[])[i]] = undefined;
-      }
-    } else if (getType(name) === 'RegExp') {
-      for (key in data) {
-        if ((name as RegExp).test(key)) {
-          data[key] = undefined;
-        }
-      }
-    } else if (typeof name === 'object') {
-      for (key in name as any) {
-        if (hasOwn.call(name, key)) {
-          URIClass.removeQuery(data, key, (name as any)[key]);
-        }
-      }
-    } else if (typeof name === 'string') {
-      if (value !== undefined) {
-        if (getType(value) === 'RegExp') {
-          if (!isArray(data[name]) && (value as RegExp).test(data[name] as string)) {
-            data[name] = undefined;
-          } else {
-            const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
-            data[name] = filtered.length === 0 ? undefined : filtered;
-          }
-        } else if (data[name] === String(value) && (!isArray(value) || (value as unknown as any[]).length === 1)) {
-          data[name] = undefined;
-        } else if (isArray(data[name])) {
-          const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
-          data[name] = filtered.length === 0 ? undefined : filtered;
-        }
+  const generateSegmentedPathFunction = function(_sep: string, _codingFuncName: string, _innerCodingFuncName?: string): (str: string) => string {
+    return function(string: string): string {
+      // Why pass in names of functions, rather than the function objects themselves? The
+      // definitions of some functions (but in particular, URI.decode) will occasionally change due
+      // to URI.js having ISO8859 and Unicode modes. Passing in the name and getting it will ensure
+      // that the functions we use here are "fresh".
+      let actualCodingFunc: Function;
+      if (!_innerCodingFuncName) {
+        actualCodingFunc = URIClass[_codingFuncName];
       } else {
-        data[name] = undefined;
+        actualCodingFunc = function(string: string) {
+          return URIClass[_codingFuncName](URIClass[_innerCodingFuncName](string));
+        };
       }
-    } else {
-      throw new TypeError('URI.removeQuery() accepts an object, string, RegExp as the first parameter');
-    }
-  };
 
-  URIClass.hasQuery = function(data: QueryData, name?: string | RegExp | QueryData, value?: any, withinArray?: boolean): boolean {
-    switch (getType(name)) {
-      case 'String':
-        // Nothing to do here
-        break;
+      const segments = (string + '').split(_sep);
 
-      case 'RegExp':
-        for (const key in data) {
-          if (hasOwn.call(data, key)) {
-            if ((name as RegExp).test(key) && (value === undefined || URIClass.hasQuery(data, key, value))) {
-              return true;
-            }
-          }
-        }
-        return false;
-
-      case 'Object':
-        for (const _key in name as any) {
-          if (hasOwn.call(name, _key)) {
-            if (!URIClass.hasQuery(data, _key, (name as any)[_key])) {
-              return false;
-            }
-          }
-        }
-        return true;
-
-      default:
-        throw new TypeError('URI.hasQuery() accepts a string, regular expression or object as the name parameter');
-    }
-
-    switch (getType(value)) {
-      case 'Undefined':
-        // true if exists (but may be empty)
-        return (name as string) in data;
-
-      case 'Boolean':
-        // true if exists and non-empty
-        const _booly = Boolean(isArray(data[name as string]) ? (data[name as string] as any[]).length : data[name as string]);
-        return value === _booly;
-
-      case 'Function':
-        // allow complex comparison
-        return !!value(data[name as string], name, data);
-
-      case 'Array':
-        if (!isArray(data[name as string])) {
-          return false;
-        }
-
-        const op = withinArray ? arrayContains : arraysEqual;
-        return op(data[name as string] as any[], value);
-
-      case 'RegExp':
-        if (!isArray(data[name as string])) {
-          return Boolean(data[name as string] && (data[name as string] as string).match(value));
-        }
-
-        if (!withinArray) {
-          return false;
-        }
-
-        return arrayContains(data[name as string] as any[], value);
-
-      case 'Number':
-        value = String(value);
-        /* falls through */
-      case 'String':
-        if (!isArray(data[name as string])) {
-          return data[name as string] === value;
-        }
-
-        if (!withinArray) {
-          return false;
-        }
-
-        return arrayContains(data[name as string] as any[], value);
-
-      default:
-        throw new TypeError('URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter');
-    }
-  };
-
-  URIClass.buildQuery = function(data: QueryData, duplicateQueryParameters?: boolean, escapeQuerySpace?: boolean): string {
-    // according to http://tools.ietf.org/html/rfc3986 or http://labs.apache.org/webarch/uri/rfc/rfc3986.html
-    // being »-._~!$&'()*+,;=:@/?« %HEX and alnum are allowed
-    // the RFC explicitly states ?/foo being a valid use case, no mention of parameter syntax!
-    // URI.js treats the query string as being application/x-www-form-urlencoded
-    // see http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type
-
-    let t = '';
-    let unique: any, key: string, i: number, length: number;
-    for (key in data) {
-      if (key === '__proto__') {
-        // ignore attempt at exploiting JavaScript internals
-        continue;
-      } else if (hasOwn.call(data, key)) {
-        if (isArray(data[key])) {
-          unique = {};
-          for (i = 0, length = (data[key] as any[]).length; i < length; i++) {
-            if ((data[key] as any[])[i] !== undefined && unique[(data[key] as any[])[i] + ''] === undefined) {
-              t += '&' + URIClass.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
-              if (duplicateQueryParameters !== true) {
-                unique[(data[key] as any[])[i] + ''] = true;
-              }
-            }
-          }
-        } else if (data[key] !== undefined) {
-          t += '&' + URIClass.buildQueryParameter(key, data[key] as string, escapeQuerySpace);
-        }
+      for (let i = 0, length = segments.length; i < length; i++) {
+        segments[i] = actualCodingFunc(segments[i]);
       }
-    }
 
-    return t.substring(1);
+      return segments.join(_sep);
+    };
   };
 
-  URIClass.buildQueryParameter = function(name: string, value: string | null, escapeQuerySpace?: boolean): string {
-    // http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type -- application/x-www-form-urlencoded
-    // don't append "=" for null values, according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#url-parameter-serialization
-    return URIClass.encodeQuery(name, escapeQuerySpace) + (value !== null ? '=' + URIClass.encodeQuery(value, escapeQuerySpace) : '');
-  };
+  // This takes place outside the above loop because we don't want, e.g., encodeUrnPath functions.
+  URIClass.decodePath = generateSegmentedPathFunction('/', 'decodePathSegment');
+  URIClass.decodeUrnPath = generateSegmentedPathFunction(':', 'decodeUrnPathSegment');
+  URIClass.recodePath = generateSegmentedPathFunction('/', 'encodePathSegment', 'decode');
+  URIClass.recodeUrnPath = generateSegmentedPathFunction(':', 'encodeUrnPathSegment', 'decode');
 
-    // Add essential parsing and building methods
+  URIClass.encodeReserved = generateAccessor('reserved', 'encode');
+
+
+  // Add essential parsing and building methods
   URIClass.parse = function(string: string, parts?: Partial<URIParts>): URIParts {
     let pos: number;
     if (!parts) {
@@ -1208,64 +1061,216 @@ declare const URIClass: URIConstructor;
     return t;
   };
 
-  // Add some essential path encoding functions
-  const generateAccessor = function(_group: string, _part: string): any {
-    return function(string: string): string {
-      try {
-        return URIClass[_part](string + '').replace(URIClass.characters[_group][_part].expression, function(c: string) {
-          return URIClass.characters[_group][_part].map[c];
-        });
-      } catch (e) {
-        // we're not going to mess with weird encodings,
-        // give up and return the undecoded original string
-        // see https://github.com/medialize/URI.js/issues/87
-        // see https://github.com/medialize/URI.js/issues/92
-        return string;
+  URIClass.buildQuery = function(data: QueryData, duplicateQueryParameters?: boolean, escapeQuerySpace?: boolean): string {
+    // according to http://tools.ietf.org/html/rfc3986 or http://labs.apache.org/webarch/uri/rfc/rfc3986.html
+    // being »-._~!$&'()*+,;=:@/?« %HEX and alnum are allowed
+    // the RFC explicitly states ?/foo being a valid use case, no mention of parameter syntax!
+    // URI.js treats the query string as being application/x-www-form-urlencoded
+    // see http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type
+
+    let t = '';
+    let unique: any, key: string, i: number, length: number;
+    for (key in data) {
+      if (key === '__proto__') {
+        // ignore attempt at exploiting JavaScript internals
+        continue;
+      } else if (hasOwn.call(data, key)) {
+        if (isArray(data[key])) {
+          unique = {};
+          for (i = 0, length = (data[key] as any[]).length; i < length; i++) {
+            if ((data[key] as any[])[i] !== undefined && unique[(data[key] as any[])[i] + ''] === undefined) {
+              t += '&' + URIClass.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
+              if (duplicateQueryParameters !== true) {
+                unique[(data[key] as any[])[i] + ''] = true;
+              }
+            }
+          }
+        } else if (data[key] !== undefined) {
+          t += '&' + URIClass.buildQueryParameter(key, data[key] as string, escapeQuerySpace);
+        }
       }
-    };
+    }
+
+    return t.substring(1);
   };
 
-  const _parts = {'encode':'encode', 'decode':'decode'};
-  for (const _part in _parts) {
-    URIClass[_part + 'PathSegment'] = generateAccessor('pathname', (_parts as any)[_part]);
-    URIClass[_part + 'UrnPathSegment'] = generateAccessor('urnpath', (_parts as any)[_part]);
-  }
+  URIClass.buildQueryParameter = function(name: string, value: string | null, escapeQuerySpace?: boolean): string {
+    // http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type -- application/x-www-form-urlencoded
+    // don't append "=" for null values, according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#url-parameter-serialization
+    return URIClass.encodeQuery(name, escapeQuerySpace) + (value !== null ? '=' + URIClass.encodeQuery(value, escapeQuerySpace) : '');
+  };
 
-  const generateSegmentedPathFunction = function(_sep: string, _codingFuncName: string, _innerCodingFuncName?: string): any {
-    return function(string: string): string {
-      // Why pass in names of functions, rather than the function objects themselves? The
-      // definitions of some functions (but in particular, URI.decode) will occasionally change due
-      // to URI.js having ISO8859 and Unicode modes. Passing in the name and getting it will ensure
-      // that the functions we use here are "fresh".
-      let actualCodingFunc: Function;
-      if (!_innerCodingFuncName) {
-        actualCodingFunc = URIClass[_codingFuncName];
+
+  // Add missing static query manipulation methods
+  URIClass.addQuery = function(data: QueryData, name: string | QueryData, value?: string | string[]): void {
+    if (typeof name === 'object') {
+      for (const key in name) {
+        if (hasOwn.call(name, key)) {
+          URIClass.addQuery(data, key, (name as any)[key]);
+        }
+      }
+    } else if (typeof name === 'string') {
+      if (data[name] === undefined) {
+        data[name] = value;
+        return;
+      } else if (typeof data[name] === 'string') {
+        data[name] = [data[name] as string];
+      }
+
+      if (!isArray(value)) {
+        value = [value as string];
+      }
+
+      data[name] = ((data[name] as string[]) || []).concat(value as string[]);
+    } else {
+      throw new TypeError('URI.addQuery() accepts an object, string as the name parameter');
+    }
+  };
+
+  URIClass.setQuery = function(data: QueryData, name: string | QueryData, value?: string | null): void {
+    if (typeof name === 'object') {
+      for (const key in name) {
+        if (hasOwn.call(name, key)) {
+          URIClass.setQuery(data, key, (name as any)[key]);
+        }
+      }
+    } else if (typeof name === 'string') {
+      data[name] = value === undefined ? null : value;
+    } else {
+      throw new TypeError('URI.setQuery() accepts an object, string as the name parameter');
+    }
+  };
+
+  URIClass.removeQuery = function(data: QueryData, name?: string | string[] | RegExp | QueryData, value?: string | RegExp): void {
+    let i: number, length: number, key: string;
+
+    if (isArray(name)) {
+      for (i = 0, length = (name as string[]).length; i < length; i++) {
+        data[(name as string[])[i]] = undefined;
+      }
+    } else if (getType(name) === 'RegExp') {
+      for (key in data) {
+        if ((name as RegExp).test(key)) {
+          data[key] = undefined;
+        }
+      }
+    } else if (typeof name === 'object') {
+      for (key in name as any) {
+        if (hasOwn.call(name, key)) {
+          URIClass.removeQuery(data, key, (name as any)[key]);
+        }
+      }
+    } else if (typeof name === 'string') {
+      if (value !== undefined) {
+        if (getType(value) === 'RegExp') {
+          if (!isArray(data[name]) && (value as RegExp).test(data[name] as string)) {
+            data[name] = undefined;
+          } else {
+            const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
+            data[name] = filtered.length === 0 ? undefined : filtered;
+          }
+        } else if (data[name] === String(value) && (!isArray(value) || (value as unknown as any[]).length === 1)) {
+          data[name] = undefined;
+        } else if (isArray(data[name])) {
+          const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
+          data[name] = filtered.length === 0 ? undefined : filtered;
+        }
       } else {
-        actualCodingFunc = function(string: string) {
-          return URIClass[_codingFuncName](URIClass[_innerCodingFuncName](string));
-        };
+        data[name] = undefined;
       }
-
-      const segments = (string + '').split(_sep);
-
-      for (let i = 0, length = segments.length; i < length; i++) {
-        segments[i] = actualCodingFunc(segments[i]);
-      }
-
-      return segments.join(_sep);
-    };
+    } else {
+      throw new TypeError('URI.removeQuery() accepts an object, string, RegExp as the first parameter');
+    }
   };
 
-  // This takes place outside the above loop because we don't want, e.g., encodeUrnPath functions.
-  URIClass.decodePath = generateSegmentedPathFunction('/', 'decodePathSegment');
-  URIClass.decodeUrnPath = generateSegmentedPathFunction(':', 'decodeUrnPathSegment');
-  URIClass.recodePath = generateSegmentedPathFunction('/', 'encodePathSegment', 'decode');
-  URIClass.recodeUrnPath = generateSegmentedPathFunction(':', 'encodeUrnPathSegment', 'decode');
+  URIClass.hasQuery = function(data: QueryData, name?: string | RegExp | QueryData, value?: any, withinArray?: boolean): boolean {
+    switch (getType(name)) {
+      case 'String':
+        // Nothing to do here
+        break;
 
-  URIClass.encodeReserved = generateAccessor('reserved', 'encode');
+      case 'RegExp':
+        for (const key in data) {
+          if (hasOwn.call(data, key)) {
+            if ((name as RegExp).test(key) && (value === undefined || URIClass.hasQuery(data, key, value))) {
+              return true;
+            }
+          }
+        }
+        return false;
+
+      case 'Object':
+        for (const _key in name as any) {
+          if (hasOwn.call(name, _key)) {
+            if (!URIClass.hasQuery(data, _key, (name as any)[_key])) {
+              return false;
+            }
+          }
+        }
+        return true;
+
+      default:
+        throw new TypeError('URI.hasQuery() accepts a string, regular expression or object as the name parameter');
+    }
+
+    switch (getType(value)) {
+      case 'Undefined':
+        // true if exists (but may be empty)
+        return (name as string) in data;
+
+      case 'Boolean':
+        // true if exists and non-empty
+        const _booly = Boolean(isArray(data[name as string]) ? (data[name as string] as any[]).length : data[name as string]);
+        return value === _booly;
+
+      case 'Function':
+        // allow complex comparison
+        return !!value(data[name as string], name, data);
+
+      case 'Array':
+        if (!isArray(data[name as string])) {
+          return false;
+        }
+
+        const op = withinArray ? arrayContains : arraysEqual;
+        return op(data[name as string] as any[], value);
+
+      case 'RegExp':
+        if (!isArray(data[name as string])) {
+          return Boolean(data[name as string] && (data[name as string] as string).match(value));
+        }
+
+        if (!withinArray) {
+          return false;
+        }
+
+        return arrayContains(data[name as string] as any[], value);
+
+      case 'Number':
+        value = String(value);
+        /* falls through */
+      case 'String':
+        if (!isArray(data[name as string])) {
+          return data[name as string] === value;
+        }
+
+        if (!withinArray) {
+          return false;
+        }
+
+        return arrayContains(data[name as string] as any[], value);
+
+      default:
+        throw new TypeError('URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter');
+    }
+  };
+
+
+  // Add some essential path encoding functions
+
 
   // Add joinPaths method
-  URIClass.joinPaths = function(...paths: string[]): any {
+  URIClass.joinPaths = function(): URIProto {
     const input: any[] = [];
     const segments: string[] = [];
     let nonEmptySegments = 0;
@@ -1478,7 +1483,7 @@ declare const URIClass: URIConstructor;
   };
 
   function generateSimpleAccessor(_part: string): any {
-    return function(this: any, v?: any, build?: boolean): any {
+    return function(v?: any, build?: boolean): any {
       if (v === undefined) {
         return this._parts[_part] || '';
       } else {
@@ -1490,7 +1495,7 @@ declare const URIClass: URIConstructor;
   }
 
   function generatePrefixAccessor(_part: string, _key: string): any {
-    return function(this: any, v?: any, build?: boolean): any {
+    return function(v?: any, build?: boolean): any {
       if (v === undefined) {
         return this._parts[_part] || '';
       } else {
@@ -1508,72 +1513,18 @@ declare const URIClass: URIConstructor;
     };
   }
 
-  // Basic accessors
-  const _protocol = generateSimpleAccessor('protocol');
-  const _port = generateSimpleAccessor('port');
-  const _hostname = generateSimpleAccessor('hostname');
 
-  p.protocol = function(v?: any, build?: boolean): any {
-    if (v) {
-      // accept trailing ://
-      v = v.replace(/:(\/\/)?$/, '');
-
-      if (!v.match(URIClass.protocol_expression)) {
-        throw new TypeError('Protocol "' + v + '" contains characters other than [A-Z0-9.+-] or doesn\'t start with [A-Z]');
-      }
-    }
-
-    return _protocol.call(this, v, build);
-  };
-  p.scheme = p.protocol;
-
+  p.protocol = generateSimpleAccessor('protocol');
   p.username = generateSimpleAccessor('username');
+
   p.password = generateSimpleAccessor('password');
+  p.hostname = generateSimpleAccessor('hostname');
 
-  p.hostname = function(v?: any, build?: boolean): any {
-    if (this._parts.urn) {
-      return v === undefined ? '' : this;
-    }
+  p.port = generateSimpleAccessor('port');
 
-    if (v !== undefined) {
-      const x: any = { preventInvalidHostname: this._parts.preventInvalidHostname };
-      const res = URIClass.parseHost(v, x);
-      if (res !== '/') {
-        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
-      }
-
-      v = x.hostname;
-      if (this._parts.preventInvalidHostname) {
-        URIClass.ensureValidHostname(v, this._parts.protocol);
-      }
-    }
-
-    return _hostname.call(this, v, build);
-  };
-
-  p.port = function(v?: any, build?: boolean): any {
-    if (this._parts.urn) {
-      return v === undefined ? '' : this;
-    }
-
-    if (v !== undefined) {
-      if (v === 0) {
-        v = null;
-      }
-
-      if (v) {
-        v += '';
-        if (v.charAt(0) === ':') {
-          v = v.substring(1);
-        }
-
-        URIClass.ensureValidPort(v);
-      }
-    }
-    return _port.call(this, v, build);
-  };
 
   p.query = generatePrefixAccessor('query', '?');
+
   p.fragment = generatePrefixAccessor('fragment', '#');
 
   p.search = function(v?: any, build?: boolean): any {
