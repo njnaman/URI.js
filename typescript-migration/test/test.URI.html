@@ -2,18 +2,20 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>URI.js - URI Test Suite</title>
+    <title>URI.js - URI Test Suite (TypeScript)</title>
     <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
     <script type="text/javascript" src="pre_libs.js"></script>
-    <script type="text/javascript" src="../src/punycode.js"></script>
-    <script type="text/javascript" src="../src/IPv6.js"></script>
-    <script type="text/javascript" src="../src/SecondLevelDomains.js"></script>
-    <script type="text/javascript" src="../src/URI.js"></script>
-    <script type="text/javascript" src="../src/URITemplate.js"></script>
+    <!-- Compiled TypeScript files from dist -->
+    <script type="text/javascript" src="../dist/punycode.js"></script>
+    <script type="text/javascript" src="../dist/IPv6.js"></script>
+    <script type="text/javascript" src="../dist/SecondLevelDomains.js"></script>
+    <script type="text/javascript" src="../dist/URI.js"></script>
+    <script type="text/javascript" src="../dist/URITemplate.js"></script>
     <script type="text/javascript" src="../jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="../src/jquery.URI.js"></script>
+    <script type="text/javascript" src="../dist/jquery.URI.js"></script>
     <script type="text/javascript" src="qunit/qunit.js"></script>
 
+    <!-- Compiled TypeScript test files -->
     <script type="text/javascript" src="urls.js"></script>
     <script type="text/javascript" src="test.js"></script>
     <script type="text/javascript" src="test_jim.js"></script>
@@ -22,5 +24,7 @@
 <body>
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
+    <p><strong>Note:</strong> This test suite runs the TypeScript-compiled version of URI.js. 
+    Make sure to run <code>npm run build</code> to compile the TypeScript files before running tests.</p>
 </body>
 </html>

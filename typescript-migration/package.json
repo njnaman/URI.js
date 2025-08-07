@@ -30,6 +30,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:info": "ts-node test/test-runner.ts",
+    "test:browser": "echo 'Open test/test.URI.html in your browser to run QUnit tests'",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prepare": "npm run build",
