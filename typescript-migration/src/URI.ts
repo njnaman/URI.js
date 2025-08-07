@@ -2711,5 +2711,3 @@ declare const URIClass: URIConstructor;
 
   return URI as any;
 }));
-
-export { URIClass, URIParts, QueryData };
