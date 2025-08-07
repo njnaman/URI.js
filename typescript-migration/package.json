@@ -1,12 +1,29 @@
 {
   "name": "uri-js-typescript",
   "version": "1.19.11",
-  "description": "TypeScript migration of URI.js library - Mutating URLs",
+  "title": "URI.js - Mutating URLs (TypeScript)",
+  "description": "TypeScript migration of URI.js library - Mutating URLs. URI.js is a Javascript library for working with URLs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "author": {
+    "name": "Rodney Rehm (original), TypeScript migration",
+    "url": "http://rodneyrehm.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medialize/URI.js.git"
+  },
+  "homepage": "http://medialize.github.io/URI.js/",
+  "license": "MIT",
+  "contributors": [
+    "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
+    "Justin Chase <justin.m.chase@gmail.com> (http://justinmchase.com)"
+  ],
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "build:clean": "npm run clean && npm run build",
+    "build:full": "node build.js",
     "dev": "ts-node src/index.ts",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
@@ -14,17 +31,35 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "keywords": [
     "uri",
     "url",
-    "parser",
+    "urn",
+    "uri mutation",
+    "url mutation",
+    "uri manipulation",
+    "url manipulation",
+    "uri template",
+    "url template",
+    "unified resource locator",
+    "unified resource identifier",
+    "query string",
+    "RFC 3986",
+    "RFC3986",
+    "RFC 6570",
+    "RFC6570",
     "typescript",
-    "web"
+    "web",
+    "parser"
   ],
-  "author": "Rodney Rehm (original), TypeScript migration",
-  "license": "MIT",
+  "categories": [
+    "Parsers & Compilers",
+    "Utilities"
+  ],
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^24.2.0",
@@ -38,6 +73,13 @@
     "typescript": "^5.9.2"
   },
   "files": [
-    "dist/**/*"
-  ]
+    "dist/**/*",
+    "src/**/*",
+    "LICENSE.txt",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }
