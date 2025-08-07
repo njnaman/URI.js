@@ -1667,6 +1667,70 @@ declare const URIClass: URIConstructor;
     return null;
   };
 
+  // Basic accessors
+  const _protocol = generateSimpleAccessor('protocol');
+  const _port = generateSimpleAccessor('port');
+  const _hostname = generateSimpleAccessor('hostname');
+
+  p.protocol = function(v?: any, build?: boolean): any {
+    if (v) {
+      // accept trailing ://
+      v = v.replace(/:(\/\/)?$/, '');
+
+      if (!v.match(URIClass.protocol_expression)) {
+        throw new TypeError('Protocol "' + v + '" contains characters other than [A-Z0-9.+-] or doesn\'t start with [A-Z]');
+      }
+    }
+
+    return _protocol.call(this, v, build);
+  };
+  p.scheme = p.protocol;
+
+
+  p.port = function(v?: any, build?: boolean): any {
+    if (this._parts.urn) {
+      return v === undefined ? '' : this;
+    }
+
+    if (v !== undefined) {
+      if (v === 0) {
+        v = null;
+      }
+
+      if (v) {
+        v += '';
+        if (v.charAt(0) === ':') {
+          v = v.substring(1);
+        }
+
+        URIClass.ensureValidPort(v);
+      }
+    }
+    return _port.call(this, v, build);
+  };
+
+
+  p.hostname = function(v?: any, build?: boolean): any {
+    if (this._parts.urn) {
+      return v === undefined ? '' : this;
+    }
+
+    if (v !== undefined) {
+      const x: any = { preventInvalidHostname: this._parts.preventInvalidHostname };
+      const res = URIClass.parseHost(v, x);
+      if (res !== '/') {
+        throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
+      }
+
+      v = x.hostname;
+      if (this._parts.preventInvalidHostname) {
+        URIClass.ensureValidHostname(v, this._parts.protocol);
+      }
+    }
+
+    return _hostname.call(this, v, build);
+  };
+
   // compound accessors
   p.origin = function(v?: any, build?: boolean): any {
     if (this._parts.urn) {
