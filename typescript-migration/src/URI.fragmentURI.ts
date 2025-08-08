@@ -17,7 +17,21 @@
 // furi.pathname('/hello.html');
 // uri.toString() === "http://example.org/#!/hello.html"
 
-import URI from './URI';
+(function (root, factory) {
+  'use strict';
+  // https://github.com/umdjs/umd/blob/master/returnExports.js
+  if (typeof module === 'object' && module.exports) {
+    // Node
+    module.exports = factory(require('./URI'));
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['./URI'], factory);
+  } else {
+    // Browser globals (root is window)
+    factory(root.URI);
+  }
+}(this, function (URI: any) {
+  'use strict';
 
   const p = URI.prototype;
   // old handlers we need to wrap
@@ -79,5 +93,6 @@ import URI from './URI';
     return t;
   };
 
-// extending existing object rather than defining something new
-export default URI;
+  // extending existing object rather than defining something new
+  return URI;
+}));

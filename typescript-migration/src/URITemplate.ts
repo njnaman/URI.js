@@ -76,10 +76,26 @@ export interface DataInterface {
   get(key: string): URITemplateDataValue;
 }
 
-import URI from './URI';
+(function (root, factory) {
+  'use strict';
+  // https://github.com/umdjs/umd/blob/master/returnExports.js
+  if (typeof module === 'object' && module.exports) {
+    // Node
+    module.exports = factory(require('./URI'));
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['./URI'], factory);
+  } else {
+    // Browser globals (root is window)
+    root.URITemplate = factory(root.URI, root);
+  }
+}(this, function (URI: any, root: any) {
+  'use strict';
+  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+  /*jshint camelcase: false */
 
-// FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-/*jshint camelcase: false */
+  // save current URITemplate variable, if any
+  const _URITemplate = root && root.URITemplate;
 
   const hasOwn = Object.prototype.hasOwnProperty;
 
@@ -367,7 +383,10 @@ import URI from './URI';
   };
 
   URITemplate.noConflict = function(): URITemplateInterface {
-    // In ES module context, noConflict is not needed but kept for API compatibility
+    if (root.URITemplate === URITemplate) {
+      root.URITemplate = _URITemplate;
+    }
+
     return <URITemplateInterface>URITemplate;
   };
 
@@ -563,4 +582,5 @@ import URI from './URI';
   return new (URI as any)(expansion);
 };
 
-export default URITemplate as any;
+  return URITemplate as any;
+}));
