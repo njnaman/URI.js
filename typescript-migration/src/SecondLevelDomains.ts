@@ -21,7 +21,26 @@ export interface SecondLevelDomainsInterface {
   noConflict: () => SecondLevelDomainsInterface;
 }
 
-const SLD: SecondLevelDomainsInterface = {
+(function (root: any, factory: (root?: any) => SecondLevelDomainsInterface) {
+  'use strict';
+  // https://github.com/umdjs/umd/blob/master/returnExports.js
+  if (typeof module === 'object' && module.exports) {
+    // Node
+    module.exports = factory();
+  } else if (typeof define === 'function' && (define as any).amd) {
+    // AMD. Register as an anonymous module.
+    define(factory);
+  } else {
+    // Browser globals (root is window)
+    root.SecondLevelDomains = factory(root);
+  }
+}((typeof self !== 'undefined' && self) || (typeof window !== 'undefined' && window) || (typeof global !== 'undefined' && global) || this, function (root?: any): SecondLevelDomainsInterface {
+  'use strict';
+
+  // save current SecondLevelDomains variable, if any
+  const _SecondLevelDomains = root && root.SecondLevelDomains;
+
+  const SLD: SecondLevelDomainsInterface = {
     // list of known Second Level Domains
     // converted list of SLDs from https://github.com/gavingmiller/second-level-domains
     // ----
@@ -86,9 +105,17 @@ const SLD: SecondLevelDomainsInterface = {
       return domain.slice(sldOffset+1);
     },
     noConflict: function(): SecondLevelDomainsInterface {
-      // In ES module context, noConflict is not needed but kept for API compatibility
+      if (root && root.SecondLevelDomains === this) {
+        root.SecondLevelDomains = _SecondLevelDomains;
+      }
       return this;
     }
   };
 
-export default SLD;
+  return SLD;
+}));
+
+// For TypeScript module compatibility, we need to handle the export properly
+// Since the UMD wrapper handles the actual export, we declare the module structure
+declare const SecondLevelDomains: SecondLevelDomainsInterface;
+export default SecondLevelDomains;
