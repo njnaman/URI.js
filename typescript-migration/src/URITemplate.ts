@@ -76,7 +76,7 @@ export interface DataInterface {
   get(key: string): URITemplateDataValue;
 }
 
-(function (root, factory) {
+(function (root: any, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
@@ -89,7 +89,7 @@ export interface DataInterface {
     // Browser globals (root is window)
     root.URITemplate = factory(root.URI, root);
   }
-}(this, function (URI: any, root: any) {
+}(this, function (URI: any, root?: any) {
   'use strict';
   // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
   /*jshint camelcase: false */

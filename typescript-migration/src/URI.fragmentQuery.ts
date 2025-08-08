@@ -43,7 +43,7 @@ export interface URIFragmentQueryExtended {
   setHash(data: any, build?: boolean): any;
 }
 
-(function (root, factory) {
+(function (root: any, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
@@ -71,7 +71,7 @@ export interface URIFragmentQueryExtended {
     parts.fragmentPrefix = URI.fragmentPrefix;
     return parts;
   };
-  
+
   p.fragmentPrefix = function(v: string): any {
     this._parts.fragmentPrefix = v;
     return this;
