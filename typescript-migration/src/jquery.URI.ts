@@ -38,13 +38,23 @@ export interface URICompareFunctions {
   [key: string]: CompareFunction | ((uri: any, target: string) => boolean);
 }
 
-import URI from './URI';
-
-// FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-/*jshint camelcase: false */
-
-// Note: jQuery should be imported externally when using this module
-export function initializeJQueryURI($: JQueryStatic): JQueryStatic {
+(function (root: any, factory: (jquery: JQueryStatic, uri: any) => JQueryStatic) {
+  'use strict';
+  // https://github.com/umdjs/umd/blob/master/returnExports.js
+  if (typeof module === 'object' && module.exports) {
+    // Node
+    module.exports = factory(require('jquery'), require('./URI'));
+  } else if (typeof define === 'function' && (define as any).amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery', './URI'], factory);
+  } else {
+    // Browser globals (root is window)
+    factory(root.jQuery, root.URI);
+  }
+}(typeof self !== 'undefined' ? self : this, function ($: JQueryStatic, URI: any): JQueryStatic {
+  'use strict';
+  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+  /*jshint camelcase: false */
 
   const comparable: { [key: string]: boolean } = {};
   const compare: URICompareFunctions = {
@@ -247,4 +257,4 @@ export function initializeJQueryURI($: JQueryStatic): JQueryStatic {
   // extending existing object rather than defining something new,
   // return jQuery anyway
   return $;
-}
+}));
