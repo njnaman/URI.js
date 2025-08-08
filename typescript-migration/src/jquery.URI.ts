@@ -51,7 +51,9 @@ export interface URICompareFunctions {
     // Browser globals (root is window)
     factory(root.jQuery, root.URI);
   }
-}(typeof self !== 'undefined' ? self : this, function ($: JQueryStatic, URI: any): JQueryStatic {
+}(typeof self !== 'undefined' ? self : this, jQueryURIFactory));
+
+function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   'use strict';
   // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
   /*jshint camelcase: false */
@@ -257,4 +259,11 @@ export interface URICompareFunctions {
   // extending existing object rather than defining something new,
   // return jQuery anyway
   return $;
-}));
+}
+
+// ES6 export for TypeScript
+export function initializeJQueryURI($: JQueryStatic, URI: any) {
+  return jQueryURIFactory($, URI);
+}
+
+export default initializeJQueryURI;

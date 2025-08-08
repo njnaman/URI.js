@@ -2,6 +2,27 @@
  * Punycode.js v1.4.0 by @mathias
  * TypeScript migration
  */
+
+// Type definitions at module level for ES6 exports
+export interface PunycodeInterface {
+	  decode(input: string): string;
+
+	  encode(input: string): string;
+
+	  toASCII(input: string): string;
+
+	  toUnicode(input: string): string;
+
+	  ucs2: {
+	    decode(input: string): number[];
+	    encode(input: number[]): string;
+	  };
+	  version: string;
+	}
+
+// Declare punycode variable at module level for ES6 export
+let punycode: PunycodeInterface;
+
 ;(function(root: any) {
 
 	/** Detect free variables */
@@ -18,26 +39,10 @@
 		root = freeGlobal;
 	}
 
-	interface PunycodeInterface {
-	  decode(input: string): string;
-
-	  encode(input: string): string;
-
-	  toASCII(input: string): string;
-
-	  toUnicode(input: string): string;
-
-	  ucs2: {
-	    decode(input: string): number[];
-	    encode(input: number[]): string;
-	  };
-	  version: string;
-	}
-
 	/**
 	 * The `punycode` object.
 	 */
-	var punycode: PunycodeInterface,
+	var _punycode: PunycodeInterface,
 
 	/** Highest positive signed 32-bit float value */
 	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
@@ -439,7 +444,7 @@
 	/*--------------------------------------------------------------------------*/
 
 	/** Define the public API */
-	punycode = {
+	_punycode = {
 		/**
 		 * A string representing the current Punycode.js version number.
 		 */
@@ -467,21 +472,27 @@
 		define.amd
 	) {
 		define('punycode', function() {
-			return punycode;
+			return _punycode;
 		});
 	} else if (freeExports && freeModule) {
 		if (module.exports == freeExports) {
 			// in Node.js, io.js, or RingoJS v0.8.0+
-			freeModule.exports = punycode;
+			freeModule.exports = _punycode;
 		} else {
 			// in Narwhal or RingoJS v0.7.0-
-			for (key in punycode) {
-				punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
+			for (key in _punycode) {
+				_punycode.hasOwnProperty(key) && (freeExports[key] = _punycode[key]);
 			}
 		}
 	} else {
 		// in Rhino or a web browser
-		root.punycode = punycode;
+		root.punycode = _punycode;
 	}
 
+	// Assign to module level variable for ES6 export
+	punycode = _punycode;
+
 }(this));
+
+// ES6 export for TypeScript
+export default punycode;

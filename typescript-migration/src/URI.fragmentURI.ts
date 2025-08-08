@@ -17,18 +17,21 @@
 // furi.pathname('/hello.html');
 // uri.toString() === "http://example.org/#!/hello.html"
 
+// Declare URI variable at module level for ES6 export
+let URI: any;
+
 (function (root, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory(require('./URI'));
+    URI = module.exports = factory(require('./URI'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./URI'], factory);
   } else {
     // Browser globals (root is window)
-    factory(root.URI);
+    URI = factory((root as any)?.URI);
   }
 }(this, function (URI: any) {
   'use strict';
@@ -96,3 +99,6 @@
   // extending existing object rather than defining something new
   return URI;
 }));
+
+// ES6 export for TypeScript
+export default URI;

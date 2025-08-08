@@ -21,18 +21,24 @@ export interface SecondLevelDomainsInterface {
   noConflict: () => SecondLevelDomainsInterface;
 }
 
+// Declare SecondLevelDomains variable at module level for ES6 export
+let SecondLevelDomains: SecondLevelDomainsInterface;
+
 (function (root: any, factory: (root?: any) => SecondLevelDomainsInterface) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory();
+    SecondLevelDomains = module.exports = factory();
   } else if (typeof define === 'function' && (define as any).amd) {
     // AMD. Register as an anonymous module.
     define(factory);
   } else {
     // Browser globals (root is window)
-    root.SecondLevelDomains = factory(root);
+    SecondLevelDomains = factory(root);
+    if (root) {
+      root.SecondLevelDomains = SecondLevelDomains;
+    }
   }
 }((typeof self !== 'undefined' && self) || (typeof window !== 'undefined' && window) || (typeof global !== 'undefined' && global) || this, function (root?: any): SecondLevelDomainsInterface {
   'use strict';
@@ -115,7 +121,5 @@ export interface SecondLevelDomainsInterface {
   return SLD;
 }));
 
-// For TypeScript module compatibility, we need to handle the export properly
-// Since the UMD wrapper handles the actual export, we declare the module structure
-declare const SecondLevelDomains: SecondLevelDomainsInterface;
+// ES6 export for TypeScript
 export default SecondLevelDomains;

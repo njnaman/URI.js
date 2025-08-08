@@ -10,18 +10,25 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
+
+// Declare URI variable at module level for ES6 export
+let URI: any;
+
 (function (root, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
+    URI = module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./punycode', './IPv6', './SecondLevelDomains'], factory);
   } else {
     // Browser globals (root is window)
-    root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains, root);
+    URI = factory((root as any)?.punycode, (root as any)?.IPv6, (root as any)?.SecondLevelDomains, root);
+    if (root) {
+      (root as any).URI = URI;
+    }
   }
 }(this, function (punycode: any, IPv6: any, SLD: any, root?: any) {
   'use strict';
@@ -2694,3 +2701,6 @@ interface URIConstructor {
 
   return URI;
 }));
+
+// ES6 export for TypeScript
+export default URI;

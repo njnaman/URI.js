@@ -18,22 +18,24 @@ export interface IPv6 {
   noConflict: () => IPv6;
 }
 
-// Declare for TypeScript typing in UMD context
-declare const IPv6: IPv6;
-export default IPv6;
+// Declare IPv6 variable at module level for ES6 export
+let IPv6: IPv6;
 
 (function (root: any, factory: (root?: any) => IPv6) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory();
+    IPv6 = module.exports = factory();
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(factory);
   } else {
     // Browser globals (root is window)
-    root.IPv6 = factory(root);
+    IPv6 = factory(root);
+    if (root) {
+      root.IPv6 = IPv6;
+    }
   }
 }(this, function (root?: any): IPv6 {
   'use strict';
@@ -194,3 +196,6 @@ export default IPv6;
     noConflict: noConflict
   };
 }));
+
+// ES6 export for TypeScript
+export default IPv6;

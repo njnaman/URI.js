@@ -76,18 +76,24 @@ export interface DataInterface {
   get(key: string): URITemplateDataValue;
 }
 
+// Declare URITemplate variable at module level for ES6 export
+let URITemplate: any;
+
 (function (root: any, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory(require('./URI'));
+    URITemplate = module.exports = factory(require('./URI'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./URI'], factory);
   } else {
     // Browser globals (root is window)
-    root.URITemplate = factory(root.URI, root);
+    URITemplate = factory(root && root.URI, root);
+    if (root) {
+      root.URITemplate = URITemplate;
+    }
   }
 }(this, function (URI: any, root?: any) {
   'use strict';
@@ -584,3 +590,6 @@ export interface DataInterface {
 
   return URITemplate as any;
 }));
+
+// ES6 export for TypeScript
+export default URITemplate;

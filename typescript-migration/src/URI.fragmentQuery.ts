@@ -24,6 +24,9 @@
 // uri.setFragment("name", "value2");
 // uri.toString() === "http://example.org/#?bar=foo&name=value2";
 
+// Declare URI variable at module level for ES6 export
+let URI: any;
+
 // Extended interface for fragment query functionality
 export interface URIFragmentQueryExtended {
   fragmentPrefix(prefix: string): any;
@@ -48,13 +51,13 @@ export interface URIFragmentQueryExtended {
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    module.exports = factory(require('./URI'));
+    URI = module.exports = factory(require('./URI'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./URI'], factory);
   } else {
     // Browser globals (root is window)
-    factory(root.URI);
+    URI = factory((root as any)?.URI);
   }
 }(this, function (URI: any) {
   'use strict';
@@ -143,3 +146,6 @@ export interface URIFragmentQueryExtended {
   // extending existing object rather than defining something new
   return URI;
 }));
+
+// ES6 export for TypeScript
+export default URI;
