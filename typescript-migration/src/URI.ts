@@ -10,7 +10,27 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
+(function (root, factory) {
+  'use strict';
+  // https://github.com/umdjs/umd/blob/master/returnExports.js
+  if (typeof module === 'object' && module.exports) {
+    // Node
+    module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['./punycode', './IPv6', './SecondLevelDomains'], factory);
+  } else {
+    // Browser globals (root is window)
+    root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains, root);
+  }
+}(this, function (punycode: any, IPv6: any, SLD: any, root?: any) {
+  'use strict';
+  /*global location, escape, unescape */
+  // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
+  /*jshint camelcase: false */
 
+  // save current URI variable, if any
+  var _URI = root && root.URI;
 
 interface URIParts {
   protocol: string | null;
@@ -296,14 +316,10 @@ interface URIConstructor {
   withinString(string: string, callback: (uri: string, start: number, end: number, string: string) => string | void, options?: WithinStringOptions): string;
   ensureValidHostname(hostname: string, protocol?: string): void;
   ensureValidPort(port: string): void;
-  noConflict(removeAll?: boolean): URIProto | { URI: URIProto; URITemplate?: any; IPv6?: IPv6; SecondLevelDomains?: any };
+  noConflict(removeAll?: boolean): URIProto | { URI: URIProto; URITemplate?: any; IPv6?: any; SecondLevelDomains?: any };
 }
 
 // Import dependencies
-import punycode, { PunycodeInterface } from './punycode';
-import IPv6Impl, { IPv6 } from './IPv6';
-import SLD, { SecondLevelDomainsInterface } from './SecondLevelDomains';
-
 /*global location, escape, unescape */
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 /*jshint camelcase: false */
@@ -2284,8 +2300,8 @@ import SLD, { SecondLevelDomainsInterface } from './SecondLevelDomains';
     if (this._parts.hostname) {
       if (this.is('IDN') && punycode) {
         this._parts.hostname = punycode.toASCII(this._parts.hostname);
-              } else if (this.is('IPv6') && IPv6Impl) {
-          this._parts.hostname = IPv6Impl.best(this._parts.hostname);
+              } else if (this.is('IPv6') && IPv6) {
+          this._parts.hostname = IPv6.best(this._parts.hostname);
       }
 
       this._parts.hostname = this._parts.hostname.toLowerCase();
@@ -2676,4 +2692,5 @@ import SLD, { SecondLevelDomainsInterface } from './SecondLevelDomains';
     return this;
   };
 
-export default URI as any;
+  return URI;
+}));
