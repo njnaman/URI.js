@@ -13,12 +13,12 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "test/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "src/index.ts",
-    "test/**/*"
   ]
 }
