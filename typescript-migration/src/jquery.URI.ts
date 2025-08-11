@@ -12,7 +12,7 @@
  *
  */
 
-export interface JQueryStatic {
+interface JQueryStatic {
   (selector: any): JQuery;
   each(obj: any, callback: (index: any, value: any) => void): void;
   attrHooks: { [key: string]: any };
@@ -20,7 +20,7 @@ export interface JQueryStatic {
   fn: any;
 }
 
-export interface JQuery {
+interface JQuery {
   first(): JQuery;
   get(index: number): Element;
   data(key: string): any;
@@ -30,11 +30,11 @@ export interface JQuery {
   uri(uri: string | any): any;
 }
 
-export interface CompareFunction {
+interface CompareFunction {
   (value: string, target: string, property?: string): boolean;
 }
 
-export interface URICompareFunctions {
+interface URICompareFunctions {
   [key: string]: CompareFunction | ((uri: any, target: string) => boolean);
 }
 
@@ -262,8 +262,8 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
 }
 
 // ES6 export for TypeScript
-export function initializeJQueryURI($: JQueryStatic, URI: any) {
+function initializeJQueryURI($: JQueryStatic, URI: any) {
   return jQueryURIFactory($, URI);
 }
 
-export default initializeJQueryURI;
+// initializeJQueryURI is exported via UMD wrapper above

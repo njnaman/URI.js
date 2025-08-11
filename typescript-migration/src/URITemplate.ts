@@ -12,7 +12,7 @@
  *
  */
 
-export interface URITemplateOperator {
+interface URITemplateOperator {
   prefix: string;
   separator: string;
   named: boolean;
@@ -20,34 +20,34 @@ export interface URITemplateOperator {
   encode: string;
 }
 
-export interface URITemplateVariable {
+interface URITemplateVariable {
   name: string;
   explode: boolean;
   maxlength?: number;
 }
 
-export interface URITemplateExpression {
+interface URITemplateExpression {
   expression: string;
   operator: string;
   variables: URITemplateVariable[];
 }
 
-export interface URITemplateData {
+interface URITemplateData {
   [key: string]: any;
 }
 
-export interface URITemplateExpandOptions {
+interface URITemplateExpandOptions {
   strict?: boolean;
 }
 
-export interface URITemplateDataValue {
+interface URITemplateDataValue {
   type: number;
   val: Array<[string | undefined, string]>;
   encode: Array<[string | undefined, string]>;
   encodeReserved: Array<[string | undefined, string]>;
 }
 
-export interface URITemplateInterface {
+interface URITemplateInterface {
   new (expression: string): URITemplateInterface;
   (expression: string): URITemplateInterface;
 
@@ -70,7 +70,7 @@ export interface URITemplateInterface {
   noConflict(): URITemplateInterface;
 }
 
-export interface DataInterface {
+interface DataInterface {
   data: URITemplateData;
   cache: { [key: string]: URITemplateDataValue };
   get(key: string): URITemplateDataValue;
@@ -592,4 +592,4 @@ let URITemplate: any;
 }));
 
 // ES6 export for TypeScript
-export default URITemplate;
+// URITemplate is exported via UMD wrapper above

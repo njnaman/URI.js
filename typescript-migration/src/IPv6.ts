@@ -13,7 +13,7 @@
  */
 
 // Define the IPv6 interface
-export interface IPv6 {
+interface IPv6 {
   best: (address: string) => string;
   noConflict: () => IPv6;
 }
@@ -198,4 +198,4 @@ let IPv6: IPv6;
 }));
 
 // ES6 export for TypeScript
-export default IPv6;
+// IPv6 is exported via UMD wrapper above

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "umd",
+    "module": "none",
     "lib": ["ES5", "DOM"],
     "outDir": "./dist",
     "strict": false,
@@ -13,11 +13,12 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*",
-    "test/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "src/index.ts",
+    "test/**/*"
   ]
 }

@@ -13,7 +13,7 @@
  */
 
 // Define the SecondLevelDomains interface
-export interface SecondLevelDomainsInterface {
+interface SecondLevelDomainsInterface {
   list: { [key: string]: string };
   has: (domain: string) => boolean;
   is: (domain: string) => boolean;
@@ -122,4 +122,4 @@ let SecondLevelDomains: SecondLevelDomainsInterface;
 }));
 
 // ES6 export for TypeScript
-export default SecondLevelDomains;
+// SecondLevelDomains is exported via UMD wrapper above

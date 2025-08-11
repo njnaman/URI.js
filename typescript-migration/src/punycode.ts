@@ -3,8 +3,8 @@
  * TypeScript migration
  */
 
-// Type definitions at module level for ES6 exports
-export interface PunycodeInterface {
+// Type definitions at module level
+interface PunycodeInterface {
 	  decode(input: string): string;
 
 	  encode(input: string): string;
@@ -495,4 +495,4 @@ let punycode: PunycodeInterface;
 }(this));
 
 // ES6 export for TypeScript
-export default punycode;
+// punycode is exported via UMD wrapper above

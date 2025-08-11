@@ -11,8 +11,8 @@
  *
  */
 
-// Declare URI variable at module level for ES6 export
-let URI: any;
+// Declare URI variable at module level
+var URI: any;
 
 (function (root, factory) {
   'use strict';
@@ -2703,4 +2703,4 @@ interface URIConstructor {
 }));
 
 // ES6 export for TypeScript
-export default URI;
+// URI is exported via UMD wrapper above

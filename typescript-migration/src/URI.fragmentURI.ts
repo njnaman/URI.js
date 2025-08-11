@@ -17,21 +17,21 @@
 // furi.pathname('/hello.html');
 // uri.toString() === "http://example.org/#!/hello.html"
 
-// Declare URI variable at module level for ES6 export
-let URI: any;
+// Declare URI variable at module level
+var URIFragmentURI: any;
 
 (function (root, factory) {
   'use strict';
   // https://github.com/umdjs/umd/blob/master/returnExports.js
   if (typeof module === 'object' && module.exports) {
     // Node
-    URI = module.exports = factory(require('./URI'));
+    URIFragmentURI = module.exports = factory(require('./URI'));
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['./URI'], factory);
   } else {
     // Browser globals (root is window)
-    URI = factory((root as any)?.URI);
+    factory((root as any)?.URI);
   }
 }(this, function (URI: any) {
   'use strict';
@@ -101,4 +101,4 @@ let URI: any;
 }));
 
 // ES6 export for TypeScript
-export default URI;
+// URI is exported via UMD wrapper above
