@@ -925,6 +925,14 @@ interface URIConstructor {
       string = '/' + string;
     }
 
+    if ((parts as any).preventInvalidHostname) {
+      URIClass.ensureValidHostname(parts.hostname, parts.protocol);
+    }
+
+    if ((parts as any).port) {
+      URIClass.ensureValidPort(parts.port);
+    }
+
     return string.substring(pos) || '/';
   };
 
