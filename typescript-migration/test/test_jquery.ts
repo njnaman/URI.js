@@ -2,8 +2,11 @@
 // Note: This is adapted for TypeScript without jQuery dependency
 // The original tests were jQuery-specific and DOM-dependent
 
-import { initializeJQueryURI } from '../src/jquery.URI';
-import URI from '../src/URI';
+// Reference the source files to compile them
+/// <reference path="../src/URI.ts" />
+/// <reference path="../src/jquery.URI.ts" />
+
+declare var URI: any;
 
 describe('jQuery.URI Functionality', () => {
   // Since we don't have jQuery or DOM in the TypeScript environment,

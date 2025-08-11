@@ -21,8 +21,7 @@ interface SecondLevelDomainsInterface {
   noConflict: () => SecondLevelDomainsInterface;
 }
 
-// Declare SecondLevelDomains variable at module level for ES6 export
-let SecondLevelDomains: SecondLevelDomainsInterface;
+// SecondLevelDomains will be declared by the UMD wrapper below
 
 (function (root: any, factory: (root?: any) => SecondLevelDomainsInterface) {
   'use strict';

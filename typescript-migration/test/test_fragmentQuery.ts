@@ -1,5 +1,10 @@
 // TypeScript version of test_fragmentQuery.js
-import URI from '../src/URI.fragmentQuery';
+
+// Reference the source files to compile them
+/// <reference path="../src/URI.ts" />
+/// <reference path="../src/URI.fragmentQuery.ts" />
+
+declare var URI: any;
 
 describe('URI.fragmentQuery', () => {
   test('storing query-data in fragment', () => {

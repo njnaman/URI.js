@@ -21,7 +21,7 @@ declare var URI: any;
 declare var IPv6: any;
 declare var URITemplate: any;
 declare var SecondLevelDomains: any;
-declare var urls: any;
+// urls is declared in urls.ts
 
 // Test suite setup
 (function() {
@@ -890,5 +890,4 @@ declare var urls: any;
 
 })();
 
-// Export for module system
-export {}; 
+// Removed export to avoid module conflict in TypeScript config with module: 'none' 

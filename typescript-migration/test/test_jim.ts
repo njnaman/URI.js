@@ -7,7 +7,11 @@
  */
 
 // TypeScript version of test_jim.js
-import URI from '../src/URI';
+
+// Reference the source files to compile them
+/// <reference path="../src/URI.ts" />
+
+declare var URI: any;
 
 describe('injection', () => {
   test('protocol', () => {

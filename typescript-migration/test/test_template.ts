@@ -1,5 +1,9 @@
 // TypeScript version of test_template.js
-import URITemplate from '../src/URITemplate';
+
+// Reference the source files to compile them
+/// <reference path="../src/URITemplate.ts" />
+
+declare var URITemplate: any;
 
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 

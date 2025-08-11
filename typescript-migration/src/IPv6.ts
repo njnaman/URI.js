@@ -18,8 +18,7 @@ interface IPv6 {
   noConflict: () => IPv6;
 }
 
-// Declare IPv6 variable at module level for ES6 export
-let IPv6: IPv6;
+// IPv6 will be declared by the UMD wrapper below
 
 (function (root: any, factory: (root?: any) => IPv6) {
   'use strict';

@@ -1,5 +1,10 @@
 // TypeScript version of test_fragmentURI.js
-import URI from '../src/URI.fragmentURI';
+
+// Reference the source files to compile them
+/// <reference path="../src/URI.ts" />
+/// <reference path="../src/URI.fragmentURI.ts" />
+
+declare var URI: any;
 
 describe('URI.fragmentURI', () => {
   test('storing URLs in fragment', () => {

@@ -76,8 +76,7 @@ interface DataInterface {
   get(key: string): URITemplateDataValue;
 }
 
-// Declare URITemplate variable at module level for ES6 export
-let URITemplate: any;
+// URITemplate will be declared by the UMD wrapper below
 
 (function (root: any, factory) {
   'use strict';
