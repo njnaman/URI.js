@@ -1609,9 +1609,10 @@ interface URIConstructor {
     let sld = false;
     let idn = false;
     let punycode_test = false;
-    const relative = !this._parts.urn;
+    let relative = !this._parts.urn;
 
     if (this._parts.hostname) {
+      relative = false;
       ip4 = URIClass.ip4_expression.test(this._parts.hostname);
       ip6 = URIClass.ip6_expression.test(this._parts.hostname);
       ip = ip4 || ip6;

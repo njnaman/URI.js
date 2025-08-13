@@ -30,33 +30,33 @@ declare var SecondLevelDomains: any;
   // Dynamically check for available test frameworks
   const hasQUnit = typeof (globalThis as any).QUnit !== 'undefined';
   const hasJest = typeof (globalThis as any).expect !== 'undefined' && typeof (globalThis as any).it !== 'undefined';
-  
+
   // Test function - try QUnit first, then Jest, then mock
   const testFn = hasQUnit ? (globalThis as any).QUnit.test :
                  hasJest ? (globalThis as any).it :
-                 function(name: string, fn: () => void) { 
-                   console.log(`Test: ${name}`); 
-                   fn(); 
+                 function(name: string, fn: () => void) {
+                   console.log(`Test: ${name}`);
+                   fn();
                  };
-  
+
   // Module function - try QUnit first, then Jest describe, then mock
   const moduleFn = hasQUnit ? (globalThis as any).QUnit.module :
                    hasJest ? (name: string) => (globalThis as any).describe(name, () => {}) :
-                   function(name: string) { 
-                     console.log(`Module: ${name}`); 
+                   function(name: string) {
+                     console.log(`Module: ${name}`);
                    };
 
   // Assertion functions with fallbacks
   const assertOk = hasQUnit ? (globalThis as any).ok :
                    hasJest ? (value: any) => (globalThis as any).expect(value).toBeTruthy() :
-                   function(value: any, message?: string) { 
-                     if (!value) throw new Error(message || 'Assertion failed'); 
+                   function(value: any, message?: string) {
+                     if (!value) throw new Error(message || 'Assertion failed');
                    };
 
   const assertEqual = hasQUnit ? (globalThis as any).equal :
                       hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toEqual(expected) :
-                      function(actual: any, expected: any, message?: string) { 
-                        if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`); 
+                      function(actual: any, expected: any, message?: string) {
+                        if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`);
                       };
 
   const assertDeepEqual = hasQUnit ? (globalThis as any).deepEqual :
@@ -110,8 +110,8 @@ declare var SecondLevelDomains: any;
     assertOk((u as any)._parts.hostname !== undefined, 'host undefined');
   });
 
-  testFn('new URI(object) with query object', function() {
-    const u = new URI({
+  testFn('new URI(object)', function() {
+    var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: {
@@ -127,8 +127,8 @@ declare var SecondLevelDomains: any;
     assertDeepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
   });
 
-  testFn('new URI(object) with query string', function() {
-    const u = new URI({
+  testFn('new URI(object)', function() {
+    var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: 'foo=bar&bar=foo',
@@ -141,8 +141,8 @@ declare var SecondLevelDomains: any;
     assertDeepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
   });
 
-  testFn('new URI(object) with query string prefixed with ?', function() {
-    const u = new URI({
+  testFn('new URI(object)', function() {
+    var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: '?foo=bar&bar=foo',
@@ -236,10 +236,10 @@ declare var SecondLevelDomains: any;
     }, TypeError, 'Failing undefined input');
   });
 
-  testFn('new URI() - no args', function() {
+  testFn('new URI()', function() {
     const u = new URI();
     assertOk(u instanceof URI, 'instanceof URI');
-    const expectedHostname = (typeof window !== 'undefined' && typeof location !== 'undefined') ? 
+    const expectedHostname = (typeof window !== 'undefined' && typeof location !== 'undefined') ?
       (location.hostname === '' ? null : location.hostname) : null;
     const actualHostname = (u as any)._parts.hostname;
     assertOk(actualHostname === expectedHostname, 'hostname == location.hostname');
@@ -288,7 +288,7 @@ declare var SecondLevelDomains: any;
   });
 
   moduleFn('parsing');
-  
+
   // Test URL parsing with the URLs data
   for (let i = 0, t; (t = urls[i]); i++) {
     (function(t: any){
@@ -890,4 +890,4 @@ declare var SecondLevelDomains: any;
 
 })();
 
-// Removed export to avoid module conflict in TypeScript config with module: 'none' 
+// Removed export to avoid module conflict in TypeScript config with module: 'none'
