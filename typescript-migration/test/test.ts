@@ -59,6 +59,12 @@ declare var SecondLevelDomains: any;
                         if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`);
                       };
 
+  const assertStrictEqual = hasQUnit ? (globalThis as any).strictEqual :
+                            hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toBe(expected) :
+                            function(actual: any, expected: any, message?: string) {
+                              if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`);
+                            };
+
   const assertDeepEqual = hasQUnit ? (globalThis as any).deepEqual :
                           hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toEqual(expected) :
                           assertEqual;
@@ -1949,20 +1955,50 @@ declare var SecondLevelDomains: any;
     assertEqual(testPort(8080.2), false);
   });
   testFn('noConflict', function() {
-    // Note: In TypeScript, we can't really test noConflict in the same way as original JS
-    // since global variables work differently, but we can at least test that the function exists
-    if (typeof (URI as any).noConflict === 'function') {
-      assertOk(true, 'noConflict function exists');
+    const actual_lib = URI; // actual library; after loading, before noConflict()
+    const unconflicted = (URI as any).noConflict();
+
+    assertStrictEqual(unconflicted, actual_lib, 'noConflict() returns the URI object');
+    
+    // In browser environment, check if URI was restored
+    if (typeof window !== 'undefined') {
+      assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
+      
+      // restore for other tests
+      (window as any).URI = actual_lib;
     } else {
-      assertOk(false, 'noConflict function should exist');
+      // In Node.js environment, we can't test global restoration the same way
+      assertOk(unconflicted, 'noConflict() returns the library object in Node.js');
     }
   });
+
   testFn('noConflict(removeAll=true)', function() {
-    // Note: Similar limitation as above - this is mainly to ensure the API exists
-    if (typeof (URI as any).noConflict === 'function') {
-      assertOk(true, 'noConflict function exists for removeAll test');
+    const actual = {
+      URI:        URI,
+      URITemplate:    URITemplate,
+      IPv6:         IPv6,
+      SecondLevelDomains: SecondLevelDomains
+    };
+
+    const unconflicted = (URI as any).noConflict(true);
+
+    assertDeepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
+    
+    // In browser environment, check if all variables were restored
+    if (typeof window !== 'undefined') {
+      assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
+      assertStrictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
+      assertStrictEqual(IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
+      assertStrictEqual(SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
+
+      // restore for other tests
+      (window as any).URI        = actual.URI;
+      (window as any).URITemplate    = actual.URITemplate;
+      (window as any).IPv6         = actual.IPv6;
+      (window as any).SecondLevelDomains = actual.SecondLevelDomains;
     } else {
-      assertOk(false, 'noConflict function should exist for removeAll test');
+      // In Node.js environment, we can't test global restoration the same way
+      assertOk(unconflicted, 'noConflict(true) returns the libraries object in Node.js');
     }
   });
 
