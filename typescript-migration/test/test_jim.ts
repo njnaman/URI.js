@@ -15,129 +15,133 @@ declare var URI: any;
 
 (function() {
   'use strict';
+  const test = QUnit.test;
+  const module = QUnit.module;
+  const equal = QUnit.equal;
+  const raises = QUnit.raises;
 
-  QUnit.module('injection');
-  QUnit.test('protocol', function(assert) {
+  module('injection');
+  test('protocol', function() {
     var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
-    assert.throws(function() {
+    raises(function() {
       u.protocol('ftp://example.org');
     }, TypeError, 'Failing invalid characters');
 
     u.protocol('ftp:');
-    assert.equal(u.protocol(), 'ftp', 'protocol() has set invalid protocoll!');
-    assert.equal(u.hostname(), 'example.com', 'protocol() has changed the hostname');
+    equal(u.protocol(), 'ftp', 'protocol() has set invalid protocoll!');
+    equal(u.hostname(), 'example.com', 'protocol() has changed the hostname');
   });
 
-  QUnit.test('port', function(assert) {
+  test('port', function() {
     var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
-    assert.throws(function() {
+    raises(function() {
       u.port('99:example.org');
     }, TypeError, 'Failing invalid characters');
 
     u.port(':99');
-    assert.equal(u.hostname(), 'example.com', 'port() has modified hostname');
-    assert.equal(u.port(), 99, 'port() has set an invalid port');
+    equal(u.hostname(), 'example.com', 'port() has modified hostname');
+    equal(u.port(), 99, 'port() has set an invalid port');
 
     u.port(false);
-    assert.equal(u.port(), '', 'port() has set an invalid port');
+    equal(u.port(), '', 'port() has set an invalid port');
 
     // RFC 3986 says nothing about "16-bit unsigned" http://tools.ietf.org/html/rfc3986#section-3.2.3
     // u.href(new URI("http://example.com/"))
     // u.port(65536);
     // notEqual(u.port(), "65536", "port() has set to an non-valid value (A port number is a 16-bit unsigned integer)");
 
-    assert.throws(function() {
+    raises(function() {
       u.port('-99');
     }, TypeError, 'Failing invalid characters');
   });
 
-  QUnit.test('domain', function(assert) {
+  test('domain', function() {
     var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
 
-    assert.throws(function() {
+    raises(function() {
       u.domain('example.org/dir0/');
     }, TypeError, 'Failing invalid characters');
 
-    assert.throws(function() {
+    raises(function() {
       u.domain('example.org:80');
     }, TypeError, 'Failing invalid characters');
 
-    assert.throws(function() {
+    raises(function() {
       u.domain('foo@example.org');
     }, TypeError, 'Failing invalid characters');
   });
 
-  QUnit.test('subdomain', function(assert) {
+  test('subdomain', function() {
     var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
 
-    assert.throws(function() {
+    raises(function() {
       u.subdomain('example.org/dir0/');
     }, TypeError, 'Failing invalid characters');
 
-    assert.throws(function() {
+    raises(function() {
       u.subdomain('example.org:80');
     }, TypeError, 'Failing invalid characters');
 
-    assert.throws(function() {
+    raises(function() {
       u.subdomain('foo@example.org');
     }, TypeError, 'Failing invalid characters');
   });
 
-  QUnit.test('tld', function(assert) {
+  test('tld', function() {
   var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
 
-  assert.throws(function() {
+  raises(function() {
     u.tld('foo/bar.html');
   }, TypeError, 'Failing invalid characters');
 });
 
-  QUnit.test('path', function(assert) {
+  test('path', function() {
   var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
   u.path('/dir3/?query3=value3#fragment');
-  assert.equal(u.hostname(), 'example.com', 'path() has modified hostname');
-  assert.equal(u.path(), '/dir3/%3Fquery3=value3%23fragment', 'path() has set invalid path');
-  assert.equal(u.query(), 'query1=value1&query2=value2', 'path() has modified query');
-  assert.equal(u.fragment(), 'hash', 'path() has modified fragment');
+  equal(u.hostname(), 'example.com', 'path() has modified hostname');
+  equal(u.path(), '/dir3/%3Fquery3=value3%23fragment', 'path() has set invalid path');
+  equal(u.query(), 'query1=value1&query2=value2', 'path() has modified query');
+  equal(u.fragment(), 'hash', 'path() has modified fragment');
 });
 
-  QUnit.test('filename', function(assert) {
+  test('filename', function() {
   var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
 
   u.filename('name.html?query');
-  assert.equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
-  assert.equal(u.query(), 'query1=value1&query2=value2', 'filename() has modified query');
+  equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
+  equal(u.query(), 'query1=value1&query2=value2', 'filename() has modified query');
 
   // allowed!
   u.filename('../name.html?query');
-  assert.equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
-  assert.equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
+  equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
+  equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
 
   u.filename(null);
-  assert.equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
-  assert.equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
+  equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
+  equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
 
   u.filename(false);
-  assert.equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
-  assert.equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
+  equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
+  equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
 
   u.filename(0);
-  assert.equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
-  assert.equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
+  equal(u.filename(), 'name.html%3Fquery', 'filename() has set invalid filename');
+  equal(u.directory(), '/dir1', 'filename() has not altered directory properly');
 });
 
-  QUnit.test('addQuery', function(assert) {
+  test('addQuery', function() {
   var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');
   u.addQuery('query3', 'value3#got');
-  assert.equal(u.query(), 'query1=value1&query2=value2&query3=value3%23got', 'addQuery() has set invalid query');
-  assert.equal(u.fragment(), 'hash', 'addQuery() has modified fragment');
+  equal(u.query(), 'query1=value1&query2=value2&query3=value3%23got', 'addQuery() has set invalid query');
+  equal(u.fragment(), 'hash', 'addQuery() has modified fragment');
 });
 
   /*
   // RFC 3986 says "…and should limit these names to no more than 255 characters in length."
   // SHOULD is not MUST therefore not the responsibility of URI.js
 
-  QUnit.module("validation");
-  QUnit.test("domain", function(assert) {
+  module("validation");
+  test("domain", function() {
     // this bases on the wiki page information: http://en.wikipedia.org/wiki/Domain_Name_System
     var u = new URI("http://example.com/"), domain, i, j;
 
@@ -147,14 +151,14 @@ declare var URI: any;
       domain = "0123456789." + domain;
     }
     u.domain(domain);
-    assert.equal(u.hostname(), domain, "domain() has not set 204-character-domain");
+    equal(u.hostname(), domain, "domain() has not set 204-character-domain");
 
     //expand the domain to a 404 character domain
     for (i=0; i<20; i++) {
       domain = "0123456789." + domain;
     }
     u.domain(domain);
-    assert.equal(u.hostname() == domain, true, "set domain() with "+domain.length+" charachters - not valid domainname");
+    equal(u.hostname() == domain, true, "set domain() with "+domain.length+" charachters - not valid domainname");
 
     //generate a domain with three 70-char subdomains-parts.
     domain = "com";
@@ -166,7 +170,7 @@ declare var URI: any;
       }
     }
     u.domain(domain);
-    assert.equal(u.hostname() == domain, true, "set domain() with 70-character subdomain  not valid domainname");
+    equal(u.hostname() == domain, true, "set domain() with 70-character subdomain  not valid domainname");
   });
   */
 })();
