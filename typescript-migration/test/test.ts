@@ -23,57 +23,57 @@ declare var SecondLevelDomains: any;
   'use strict';
 
   // QUnit test functions - QUnit is required
-  const testFn = (globalThis as any).QUnit.test;
-  const moduleFn = (globalThis as any).QUnit.module;
+  const test = QUnit.test;
+  const module = QUnit.module;
 
   // QUnit assertion functions
-  const assertOk = (globalThis as any).ok;
-  const assertEqual = (globalThis as any).equal;
-  const assertStrictEqual = (globalThis as any).strictEqual;
-  const assertDeepEqual = (globalThis as any).deepEqual;
-  const assertRaises = (globalThis as any).raises;
+  const ok = QUnit.ok;
+  const equal = QUnit.equal;
+  const strictEqual = QUnit.strictEqual;
+  const deepEqual = QUnit.deepEqual;
+  const raises = QUnit.raises;
 
-  testFn('loaded', function() {
+  test('loaded', function() {
     if (typeof window !== 'undefined') {
-      assertOk((window as any).URI);
+      ok((window as any).URI);
     } else {
-      assertOk(URI);
+      ok(URI);
     }
   });
 
-  moduleFn('constructing');
-  testFn('URI()', function() {
+  module('constructing');
+  test('URI()', function() {
     const u = URI();
-    assertOk(u instanceof URI, 'instanceof URI');
+    ok(u instanceof URI, 'instanceof URI');
     const expectedHref = (typeof window !== 'undefined' && window.location && window.location.href) || '';
-    assertEqual(u.toString(), expectedHref, 'is location (browser) or empty string (node)');
+    equal(u.toString(), expectedHref, 'is location (browser) or empty string (node)');
   });
 
-  testFn('URI(undefined)', function() {
-    assertRaises(function() {
+  test('URI(undefined)', function() {
+    raises(function() {
       URI(undefined as any);
     }, TypeError, 'Failing undefined input');
   });
 
-  testFn('URI(null)', function() {
-    assertRaises(function() {
+  test('URI(null)', function() {
+    raises(function() {
       URI(null as any);
     }, TypeError, 'Failing undefined input');
   });
 
-  testFn('new URI(string)', function() {
+  test('new URI(string)', function() {
     const u = new URI('http://example.org/');
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u instanceof URI, 'instanceof URI');
+    ok((u as any)._parts.hostname !== undefined, 'host undefined');
   });
 
-  testFn('new URI(object)', function() {
+  test('new URI(object)', function() {
     const u = new URI({protocol: 'http', hostname: 'example.org'});
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u instanceof URI, 'instanceof URI');
+    ok((u as any)._parts.hostname !== undefined, 'host undefined');
   });
 
-  testFn('new URI(object)', function() {
+  test('new URI(object)', function() {
     var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
@@ -82,51 +82,51 @@ declare var SecondLevelDomains: any;
         bar: 'foo',
       },
     });
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk(typeof u.query() === 'string', 'query is string');
-    assertEqual(u.query(), 'foo=bar&bar=foo', 'query has right value');
-    assertEqual(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    assertDeepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
-    assertDeepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
+    ok(u instanceof URI, 'instanceof URI');
+    ok(typeof u.query() === 'string', 'query is string');
+    equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
+    equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
+    deepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
+    deepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
   });
 
-  testFn('new URI(object)', function() {
+  test('new URI(object)', function() {
     var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: 'foo=bar&bar=foo',
     });
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk(typeof u.query() === 'string', 'query is string');
-    assertEqual(u.query(), 'foo=bar&bar=foo', 'query has right value');
-    assertEqual(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    assertDeepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
-    assertDeepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
+    ok(u instanceof URI, 'instanceof URI');
+    ok(typeof u.query() === 'string', 'query is string');
+    equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
+    equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
+    deepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
+    deepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
   });
 
-  testFn('new URI(object)', function() {
+  test('new URI(object)', function() {
     var u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: '?foo=bar&bar=foo',
     });
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk(typeof u.query() === 'string', 'query is string');
-    assertEqual(u.query(), 'foo=bar&bar=foo', 'query has right value');
-    assertEqual(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    assertDeepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
-    assertDeepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
+    ok(u instanceof URI, 'instanceof URI');
+    ok(typeof u.query() === 'string', 'query is string');
+    equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
+    equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
+    deepEqual(u.query(true), { foo: 'bar', bar: 'foo' }, 'query(true) value');
+    deepEqual(u.search(true), { foo: 'bar', bar: 'foo' }, 'search(true) value');
   });
 
-  testFn('new URI(Location)', function () {
+  test('new URI(Location)', function () {
     var u = new URI(location);
-    assertEqual(u.href(), String(location.href), 'location object');
+    equal(u.href(), String(location.href), 'location object');
   });
-  testFn('new URI(undefined)', function() {
+  test('new URI(undefined)', function() {
     var u = new URI();
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertEqual(u.toString(), window.location && window.location.href || '', 'is location (browser) or empty string (node)');
-    assertRaises(function() {
+    ok(u instanceof URI, 'instanceof URI');
+    equal(u.toString(), window.location && window.location.href || '', 'is location (browser) or empty string (node)');
+    raises(function() {
       new URI(undefined);
     }, TypeError, 'Failing undefined input');
   });
@@ -135,32 +135,32 @@ declare var SecondLevelDomains: any;
   // DOM element tests (browser only)
   if (typeof document !== 'undefined') {
     const testDomAttribute = function(element: HTMLElement, attribute: string) {
-      testFn('new URI(Element ' + element.nodeName + ')', function() {
+      test('new URI(Element ' + element.nodeName + ')', function() {
         (element as any)[attribute] = 'http://example.org/foobar.html';
 
         const u = new URI(element);
-        assertEqual(u.scheme(), 'http', 'scheme');
-        assertEqual(u.host(), 'example.org', 'host');
-        assertEqual(u.path(), '/foobar.html', 'path');
+        equal(u.scheme(), 'http', 'scheme');
+        equal(u.host(), 'example.org', 'host');
+        equal(u.path(), '/foobar.html', 'path');
 
         (element as any)[attribute] = 'file:///C:/foo/bar.html';
         const u2 = new URI(element);
-        assertEqual(u2.href(), (element as any)[attribute], 'file');
+        equal(u2.href(), (element as any)[attribute], 'file');
       });
     };
 
     const testUnsupportedDomAttribute = function(element: HTMLElement, attribute: string) {
-      testFn('new URI(unsupported Element ' + element.nodeName + ')', function() {
+      test('new URI(unsupported Element ' + element.nodeName + ')', function() {
         (element as any)[attribute] = 'http://example.org/foobar.html';
 
         const u = new URI(element);
-        assertEqual(u.scheme(), '', 'scheme');
-        assertEqual(u.host(), '', 'host');
-        assertEqual(u.path(), '', 'path');
+        equal(u.scheme(), '', 'scheme');
+        equal(u.host(), '', 'host');
+        equal(u.path(), '', 'path');
 
         (element as any)[attribute] = 'file:///C:/foo/bar.html';
         const u2 = new URI(element);
-        assertEqual(u2.href(), '', 'file');
+        equal(u2.href(), '', 'file');
       });
     };
 
@@ -188,62 +188,62 @@ declare var SecondLevelDomains: any;
     testUnsupportedDomAttribute(divElement, 'src');
   }
 
-  testFn('new URI(URI)', function() {
+  test('new URI(URI)', function() {
     const u = new URI(new URI({protocol: 'http', hostname: 'example.org'}));
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u instanceof URI, 'instanceof URI');
+    ok((u as any)._parts.hostname !== undefined, 'host undefined');
   });
 
-  testFn('new URI(new Date())', function() {
-    assertRaises(function() {
+  test('new URI(new Date())', function() {
+    raises(function() {
       new URI(new Date() as any);
     }, TypeError, 'Failing unknown input');
   });
 
-  testFn('new URI(undefined)', function() {
-    assertRaises(function() {
+  test('new URI(undefined)', function() {
+    raises(function() {
       new URI(undefined as any);
     }, TypeError, 'Failing undefined input');
   });
 
-  testFn('new URI()', function() {
+  test('new URI()', function() {
     const u = new URI();
-    assertOk(u instanceof URI, 'instanceof URI');
+    ok(u instanceof URI, 'instanceof URI');
     const expectedHostname = (typeof window !== 'undefined' && typeof location !== 'undefined') ?
       (location.hostname === '' ? null : location.hostname) : null;
     const actualHostname = (u as any)._parts.hostname;
-    assertOk(actualHostname === expectedHostname, 'hostname == location.hostname');
+    ok(actualHostname === expectedHostname, 'hostname == location.hostname');
   });
 
-  testFn('function URI(string)', function() {
+  test('function URI(string)', function() {
     const u = URI('http://example.org/');
-    assertOk(u instanceof URI, 'instanceof URI');
-    assertOk((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u instanceof URI, 'instanceof URI');
+    ok((u as any)._parts.hostname !== undefined, 'host undefined');
   });
 
-  testFn('function URI(string) with invalid port "port" throws', function () {
-    assertRaises(function () {
+  test('function URI(string) with invalid port "port" throws', function () {
+    raises(function () {
       new URI('http://example.org:port');
     }, TypeError, "throws TypeError");
   });
 
-  testFn('function URI(string) with invalid port "0" throws', function () {
-    assertRaises(function () {
+  test('function URI(string) with invalid port "0" throws', function () {
+    raises(function () {
       new URI('http://example.org:0');
     }, TypeError, "throws TypeError");
   });
 
-  testFn('function URI(string) with invalid port "65536" throws', function () {
-    assertRaises(function () {
+  test('function URI(string) with invalid port "65536" throws', function () {
+    raises(function () {
       new URI('http://example.org:65536');
     }, TypeError, "throws TypeError");
   });
 
-  testFn('function URI(string) with protocol and without hostname should throw', function () {
+  test('function URI(string) with protocol and without hostname should throw', function () {
     new URI('http://');
 
     (URI as any).preventInvalidHostname = true;
-    assertRaises(function () {
+    raises(function () {
       new URI('http://');
     }, TypeError, "throws TypeError");
 
@@ -251,123 +251,123 @@ declare var SecondLevelDomains: any;
     new URI('http://');
   });
 
-  testFn('new URI(string, string)', function() {
+  test('new URI(string, string)', function() {
     // see http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#constructor
     const u = new URI('../foobar.html', 'http://example.org/hello/world.html');
-    assertEqual(u+'', 'http://example.org/foobar.html', 'resolve on construct');
+    equal(u+'', 'http://example.org/foobar.html', 'resolve on construct');
   });
 
-  moduleFn('parsing');
+  module('parsing');
 
   // Test URL parsing with the URLs data
   for (let i = 0, t; (t = urls[i]); i++) {
     (function(t: any){
-      testFn('parse ' + t.name, function() {
+      test('parse ' + t.name, function() {
         const u = new URI(t.url);
 
         // test URL built from parts
-        assertEqual(u + '', t._url || t.url, 'toString');
+        equal(u + '', t._url || t.url, 'toString');
 
         // test parsed parts
         for (const key in t.parts) {
           if (Object.hasOwnProperty.call(t.parts, key)) {
-            assertEqual((u as any)._parts[key], t.parts[key], 'part: ' + key);
+            equal((u as any)._parts[key], t.parts[key], 'part: ' + key);
           }
         }
 
         // test accessors
         for (const key in t.accessors) {
           if (Object.hasOwnProperty.call(t.accessors, key)) {
-            assertEqual((u as any)[key](), t.accessors[key], 'accessor: ' + key);
+            equal((u as any)[key](), t.accessors[key], 'accessor: ' + key);
           }
         }
 
         // test is()
         for (const key in t.is) {
           if (Object.hasOwnProperty.call(t.is, key)) {
-            assertEqual(u.is(key), t.is[key], 'is: ' + key);
+            equal(u.is(key), t.is[key], 'is: ' + key);
           }
         }
       });
     })(t);
   }
 
-  moduleFn('serializing');
-  testFn('scheme and relative path', function() {
+  module('serializing');
+  test('scheme and relative path', function() {
     const u = new URI('')
       .protocol('food')
       .path('test/file.csv');
 
-    assertEqual(u.toString(), 'food:///test/file.csv', 'relative-path with scheme but no authority');
+    equal(u.toString(), 'food:///test/file.csv', 'relative-path with scheme but no authority');
   });
 
   // Additional core tests
-  moduleFn('mutating basics');
-  testFn('protocol', function() {
+  module('mutating basics');
+  test('protocol', function() {
     const u = new URI('http://example.org/foo.html');
     u.protocol('ftp');
-    assertEqual(u.protocol(), 'ftp', 'ftp protocol');
-    assertEqual(u+'', 'ftp://example.org/foo.html', 'ftp url');
+    equal(u.protocol(), 'ftp', 'ftp protocol');
+    equal(u+'', 'ftp://example.org/foo.html', 'ftp url');
 
     u.protocol('');
-    assertEqual(u.protocol(), '', 'relative protocol');
-    assertEqual(u+'', '//example.org/foo.html', 'relative-scheme url');
+    equal(u.protocol(), '', 'relative protocol');
+    equal(u+'', '//example.org/foo.html', 'relative-scheme url');
 
     u.protocol('f.t-p+0');
-    assertEqual(u.protocol(), 'f.t-p+0', 'character profile');
+    equal(u.protocol(), 'f.t-p+0', 'character profile');
 
     try {
       u.protocol('f:t');
-      assertOk(false, 'do not accept invalid protocol');
+      ok(false, 'do not accept invalid protocol');
     } catch(e) {}
 
     u.protocol(null as any);
-    assertEqual(u.protocol(), '', 'missing protocol');
-    assertEqual(u+'', '//example.org/foo.html', 'missing-scheme url');
+    equal(u.protocol(), '', 'missing protocol');
+    equal(u+'', '//example.org/foo.html', 'missing-scheme url');
   });
 
-  testFn('username', function() {
+  test('username', function() {
     const u = new URI('http://example.org/foo.html');
     u.username('hello');
-    assertEqual(u.username(), 'hello', 'changed username hello');
-    assertEqual(u.password(), '', 'changed passowrd hello');
-    assertEqual(u+'', 'http://hello@example.org/foo.html', 'changed url hello');
+    equal(u.username(), 'hello', 'changed username hello');
+    equal(u.password(), '', 'changed passowrd hello');
+    equal(u+'', 'http://hello@example.org/foo.html', 'changed url hello');
 
     u.username('');
-    assertEqual(u.username(), '', 'changed username ""');
-    assertEqual(u.password(), '', 'changed passowrd ""');
-    assertEqual(u+'', 'http://example.org/foo.html', 'changed url ""');
+    equal(u.username(), '', 'changed username ""');
+    equal(u.password(), '', 'changed passowrd ""');
+    equal(u+'', 'http://example.org/foo.html', 'changed url ""');
   });
 
-  testFn('password', function() {
+  test('password', function() {
     const u = new URI('http://hello@example.org/foo.html');
     u.password('world');
-    assertEqual(u.username(), 'hello', 'changed username world');
-    assertEqual(u.password(), 'world', 'changed passowrd world');
-    assertEqual(u+'', 'http://hello:world@example.org/foo.html', 'changed url world');
+    equal(u.username(), 'hello', 'changed username world');
+    equal(u.password(), 'world', 'changed passowrd world');
+    equal(u+'', 'http://hello:world@example.org/foo.html', 'changed url world');
 
     u.password('');
-    assertEqual(u.username(), 'hello', 'changed username ""');
-    assertEqual(u.password(), '', 'changed passowrd ""');
-    assertEqual(u+'', 'http://hello@example.org/foo.html', 'changed url ""');
+    equal(u.username(), 'hello', 'changed username ""');
+    equal(u.password(), '', 'changed passowrd ""');
+    equal(u+'', 'http://hello@example.org/foo.html', 'changed url ""');
 
     u.username('').password('hahaha');
-    assertEqual(u.username(), '', 'changed username - password without username');
-    assertEqual(u.password(), 'hahaha', 'changed password - password without username');
-    assertEqual(u+'', 'http://:hahaha@example.org/foo.html', 'changed url - password without username');
+    equal(u.username(), '', 'changed username - password without username');
+    equal(u.password(), 'hahaha', 'changed password - password without username');
+    equal(u+'', 'http://:hahaha@example.org/foo.html', 'changed url - password without username');
   });
 
-  testFn('hostname', function() {
+  test('hostname', function() {
     const u = new URI('http://example.org/foo.html');
     u.hostname('abc.foobar.lala');
-    assertEqual(u.hostname(), 'abc.foobar.lala', 'hostname changed');
-    assertEqual(u+'', 'http://abc.foobar.lala/foo.html', 'hostname changed url');
+    equal(u.hostname(), 'abc.foobar.lala', 'hostname changed');
+    equal(u+'', 'http://abc.foobar.lala/foo.html', 'hostname changed url');
 
     u.hostname('some_where.exa_mple.org');
-    assertEqual(u.hostname(), 'some_where.exa_mple.org', 'hostname changed');
-    assertEqual(u+'', 'http://some_where.exa_mple.org/foo.html', 'hostname changed url');
+    equal(u.hostname(), 'some_where.exa_mple.org', 'hostname changed');
+    equal(u+'', 'http://some_where.exa_mple.org/foo.html', 'hostname changed url');
 
-    assertRaises(function() {
+    raises(function() {
       u.hostname('foo\\bar.com');
     }, TypeError, 'Failing backslash detection in hostname');
 
@@ -378,114 +378,114 @@ declare var SecondLevelDomains: any;
     (URI as any).preventInvalidHostname = false;
 
     (u as any).preventInvalidHostname(true);
-    assertRaises(function() {
+    raises(function() {
       u.hostname('');
     }, TypeError, "Trying to set an empty hostname with http(s) protocol throws a TypeError");
 
-    assertRaises(function() {
+    raises(function() {
       u.hostname(null as any);
     }, TypeError, "Trying to set hostname to null with http(s) protocol throws a TypeError");
   });
 
-  testFn('port', function() {
+  test('port', function() {
     const u = new URI('http://example.org/foo.html');
     u.port('80');
-    assertEqual(u.port(), '80', 'changing port 80');
-    assertEqual(u+'', 'http://example.org:80/foo.html', 'changing url 80');
+    equal(u.port(), '80', 'changing port 80');
+    equal(u+'', 'http://example.org:80/foo.html', 'changing url 80');
 
     u.port('');
-    assertEqual(u.port(), '', 'changing port ""');
-    assertEqual(u+'', 'http://example.org/foo.html', 'changing url ""');
+    equal(u.port(), '', 'changing port ""');
+    equal(u+'', 'http://example.org/foo.html', 'changing url ""');
   });
 
-  testFn('path', function() {
+  test('path', function() {
     const u = new URI('http://example.org/foobar.html?query=string');
     u.pathname('/some/path/file.suffix');
-    assertEqual(u.pathname(), '/some/path/file.suffix', 'changing pathname "/some/path/file.suffix"');
-    assertEqual(u+'', 'http://example.org/some/path/file.suffix?query=string', 'changing url "/some/path/file.suffix"');
+    equal(u.pathname(), '/some/path/file.suffix', 'changing pathname "/some/path/file.suffix"');
+    equal(u+'', 'http://example.org/some/path/file.suffix?query=string', 'changing url "/some/path/file.suffix"');
 
     u.pathname('');
-    assertEqual(u.pathname(), '/', 'changing pathname ""');
-    assertEqual(u+'', 'http://example.org/?query=string', 'changing url ""');
+    equal(u.pathname(), '/', 'changing pathname ""');
+    equal(u+'', 'http://example.org/?query=string', 'changing url ""');
 
     u.pathname('/~userhome/@mine;is %2F and/');
-    assertEqual(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
-    assertEqual(u.pathname(true), '/~userhome/@mine;is %2F and/', 'path decoded');
+    equal(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
+    equal(u.pathname(true), '/~userhome/@mine;is %2F and/', 'path decoded');
 
     let u2 = new URI('/a/b/c/').relativeTo('/a/b/c/');
-    assertEqual(u2.pathname(), '', 'empty relative path');
-    assertEqual(u2.toString(), '', 'empty relative path to string');
+    equal(u2.pathname(), '', 'empty relative path');
+    equal(u2.toString(), '', 'empty relative path to string');
 
     u2.pathname('/');
-    assertEqual(u2.pathname(), '/', 'empty absolute path');
-    assertEqual(u2.toString(), '/', 'empty absolute path to string');
+    equal(u2.pathname(), '/', 'empty absolute path');
+    equal(u2.toString(), '/', 'empty absolute path to string');
   });
 
-  testFn('URN paths', function() {
+  test('URN paths', function() {
     const u = new URI('urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66?foo=bar');
     u.pathname('uuid:de305d54-75b4-431b-adb2-eb6b9e546013');
-    assertEqual(u.pathname(), 'uuid:de305d54-75b4-431b-adb2-eb6b9e546013');
-    assertEqual(u + '', 'urn:uuid:de305d54-75b4-431b-adb2-eb6b9e546013?foo=bar');
+    equal(u.pathname(), 'uuid:de305d54-75b4-431b-adb2-eb6b9e546013');
+    equal(u + '', 'urn:uuid:de305d54-75b4-431b-adb2-eb6b9e546013?foo=bar');
 
     u.pathname('');
-    assertEqual(u.pathname(), '', 'changing pathname ""');
-    assertEqual(u+'', 'urn:?foo=bar', 'changing url ""');
+    equal(u.pathname(), '', 'changing pathname ""');
+    equal(u+'', 'urn:?foo=bar', 'changing url ""');
 
     u.pathname('music:classical:Béla Bártok%3a Concerto for Orchestra');
-    assertEqual(u.pathname(), 'music:classical:B%C3%A9la%20B%C3%A1rtok%3A%20Concerto%20for%20Orchestra', 'path encoding');
-    assertEqual(u.pathname(true), 'music:classical:Béla Bártok%3A Concerto for Orchestra', 'path decoded');
+    equal(u.pathname(), 'music:classical:B%C3%A9la%20B%C3%A1rtok%3A%20Concerto%20for%20Orchestra', 'path encoding');
+    equal(u.pathname(true), 'music:classical:Béla Bártok%3A Concerto for Orchestra', 'path decoded');
   });
 
-  testFn('query', function() {
+  test('query', function() {
     const u = new URI('http://example.org/foo.html');
     u.query('foo=bar=foo');
-    assertEqual(u.query(), 'foo=bar=foo', 'query: foo=bar=foo');
-    assertEqual(u.search(), '?foo=bar=foo', 'query: foo=bar=foo - search');
+    equal(u.query(), 'foo=bar=foo', 'query: foo=bar=foo');
+    equal(u.search(), '?foo=bar=foo', 'query: foo=bar=foo - search');
 
     u.query('?bar=foo');
-    assertEqual(u.query(), 'bar=foo', 'query: ?bar=foo');
-    assertEqual(u.search(), '?bar=foo', 'query: ?bar=foo - search');
+    equal(u.query(), 'bar=foo', 'query: ?bar=foo');
+    equal(u.search(), '?bar=foo', 'query: ?bar=foo - search');
 
     u.query('');
-    assertEqual(u.query(), '', 'query: ""');
-    assertEqual(u.search(), '', 'query: "" - search');
-    assertEqual(u.toString(), 'http://example.org/foo.html');
+    equal(u.query(), '', 'query: ""');
+    equal(u.search(), '', 'query: "" - search');
+    equal(u.toString(), 'http://example.org/foo.html');
 
     u.search('foo=bar=foo');
-    assertEqual(u.query(), 'foo=bar=foo', 'search: foo=bar=foo');
-    assertEqual(u.search(), '?foo=bar=foo', 'search: foo=bar=foo - query');
+    equal(u.query(), 'foo=bar=foo', 'search: foo=bar=foo');
+    equal(u.search(), '?foo=bar=foo', 'search: foo=bar=foo - query');
 
     u.search('?bar=foo');
-    assertEqual(u.query(), 'bar=foo', 'search: ?bar=foo');
-    assertEqual(u.search(), '?bar=foo', 'search: ?bar=foo - query');
+    equal(u.query(), 'bar=foo', 'search: ?bar=foo');
+    equal(u.search(), '?bar=foo', 'search: ?bar=foo - query');
 
     u.search('');
-    assertEqual(u.query(), '', 'search: ""');
-    assertEqual(u.search(), '', 'search: "" - query');
+    equal(u.query(), '', 'search: ""');
+    equal(u.search(), '', 'search: "" - query');
 
     u.query('?foo');
-    assertEqual(u.query(), 'foo', 'search: ""');
-    assertEqual(u.search(), '?foo', 'search: "" - query');
+    equal(u.query(), 'foo', 'search: ""');
+    equal(u.search(), '?foo', 'search: "" - query');
 
     u.search('foo=&foo=bar');
-    assertEqual(u.query(), 'foo=&foo=bar', 'search: foo=&foo=bar');
-    assertEqual(JSON.stringify(u.query(true)), JSON.stringify({foo: ['', 'bar']}), 'parsed query: {foo:["", "bar"]}');
+    equal(u.query(), 'foo=&foo=bar', 'search: foo=&foo=bar');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['', 'bar']}), 'parsed query: {foo:["", "bar"]}');
 
     u.search('foo=bar&foo=');
-    assertEqual(u.query(), 'foo=bar&foo=', 'search: foo=bar&foo=');
-    assertEqual(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', '']}), 'parsed query: {foo:["bar", ""]}');
+    equal(u.query(), 'foo=bar&foo=', 'search: foo=bar&foo=');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', '']}), 'parsed query: {foo:["bar", ""]}');
 
     u.search('foo=bar&foo');
-    assertEqual(u.query(), 'foo=bar&foo', 'search: foo=bar&foo');
-    assertEqual(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', null]}), 'parsed query: {foo:["bar", null]}');
+    equal(u.query(), 'foo=bar&foo', 'search: foo=bar&foo');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', null]}), 'parsed query: {foo:["bar", null]}');
 
     u.search('foo&foo=bar');
-    assertEqual(u.query(), 'foo&foo=bar', 'search: foo&foo=bar');
-    assertEqual(JSON.stringify(u.query(true)), JSON.stringify({foo: [null, 'bar']}), 'parsed query: {foo:[null, "bar"]}');
+    equal(u.query(), 'foo&foo=bar', 'search: foo&foo=bar');
+    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: [null, 'bar']}), 'parsed query: {foo:[null, "bar"]}');
 
     u.search('__proto__=hasOwnProperty&__proto__=eviltwin&uuid');
-    assertEqual(u.query(), '__proto__=hasOwnProperty&__proto__=eviltwin&uuid', 'search: __proto__=hasOwnProperty&__proto__=eviltwin&uuid');
-    assertEqual(JSON.stringify(u.query(true)), '{"uuid":null}', 'parsed query: {uuid: null}');
+    equal(u.query(), '__proto__=hasOwnProperty&__proto__=eviltwin&uuid', 'search: __proto__=hasOwnProperty&__proto__=eviltwin&uuid');
+    equal(JSON.stringify(u.query(true)), '{"uuid":null}', 'parsed query: {uuid: null}');
 
     // parsing empty query
     let t;
@@ -494,961 +494,961 @@ declare var SecondLevelDomains: any;
     t = u.href('http://example.org').query(true);
   });
 
-  testFn('fragment', function() {
+  test('fragment', function() {
     const u = new URI('http://example.org/foo.html');
     u.fragment('foo');
-    assertEqual(u.fragment(), 'foo', 'fragment: foo');
-    assertEqual(u.hash(), '#foo', 'fragment: foo - hash');
+    equal(u.fragment(), 'foo', 'fragment: foo');
+    equal(u.hash(), '#foo', 'fragment: foo - hash');
 
     u.fragment('#bar');
-    assertEqual(u.fragment(), 'bar', 'fragment: #bar');
-    assertEqual(u.hash(), '#bar', 'fragment: #bar - hash');
+    equal(u.fragment(), 'bar', 'fragment: #bar');
+    equal(u.hash(), '#bar', 'fragment: #bar - hash');
 
     u.fragment('');
-    assertEqual(u.fragment(), '', 'fragment: ""');
-    assertEqual(u.hash(), '', 'fragment: "" - hash');
-    assertEqual(u.toString(), 'http://example.org/foo.html');
+    equal(u.fragment(), '', 'fragment: ""');
+    equal(u.hash(), '', 'fragment: "" - hash');
+    equal(u.toString(), 'http://example.org/foo.html');
 
     u.hash('foo');
-    assertEqual(u.fragment(), 'foo', 'hash: foo');
-    assertEqual(u.hash(), '#foo', 'hash: foo - fragment');
+    equal(u.fragment(), 'foo', 'hash: foo');
+    equal(u.hash(), '#foo', 'hash: foo - fragment');
 
     u.hash('#bar');
-    assertEqual(u.fragment(), 'bar', 'hash: #bar');
-    assertEqual(u.hash(), '#bar', 'hash: #bar - fragment');
+    equal(u.fragment(), 'bar', 'hash: #bar');
+    equal(u.hash(), '#bar', 'hash: #bar - fragment');
 
     u.hash('');
-    assertEqual(u.fragment(), '', 'hash: ""');
-    assertEqual(u.hash(), '', 'hash: "" - fragment');
+    equal(u.fragment(), '', 'hash: ""');
+    equal(u.hash(), '', 'hash: "" - fragment');
   });
 
-  moduleFn('mutating compounds');
-  testFn('host', function() {
+  module('mutating compounds');
+  test('host', function() {
     const u = new URI('http://foo.bar/foo.html');
 
     u.host('example.org:80');
-    assertEqual(u.hostname(), 'example.org', 'host changed hostname');
-    assertEqual(u.port(), '80', 'host changed port');
-    assertEqual(u+'', 'http://example.org:80/foo.html', 'host changed url');
+    equal(u.hostname(), 'example.org', 'host changed hostname');
+    equal(u.port(), '80', 'host changed port');
+    equal(u+'', 'http://example.org:80/foo.html', 'host changed url');
 
     u.host('some-domain.com');
-    assertEqual(u.hostname(), 'some-domain.com', 'host modified hostname');
-    assertEqual(u.port(), '', 'host removed port');
-    assertEqual(u+'', 'http://some-domain.com/foo.html', 'host modified url');
+    equal(u.hostname(), 'some-domain.com', 'host modified hostname');
+    equal(u.port(), '', 'host removed port');
+    equal(u+'', 'http://some-domain.com/foo.html', 'host modified url');
 
     u.host('some_where.exa_mple.org:44');
-    assertEqual(u.hostname(), 'some_where.exa_mple.org', 'host modified hostname #2');
-    assertEqual(u.port(), '44', 'port restored');
-    assertEqual(u+'', 'http://some_where.exa_mple.org:44/foo.html', 'host modified url #2');
+    equal(u.hostname(), 'some_where.exa_mple.org', 'host modified hostname #2');
+    equal(u.port(), '44', 'port restored');
+    equal(u+'', 'http://some_where.exa_mple.org:44/foo.html', 'host modified url #2');
 
-    assertRaises(function() {
+    raises(function() {
       u.host('foo\\bar.com');
     }, TypeError, 'Failing backslash detection in host');
   });
 
-  testFn('origin', function () {
+  test('origin', function () {
     const u = new URI('http://foo.bar/foo.html');
-    assertEqual(u.origin(), 'http://foo.bar', 'invalid origin');
+    equal(u.origin(), 'http://foo.bar', 'invalid origin');
 
     u.origin('http://bar.foo/bar.html');
-    assertEqual(u.origin(), 'http://bar.foo', 'origin didnt change');
-    assertEqual(u+'', 'http://bar.foo/foo.html', 'origin path changed');
+    equal(u.origin(), 'http://bar.foo', 'origin didnt change');
+    equal(u+'', 'http://bar.foo/foo.html', 'origin path changed');
   });
 
-  testFn('authority', function() {
+  test('authority', function() {
     const u = new URI('http://foo.bar/foo.html');
 
     u.authority('username:password@example.org:80');
-    assertEqual(u.username(), 'username', 'authority changed username');
-    assertEqual(u.password(), 'password', 'authority changed password');
-    assertEqual(u.hostname(), 'example.org', 'authority changed hostname');
-    assertEqual(u.port(), '80', 'authority changed port');
-    assertEqual(u+'', 'http://username:password@example.org:80/foo.html', 'authority changed url');
+    equal(u.username(), 'username', 'authority changed username');
+    equal(u.password(), 'password', 'authority changed password');
+    equal(u.hostname(), 'example.org', 'authority changed hostname');
+    equal(u.port(), '80', 'authority changed port');
+    equal(u+'', 'http://username:password@example.org:80/foo.html', 'authority changed url');
 
     u.authority('some-domain.com');
-    assertEqual(u.username(), '', 'authority removed username');
-    assertEqual(u.password(), '', 'authority removed password');
-    assertEqual(u.hostname(), 'some-domain.com', 'authority modified hostname');
-    assertEqual(u.port(), '', 'authority removed port');
-    assertEqual(u+'', 'http://some-domain.com/foo.html', 'authority modified url');
+    equal(u.username(), '', 'authority removed username');
+    equal(u.password(), '', 'authority removed password');
+    equal(u.hostname(), 'some-domain.com', 'authority modified hostname');
+    equal(u.port(), '', 'authority removed port');
+    equal(u+'', 'http://some-domain.com/foo.html', 'authority modified url');
 
-    assertRaises(function() {
+    raises(function() {
       u.authority('username:password@foo\\bar.com:80');
     }, TypeError, 'Failing backslash detection in authority');
   });
 
-  testFn('userinfo', function() {
+  test('userinfo', function() {
     const u = new URI('http://foo.bar/foo.html');
 
     u.userinfo('username:password');
-    assertEqual(u.username(), 'username', 'userinfo changed username-only');
-    assertEqual(u.password(), 'password', 'userinfo changed password');
-    assertEqual(u+'', 'http://username:password@foo.bar/foo.html', 'userinfo changed url');
+    equal(u.username(), 'username', 'userinfo changed username-only');
+    equal(u.password(), 'password', 'userinfo changed password');
+    equal(u+'', 'http://username:password@foo.bar/foo.html', 'userinfo changed url');
 
     u.userinfo('walter');
-    assertEqual(u.username(), 'walter', 'userinfo removed password');
-    assertEqual(u.password(), '', 'userinfo removed password');
-    assertEqual(u+'', 'http://walter@foo.bar/foo.html', 'userinfo changed url');
+    equal(u.username(), 'walter', 'userinfo removed password');
+    equal(u.password(), '', 'userinfo removed password');
+    equal(u+'', 'http://walter@foo.bar/foo.html', 'userinfo changed url');
 
     u.userinfo('');
-    assertEqual(u.username(), '', 'userinfo removed username');
-    assertEqual(u.password(), '', 'userinfo removed password');
-    assertEqual(u+'', 'http://foo.bar/foo.html', 'userinfo changed url');
+    equal(u.username(), '', 'userinfo removed username');
+    equal(u.password(), '', 'userinfo removed password');
+    equal(u+'', 'http://foo.bar/foo.html', 'userinfo changed url');
   });
 
-  testFn('href', function() {
+  test('href', function() {
     const u = new URI('http://foo.bar/foo.html');
 
     u.href('ftp://u:p@example.org:123/directory/file.suffix?query=string#fragment');
-    assertEqual(u.protocol(), 'ftp', 'href changed protocol');
-    assertEqual(u.username(), 'u', 'href changed username');
-    assertEqual(u.password(), 'p', 'href changed password');
-    assertEqual(u.hostname(), 'example.org', 'href changed hostname');
-    assertEqual(u.port(), '123', 'href changed port');
-    assertEqual(u.pathname(), '/directory/file.suffix', 'href changed pathname');
-    assertEqual(u.search(), '?query=string', 'href changed search');
-    assertEqual(u.hash(), '#fragment', 'href changed hash');
-    assertEqual(u.href(), 'ftp://u:p@example.org:123/directory/file.suffix?query=string#fragment', 'href removed url');
+    equal(u.protocol(), 'ftp', 'href changed protocol');
+    equal(u.username(), 'u', 'href changed username');
+    equal(u.password(), 'p', 'href changed password');
+    equal(u.hostname(), 'example.org', 'href changed hostname');
+    equal(u.port(), '123', 'href changed port');
+    equal(u.pathname(), '/directory/file.suffix', 'href changed pathname');
+    equal(u.search(), '?query=string', 'href changed search');
+    equal(u.hash(), '#fragment', 'href changed hash');
+    equal(u.href(), 'ftp://u:p@example.org:123/directory/file.suffix?query=string#fragment', 'href removed url');
 
     u.href('../path/index.html');
-    assertEqual(u.protocol(), '', 'href removed protocol');
-    assertEqual(u.username(), '', 'href removed username');
-    assertEqual(u.password(), '', 'href removed password');
-    assertEqual(u.hostname(), '', 'href removed hostname');
-    assertEqual(u.port(), '', 'href removed port');
-    assertEqual(u.pathname(), '../path/index.html', 'href removed pathname');
-    assertEqual(u.search(), '', 'href removed search');
-    assertEqual(u.hash(), '', 'href removed hash');
-    assertEqual(u.href(), '../path/index.html', 'href removed url');
+    equal(u.protocol(), '', 'href removed protocol');
+    equal(u.username(), '', 'href removed username');
+    equal(u.password(), '', 'href removed password');
+    equal(u.hostname(), '', 'href removed hostname');
+    equal(u.port(), '', 'href removed port');
+    equal(u.pathname(), '../path/index.html', 'href removed pathname');
+    equal(u.search(), '', 'href removed search');
+    equal(u.hash(), '', 'href removed hash');
+    equal(u.href(), '../path/index.html', 'href removed url');
 
     /*jshint -W053 */
     u.href(new String('/narf') as any);
     /*jshint +W053 */
-    assertEqual(u.pathname(), '/narf', 'href from String instance');
+    equal(u.pathname(), '/narf', 'href from String instance');
   });
 
-  testFn('resource', function() {
+  test('resource', function() {
     const u = new URI('http://foo.bar/foo.html?hello#world');
 
-    assertEqual(u.resource(), '/foo.html?hello#world', 'get resource');
+    equal(u.resource(), '/foo.html?hello#world', 'get resource');
 
     u.resource('/foo.html?hello#world');
-    assertEqual(u.href(), 'http://foo.bar/foo.html?hello#world', 'set resource');
+    equal(u.href(), 'http://foo.bar/foo.html?hello#world', 'set resource');
 
     u.resource('/world.html');
-    assertEqual(u.href(), 'http://foo.bar/world.html', 'set resource path');
-    assertEqual(u.resource(), '/world.html', 'get resource path');
+    equal(u.href(), 'http://foo.bar/world.html', 'set resource path');
+    equal(u.resource(), '/world.html', 'get resource path');
 
     u.resource('?query');
-    assertEqual(u.href(), 'http://foo.bar/?query', 'set resource query');
-    assertEqual(u.resource(), '/?query', 'get resource query');
+    equal(u.href(), 'http://foo.bar/?query', 'set resource query');
+    equal(u.resource(), '/?query', 'get resource query');
 
     u.resource('#fragment');
-    assertEqual(u.href(), 'http://foo.bar/#fragment', 'set resource fragment');
-    assertEqual(u.resource(), '/#fragment', 'get resource fragment');
+    equal(u.href(), 'http://foo.bar/#fragment', 'set resource fragment');
+    equal(u.resource(), '/#fragment', 'get resource fragment');
 
     u.resource('?hello#world');
-    assertEqual(u.href(), 'http://foo.bar/?hello#world', 'set resource query+fragment');
-    assertEqual(u.resource(), '/?hello#world', 'get resource query+fragment');
+    equal(u.href(), 'http://foo.bar/?hello#world', 'set resource query+fragment');
+    equal(u.resource(), '/?hello#world', 'get resource query+fragment');
 
     u.resource('/mars.txt?planet=123');
-    assertEqual(u.href(), 'http://foo.bar/mars.txt?planet=123', 'set resource path+query');
-    assertEqual(u.resource(), '/mars.txt?planet=123', 'get resource path+query');
+    equal(u.href(), 'http://foo.bar/mars.txt?planet=123', 'set resource path+query');
+    equal(u.resource(), '/mars.txt?planet=123', 'get resource path+query');
 
     u.resource('/neptune.txt#foo');
-    assertEqual(u.href(), 'http://foo.bar/neptune.txt#foo', 'set resource path+fragment');
-    assertEqual(u.resource(), '/neptune.txt#foo', 'get resource path+fragment');
+    equal(u.href(), 'http://foo.bar/neptune.txt#foo', 'set resource path+fragment');
+    equal(u.resource(), '/neptune.txt#foo', 'get resource path+fragment');
   });
 
-  moduleFn('mutating fractions');
-  testFn('subdomain', function() {
+  module('mutating fractions');
+  test('subdomain', function() {
     const u = new URI('http://www.example.org/foo.html');
     u.subdomain('foo.bar');
-    assertEqual(u.hostname(), 'foo.bar.example.org', 'changed subdomain foo.bar');
-    assertEqual(u+'', 'http://foo.bar.example.org/foo.html', 'changed url foo.bar');
+    equal(u.hostname(), 'foo.bar.example.org', 'changed subdomain foo.bar');
+    equal(u+'', 'http://foo.bar.example.org/foo.html', 'changed url foo.bar');
 
     u.subdomain('');
-    assertEqual(u.hostname(), 'example.org', 'changed subdomain ""');
-    assertEqual(u+'', 'http://example.org/foo.html', 'changed url ""');
+    equal(u.hostname(), 'example.org', 'changed subdomain ""');
+    equal(u+'', 'http://example.org/foo.html', 'changed url ""');
 
     u.subdomain('foo.');
-    assertEqual(u.hostname(), 'foo.example.org', 'changed subdomain foo.');
-    assertEqual(u+'', 'http://foo.example.org/foo.html', 'changed url foo.');
+    equal(u.hostname(), 'foo.example.org', 'changed subdomain foo.');
+    equal(u+'', 'http://foo.example.org/foo.html', 'changed url foo.');
 
     u.subdomain('foo_bar');
-    assertEqual(u.hostname(), 'foo_bar.example.org', 'changed subdomain foo_bar');
-    assertEqual(u+'', 'http://foo_bar.example.org/foo.html', 'changed url foo_bar');
+    equal(u.hostname(), 'foo_bar.example.org', 'changed subdomain foo_bar');
+    equal(u+'', 'http://foo_bar.example.org/foo.html', 'changed url foo_bar');
   });
 
-  testFn('domain', function() {
+  test('domain', function() {
     const u = new URI('http://www.example.org/foo.html');
     u.domain('foo.bar');
-    assertEqual(u.hostname(), 'www.foo.bar', 'changed hostname foo.bar');
-    assertEqual(u+'', 'http://www.foo.bar/foo.html', 'changed url foo.bar');
+    equal(u.hostname(), 'www.foo.bar', 'changed hostname foo.bar');
+    equal(u+'', 'http://www.foo.bar/foo.html', 'changed url foo.bar');
 
-    assertRaises(function() {
+    raises(function() {
       u.domain('');
     }, TypeError, 'Failing empty input');
 
     u.hostname('www.example.co.uk');
-    assertEqual(u.domain(), 'example.co.uk', 'domain after changed hostname www.example.co.uk');
-    assertEqual(u+'', 'http://www.example.co.uk/foo.html', 'url after changed hostname www.example.co.uk');
-    assertEqual(u.domain(true), 'co.uk', 'domain after changed hostname www.example.co.uk (TLD of SLD)');
+    equal(u.domain(), 'example.co.uk', 'domain after changed hostname www.example.co.uk');
+    equal(u+'', 'http://www.example.co.uk/foo.html', 'url after changed hostname www.example.co.uk');
+    equal(u.domain(true), 'co.uk', 'domain after changed hostname www.example.co.uk (TLD of SLD)');
 
     u.domain('example.org');
-    assertEqual(u.domain(), 'example.org', 'domain after changed domain example.org');
-    assertEqual(u+'', 'http://www.example.org/foo.html', 'url after changed domain example.org');
+    equal(u.domain(), 'example.org', 'domain after changed domain example.org');
+    equal(u+'', 'http://www.example.org/foo.html', 'url after changed domain example.org');
 
     u.domain('example.co.uk');
-    assertEqual(u.domain(), 'example.co.uk', 'domain after changed domain example.co.uk');
-    assertEqual(u+'', 'http://www.example.co.uk/foo.html', 'url after changed domain example.co.uk');
+    equal(u.domain(), 'example.co.uk', 'domain after changed domain example.co.uk');
+    equal(u+'', 'http://www.example.co.uk/foo.html', 'url after changed domain example.co.uk');
 
     u.href('http://test/');
-    assertEqual(u.domain(), 'test', 'domain (dot-less)');
-    assertEqual(u.subdomain(), '', 'subdomain (dot-less)');
+    equal(u.domain(), 'test', 'domain (dot-less)');
+    equal(u.subdomain(), '', 'subdomain (dot-less)');
 
     u.subdomain('foo');
-    assertEqual(u.href(), 'http://foo.test/', 'subdomain set on (dot-less)');
+    equal(u.href(), 'http://foo.test/', 'subdomain set on (dot-less)');
 
     u.subdomain('bar');
-    assertEqual(u.href(), 'http://bar.foo.test/', 'subdomain set on foo.test');
+    equal(u.href(), 'http://bar.foo.test/', 'subdomain set on foo.test');
 
     u.domain('exam_ple.org');
-    assertEqual(u.domain(), 'exam_ple.org', 'domain after changed domain exam_ple.org');
-    assertEqual(u+'', 'http://bar.exam_ple.org/', 'url after changed domain exam_ple.org');
+    equal(u.domain(), 'exam_ple.org', 'domain after changed domain exam_ple.org');
+    equal(u+'', 'http://bar.exam_ple.org/', 'url after changed domain exam_ple.org');
   });
 
-  testFn('tld', function() {
+  test('tld', function() {
     const u = new URI('http://www.example.org/foo.html');
     u.tld('mine');
-    assertEqual(u.tld(), 'mine', 'tld changed');
-    assertEqual(u+'', 'http://www.example.mine/foo.html', 'changed url mine');
+    equal(u.tld(), 'mine', 'tld changed');
+    equal(u+'', 'http://www.example.mine/foo.html', 'changed url mine');
 
-    assertRaises(function() {
+    raises(function() {
       u.tld('');
     }, TypeError, 'Failing empty input');
 
-    assertRaises(function() {
+    raises(function() {
       u.tld('foo.bar');
     }, TypeError, 'Failing "foo.bar"');
 
     u.tld('co.uk');
-    assertEqual(u.tld(), 'co.uk', 'tld changed to sld');
-    assertEqual(u+'', 'http://www.example.co.uk/foo.html', 'changed url to sld');
-    assertEqual(u.tld(true), 'uk', 'TLD of SLD');
+    equal(u.tld(), 'co.uk', 'tld changed to sld');
+    equal(u+'', 'http://www.example.co.uk/foo.html', 'changed url to sld');
+    equal(u.tld(true), 'uk', 'TLD of SLD');
 
     u.tld('org');
-    assertEqual(u.tld(), 'org', 'sld changed to tld');
-    assertEqual(u+'', 'http://www.example.org/foo.html', 'changed url to tld');
+    equal(u.tld(), 'org', 'sld changed to tld');
+    equal(u+'', 'http://www.example.org/foo.html', 'changed url to tld');
 
     u.hostname('www.examplet.se');
-    assertEqual(u.tld(), 'se', 'se tld');
+    equal(u.tld(), 'se', 'se tld');
   });
 
-  testFn('sld', function() {
+  test('sld', function() {
     let u = new URI('http://www.example.ch/foo.html');
-    assertEqual(u.is('sld'), false, 'is() www.example.ch');
-    assertEqual(u.domain(), 'example.ch', 'domain() www.example.ch');
-    assertEqual(u.subdomain(), 'www', 'subdomain() www.example.ch');
+    equal(u.is('sld'), false, 'is() www.example.ch');
+    equal(u.domain(), 'example.ch', 'domain() www.example.ch');
+    equal(u.subdomain(), 'www', 'subdomain() www.example.ch');
 
     u = new URI('http://www.example.com/foo.html');
-    assertEqual(u.is('sld'), false, 'is() www.example.com');
-    assertEqual(u.domain(), 'example.com', 'domain() www.example.com');
-    assertEqual(u.subdomain(), 'www', 'subdomain() www.example.com');
+    equal(u.is('sld'), false, 'is() www.example.com');
+    equal(u.domain(), 'example.com', 'domain() www.example.com');
+    equal(u.subdomain(), 'www', 'subdomain() www.example.com');
 
     u = new URI('http://www.example.eu.com/foo.html');
-    assertEqual(u.is('sld'), true, 'is() www.example.eu.com');
-    assertEqual(u.domain(), 'example.eu.com', 'domain() www.example.eu.com');
-    assertEqual(u.subdomain(), 'www', 'subdomain() www.example.eu.com');
+    equal(u.is('sld'), true, 'is() www.example.eu.com');
+    equal(u.domain(), 'example.eu.com', 'domain() www.example.eu.com');
+    equal(u.subdomain(), 'www', 'subdomain() www.example.eu.com');
   });
 
-  testFn('directory', function() {
+  test('directory', function() {
     let u = new URI('http://www.example.org/some/directory/foo.html');
     u.directory('/');
-    assertEqual(u.path(), '/foo.html', 'changed path \'/\'');
-    assertEqual(u+'', 'http://www.example.org/foo.html', 'changed url \'/\'');
+    equal(u.path(), '/foo.html', 'changed path \'/\'');
+    equal(u+'', 'http://www.example.org/foo.html', 'changed url \'/\'');
 
     u.directory('');
-    assertEqual(u.path(), '/foo.html', 'changed path ""');
-    assertEqual(u+'', 'http://www.example.org/foo.html', 'changed url ""');
+    equal(u.path(), '/foo.html', 'changed path ""');
+    equal(u+'', 'http://www.example.org/foo.html', 'changed url ""');
 
     u.directory('/bar');
-    assertEqual(u.path(), '/bar/foo.html', 'changed path "/bar"');
-    assertEqual(u+'', 'http://www.example.org/bar/foo.html', 'changed url "/bar"');
+    equal(u.path(), '/bar/foo.html', 'changed path "/bar"');
+    equal(u+'', 'http://www.example.org/bar/foo.html', 'changed url "/bar"');
 
     u.directory('baz');
-    assertEqual(u.path(), '/baz/foo.html', 'changed path "baz"');
-    assertEqual(u+'', 'http://www.example.org/baz/foo.html', 'changed url "baz"');
+    equal(u.path(), '/baz/foo.html', 'changed path "baz"');
+    equal(u+'', 'http://www.example.org/baz/foo.html', 'changed url "baz"');
 
     // relative paths
     u = new URI('../some/directory/foo.html');
     u.directory('../other/');
-    assertEqual(u.path(), '../other/foo.html', 'changed path "../other/"');
-    assertEqual(u+'', '../other/foo.html', 'changed url "../other/"');
+    equal(u.path(), '../other/foo.html', 'changed path "../other/"');
+    equal(u+'', '../other/foo.html', 'changed url "../other/"');
 
     u.directory('mine');
-    assertEqual(u.path(), 'mine/foo.html', 'changed path "mine"');
-    assertEqual(u+'', 'mine/foo.html', 'changed url "mine"');
+    equal(u.path(), 'mine/foo.html', 'changed path "mine"');
+    equal(u+'', 'mine/foo.html', 'changed url "mine"');
 
     u.directory('/');
-    assertEqual(u.path(), '/foo.html', 'changed path "/"');
-    assertEqual(u+'', '/foo.html', 'changed url "/"');
+    equal(u.path(), '/foo.html', 'changed path "/"');
+    equal(u+'', '/foo.html', 'changed url "/"');
 
     u.directory('');
-    assertEqual(u.path(), 'foo.html', 'changed path ""');
-    assertEqual(u+'', 'foo.html', 'changed url ""');
+    equal(u.path(), 'foo.html', 'changed path ""');
+    equal(u+'', 'foo.html', 'changed url ""');
 
     u.directory('../blubb');
-    assertEqual(u.path(), '../blubb/foo.html', 'changed path "../blubb"');
-    assertEqual(u+'', '../blubb/foo.html', 'changed url "../blubb"');
+    equal(u.path(), '../blubb/foo.html', 'changed path "../blubb"');
+    equal(u+'', '../blubb/foo.html', 'changed url "../blubb"');
 
     // encoding
     u.path('/some/directory/foo.html');
     u.directory('/~userhome/@mine;is %2F and/');
-    assertEqual(u.path(), '/~userhome/@mine;is%20%2F%20and/foo.html', 'directory encoding');
-    assertEqual(u.directory(true), '/~userhome/@mine;is %2F and', 'directory decoded');
+    equal(u.path(), '/~userhome/@mine;is%20%2F%20and/foo.html', 'directory encoding');
+    equal(u.directory(true), '/~userhome/@mine;is %2F and', 'directory decoded');
   });
 
-  testFn('filename', function() {
+  test('filename', function() {
     const u = new URI('http://www.example.org/some/directory/foo.html');
     u.filename('hello.world');
-    assertEqual(u.path(), '/some/directory/hello.world', 'changed path "hello.world"');
-    assertEqual(u+'', 'http://www.example.org/some/directory/hello.world', 'changed url "hello.world"');
+    equal(u.path(), '/some/directory/hello.world', 'changed path "hello.world"');
+    equal(u+'', 'http://www.example.org/some/directory/hello.world', 'changed url "hello.world"');
 
     u.filename('hello');
-    assertEqual(u.path(), '/some/directory/hello', 'changed path "hello"');
-    assertEqual(u+'', 'http://www.example.org/some/directory/hello', 'changed url "hello"');
+    equal(u.path(), '/some/directory/hello', 'changed path "hello"');
+    equal(u+'', 'http://www.example.org/some/directory/hello', 'changed url "hello"');
 
     u.filename('');
-    assertEqual(u.path(), '/some/directory/', 'changed path ""');
-    assertEqual(u+'', 'http://www.example.org/some/directory/', 'changed url ""');
+    equal(u.path(), '/some/directory/', 'changed path ""');
+    equal(u+'', 'http://www.example.org/some/directory/', 'changed url ""');
 
     u.filename('world');
-    assertEqual(u.path(), '/some/directory/world', 'changed path "world"');
-    assertEqual(u+'', 'http://www.example.org/some/directory/world', 'changed url "world"');
+    equal(u.path(), '/some/directory/world', 'changed path "world"');
+    equal(u+'', 'http://www.example.org/some/directory/world', 'changed url "world"');
 
     // encoding
     u.path('/some/directory/foo.html');
     u.filename('hällo wörld.html');
-    assertEqual(u.path(), '/some/directory/h%C3%A4llo%20w%C3%B6rld.html', 'filename encoding');
-    assertEqual(u.filename(true), 'hällo wörld.html', 'filename decoded');
+    equal(u.path(), '/some/directory/h%C3%A4llo%20w%C3%B6rld.html', 'filename encoding');
+    equal(u.filename(true), 'hällo wörld.html', 'filename decoded');
   });
 
-  testFn('suffix', function() {
+  test('suffix', function() {
     const u = new URI('http://www.example.org/some/directory/foo.html');
     u.suffix('xml');
-    assertEqual(u.path(), '/some/directory/foo.xml', 'changed path "xml"');
-    assertEqual(u+'', 'http://www.example.org/some/directory/foo.xml', 'changed url "xml"');
+    equal(u.path(), '/some/directory/foo.xml', 'changed path "xml"');
+    equal(u+'', 'http://www.example.org/some/directory/foo.xml', 'changed url "xml"');
 
     u.suffix('');
-    assertEqual(u.path(), '/some/directory/foo', 'changed path ""');
-    assertEqual(u+'', 'http://www.example.org/some/directory/foo', 'changed url ""');
+    equal(u.path(), '/some/directory/foo', 'changed path ""');
+    equal(u+'', 'http://www.example.org/some/directory/foo', 'changed url ""');
 
     u.suffix('html');
-    assertEqual(u.path(), '/some/directory/foo.html', 'changed path "html"');
-    assertEqual(u+'', 'http://www.example.org/some/directory/foo.html', 'changed url "html"');
+    equal(u.path(), '/some/directory/foo.html', 'changed path "html"');
+    equal(u+'', 'http://www.example.org/some/directory/foo.html', 'changed url "html"');
 
     // encoding
     u.suffix('cört');
-    assertEqual(u.path(), '/some/directory/foo.c%C3%B6rt', 'suffix encoding');
-    assertEqual(u.suffix(), 'c%C3%B6rt', 'suffix encoded'); // suffix is expected to be alnum!
-    assertEqual(u.suffix(true), 'cört', 'suffix decoded'); // suffix is expected to be alnum!
+    equal(u.path(), '/some/directory/foo.c%C3%B6rt', 'suffix encoding');
+    equal(u.suffix(), 'c%C3%B6rt', 'suffix encoded'); // suffix is expected to be alnum!
+    equal(u.suffix(true), 'cört', 'suffix decoded'); // suffix is expected to be alnum!
   });
 
-  testFn('segment', function() {
+  test('segment', function() {
     let u = new URI('http://www.example.org/some/directory/foo.html');
     const s = u.segment();
 
-    assertEqual(s.join('||'), 'some||directory||foo.html', 'segment get array');
+    equal(s.join('||'), 'some||directory||foo.html', 'segment get array');
 
     u.segment(['hello', 'world', 'foo.html']);
-    assertEqual(u.path(), '/hello/world/foo.html', 'segment set array');
+    equal(u.path(), '/hello/world/foo.html', 'segment set array');
 
-    assertEqual(u.segment(0), 'hello', 'segment get 0');
-    assertEqual(u.segment(2), 'foo.html', 'segment get 2');
-    assertEqual(u.segment(3), undefined, 'segment get 3');
+    equal(u.segment(0), 'hello', 'segment get 0');
+    equal(u.segment(2), 'foo.html', 'segment get 2');
+    equal(u.segment(3), undefined, 'segment get 3');
 
     u.segment(0, 'goodbye');
-    assertEqual(u.path(), '/goodbye/world/foo.html', 'segment set 0');
+    equal(u.path(), '/goodbye/world/foo.html', 'segment set 0');
     u.segment(2, 'bar.html');
-    assertEqual(u.path(), '/goodbye/world/bar.html', 'segment set 2');
+    equal(u.path(), '/goodbye/world/bar.html', 'segment set 2');
     u.segment(3, 'zupp');
-    assertEqual(u.path(), '/goodbye/world/bar.html/zupp', 'segment set 3');
+    equal(u.path(), '/goodbye/world/bar.html/zupp', 'segment set 3');
     u.segment('zapp');
-    assertEqual(u.path(), '/goodbye/world/bar.html/zupp/zapp', 'segment append');
+    equal(u.path(), '/goodbye/world/bar.html/zupp/zapp', 'segment append');
 
     u.segment(3, '');
-    assertEqual(u.path(), '/goodbye/world/bar.html/zapp', 'segment del 3 ""');
+    equal(u.path(), '/goodbye/world/bar.html/zapp', 'segment del 3 ""');
     u.segment(3, null as any);
-    assertEqual(u.path(), '/goodbye/world/bar.html', 'segment del 3 null');
+    equal(u.path(), '/goodbye/world/bar.html', 'segment del 3 null');
 
     u = new URI('http://www.example.org/some/directory/foo.html');
-    assertEqual(u.segment(-1), 'foo.html', 'segment get -1');
+    equal(u.segment(-1), 'foo.html', 'segment get -1');
     u.segment(-1, 'world.html');
-    assertEqual(u.path(), '/some/directory/world.html', 'segment set -1');
+    equal(u.path(), '/some/directory/world.html', 'segment set -1');
 
     u = new URI('someurn:foo:bar:baz');
-    assertEqual(u.segment().join('||'), 'foo||bar||baz', 'segment get array URN');
+    equal(u.segment().join('||'), 'foo||bar||baz', 'segment get array URN');
     u.segment(1, 'mars');
-    assertEqual(u.path(), 'foo:mars:baz', 'segment set 1 URN');
-    assertEqual(u.toString(), 'someurn:foo:mars:baz', 'segment set 1 URN');
+    equal(u.path(), 'foo:mars:baz', 'segment set 1 URN');
+    equal(u.toString(), 'someurn:foo:mars:baz', 'segment set 1 URN');
 
     u = new URI('/foo/');
-    assertEqual(u.segment().join('||'), 'foo||', 'segment get array trailing empty');
+    equal(u.segment().join('||'), 'foo||', 'segment get array trailing empty');
 
     u.segment('test');
-    assertEqual(u.path(), '/foo/test', 'segment append trailing empty');
+    equal(u.path(), '/foo/test', 'segment append trailing empty');
 
     u.segment('');
-    assertEqual(u.path(), '/foo/test/', 'segment append empty trailing');
+    equal(u.path(), '/foo/test/', 'segment append empty trailing');
     u.segment('');
-    assertEqual(u.path(), '/foo/test/', 'segment append empty trailing unchanged');
+    equal(u.path(), '/foo/test/', 'segment append empty trailing unchanged');
 
     u.segment(['', '', 'foo', '', '', 'bar', '', '']);
-    assertEqual(u.path(), '/foo/bar/', 'segment collapsing empty parts');
+    equal(u.path(), '/foo/bar/', 'segment collapsing empty parts');
 
     u = new URI('https://google.com');
     u.segment('//font.ttf//');
-    assertEqual(u.path(), '/font.ttf', 'segment removes trailing and leading slashes');
+    equal(u.path(), '/font.ttf', 'segment removes trailing and leading slashes');
 
     u.segment(['/hello', '/world/', '//foo.html']);
-    assertEqual(u.path(), '/hello/world/foo.html', 'segment set array trimming slashes');
+    equal(u.path(), '/hello/world/foo.html', 'segment set array trimming slashes');
 
     u.segment(1, '/mars/');
-    assertEqual(u.path(), '/hello/mars/foo.html', 'segment set index trimming slashes');
+    equal(u.path(), '/hello/mars/foo.html', 'segment set index trimming slashes');
   });
 
-  testFn('segmentCoded', function() {
+  test('segmentCoded', function() {
     let u = new URI('http://www.example.org/some%20thing/directory/foo.html');
     const s = u.segmentCoded();
 
-    assertEqual(s.join('||'), 'some thing||directory||foo.html', 'segmentCoded get array');
+    equal(s.join('||'), 'some thing||directory||foo.html', 'segmentCoded get array');
 
     u.segmentCoded(['hello/world']);
-    assertEqual(u.path(), '/hello%2Fworld', 'escape in array');
+    equal(u.path(), '/hello%2Fworld', 'escape in array');
 
     u.segmentCoded('hello/world');
-    assertEqual(u.path(), '/hello%2Fworld/hello%2Fworld', 'escape appended value');
+    equal(u.path(), '/hello%2Fworld/hello%2Fworld', 'escape appended value');
 
     u.segmentCoded(['hello world', 'mars', 'foo.html']);
-    assertEqual(u.path(), '/hello%20world/mars/foo.html', 'segmentCoded set array');
+    equal(u.path(), '/hello%20world/mars/foo.html', 'segmentCoded set array');
 
-    assertEqual(u.segmentCoded(0), 'hello world', 'segmentCoded get 0');
-    assertEqual(u.segmentCoded(2), 'foo.html', 'segmentCoded get 2');
-    assertEqual(u.segmentCoded(3), undefined, 'segmentCoded get 3');
+    equal(u.segmentCoded(0), 'hello world', 'segmentCoded get 0');
+    equal(u.segmentCoded(2), 'foo.html', 'segmentCoded get 2');
+    equal(u.segmentCoded(3), undefined, 'segmentCoded get 3');
 
     u.segmentCoded('zapp zerapp');
-    assertEqual(u.path(), '/hello%20world/mars/foo.html/zapp%20zerapp', 'segmentCoded append');
+    equal(u.path(), '/hello%20world/mars/foo.html/zapp%20zerapp', 'segmentCoded append');
 
     u.segmentCoded(2, '');
-    assertEqual(u.path(), '/hello%20world/mars/zapp%20zerapp', 'segmentCoded del 3 ""');
+    equal(u.path(), '/hello%20world/mars/zapp%20zerapp', 'segmentCoded del 3 ""');
     u.segmentCoded(2, null as any);
-    assertEqual(u.path(), '/hello%20world/mars', 'segmentCoded del 3 null');
+    equal(u.path(), '/hello%20world/mars', 'segmentCoded del 3 null');
 
     u.segmentCoded('');
-    assertEqual(u.path(), '/hello%20world/mars/', 'segmentCoded append empty trailing');
+    equal(u.path(), '/hello%20world/mars/', 'segmentCoded append empty trailing');
     u.segmentCoded('');
-    assertEqual(u.path(), '/hello%20world/mars/', 'segmentCoded append empty trailing unchanged');
+    equal(u.path(), '/hello%20world/mars/', 'segmentCoded append empty trailing unchanged');
   });
 
-  moduleFn('mutating query strings');
-  testFn('mutating object', function() {
+  module('mutating query strings');
+  test('mutating object', function() {
     const u = new URI('?foo=bar&baz=bam&baz=bau');
     const q = u.query(true);
 
     (q as any).something = ['new', 'and', 'funky'];
     u.query(q);
-    assertEqual(u.query(), 'foo=bar&baz=bam&baz=bau&something=new&something=and&something=funky', 'adding array');
+    equal(u.query(), 'foo=bar&baz=bam&baz=bau&something=new&something=and&something=funky', 'adding array');
 
     (q as any).foo = undefined;
     u.query(q);
-    assertEqual(u.query(), 'baz=bam&baz=bau&something=new&something=and&something=funky', 'removing field');
+    equal(u.query(), 'baz=bam&baz=bau&something=new&something=and&something=funky', 'removing field');
 
     (q as any).baz = undefined;
     u.query(q);
-    assertEqual(u.query(), 'something=new&something=and&something=funky', 'removing array');
+    equal(u.query(), 'something=new&something=and&something=funky', 'removing array');
   });
 
-  testFn('query callback', function() {
+  test('query callback', function() {
     const u = URI('?foo=bar');
     u.query(function(data: any) {
       data.foo = 'bam';
     });
-    assertEqual(u.query(), 'foo=bam', 'augment argument');
+    equal(u.query(), 'foo=bam', 'augment argument');
 
     u.query(function() {
       return {
         bla: 'blubb'
       };
     });
-    assertEqual(u.query(), 'bla=blubb', 'overwrite returned value');
+    equal(u.query(), 'bla=blubb', 'overwrite returned value');
   });
 
-  testFn('setQuery', function() {
+  test('setQuery', function() {
     const u = URI('?foo=bar');
     u.setQuery('foo', 'bam');
-    assertEqual(u.query(), 'foo=bam', 'set name, value');
+    equal(u.query(), 'foo=bam', 'set name, value');
 
     u.setQuery('array', ['one', 'two']);
-    assertEqual(u.query(), 'foo=bam&array=one&array=two', 'set name, array');
+    equal(u.query(), 'foo=bam&array=one&array=two', 'set name, array');
 
     u.query('?foo=bar');
     u.setQuery({'obj': 'bam', foo: 'baz'});
-    assertEqual(u.query(), 'foo=baz&obj=bam', 'set {name: value}');
+    equal(u.query(), 'foo=baz&obj=bam', 'set {name: value}');
 
     u.setQuery({'foo': 'foo', bar: ['1', '2']});
-    assertEqual(u.query(), 'foo=foo&obj=bam&bar=1&bar=2', 'set {name: array}');
+    equal(u.query(), 'foo=foo&obj=bam&bar=1&bar=2', 'set {name: array}');
 
     u.query('?foo=bar');
     u.setQuery({'bam': null, 'baz': ''});
-    assertEqual(u.query(), 'foo=bar&bam&baz=', 'set {name: null}');
+    equal(u.query(), 'foo=bar&bam&baz=', 'set {name: null}');
 
     u.query('?foo=bar');
     u.setQuery('empty');
-    assertEqual(u.query(), 'foo=bar&empty', 'set undefined');
+    equal(u.query(), 'foo=bar&empty', 'set undefined');
 
     u.query('?foo=bar');
     u.setQuery('empty', '');
-    assertEqual(u.query(), 'foo=bar&empty=', 'set empty string');
+    equal(u.query(), 'foo=bar&empty=', 'set empty string');
 
     u.query('');
     u.setQuery('some value', 'must be encoded because of = and ? and #');
-    assertEqual(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    assertEqual((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
+    equal((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
 
     u.query('?foo=bar');
     u.setQuery('__proto__', 'hasOwnProperty');
-    assertEqual(u.query(), 'foo=bar', 'set __proto__');
+    equal(u.query(), 'foo=bar', 'set __proto__');
   });
 
-  testFn('addQuery', function() {
+  test('addQuery', function() {
     const u = URI('?foo=bar');
     u.addQuery('baz', 'bam');
-    assertEqual(u.query(), 'foo=bar&baz=bam', 'add name, value');
+    equal(u.query(), 'foo=bar&baz=bam', 'add name, value');
 
     u.addQuery('array', ['one', 'two']);
-    assertEqual(u.query(), 'foo=bar&baz=bam&array=one&array=two', 'add name, array');
+    equal(u.query(), 'foo=bar&baz=bam&array=one&array=two', 'add name, array');
 
     u.query('?foo=bar');
     u.addQuery({'obj': 'bam', foo: 'baz'});
-    assertEqual(u.query(), 'foo=bar&foo=baz&obj=bam', 'add {name: value}');
+    equal(u.query(), 'foo=bar&foo=baz&obj=bam', 'add {name: value}');
 
     u.addQuery({'foo': 'bam', bar: ['1', '2']});
-    assertEqual(u.query(), 'foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2', 'add {name: array}');
+    equal(u.query(), 'foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2', 'add {name: array}');
 
     u.query('?foo=bar');
     u.addQuery({'bam': null, 'baz': ''});
-    assertEqual(u.query(), 'foo=bar&bam&baz=', 'add {name: null}');
+    equal(u.query(), 'foo=bar&bam&baz=', 'add {name: null}');
 
     u.query('?foo=bar');
     u.addQuery('empty');
-    assertEqual(u.query(), 'foo=bar&empty', 'add undefined');
+    equal(u.query(), 'foo=bar&empty', 'add undefined');
 
     u.query('?foo=bar');
     u.addQuery('empty', '');
-    assertEqual(u.query(), 'foo=bar&empty=', 'add empty string');
+    equal(u.query(), 'foo=bar&empty=', 'add empty string');
 
     u.query('?foo');
     u.addQuery('foo', 'bar');
-    assertEqual(u.query(), 'foo=bar', 'add to null value');
+    equal(u.query(), 'foo=bar', 'add to null value');
 
     u.query('');
     u.addQuery('some value', 'must be encoded because of = and ? and #');
-    assertEqual(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    assertEqual((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
+    equal((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
   });
 
-  testFn('removeQuery', function() {
+  test('removeQuery', function() {
     let u = new URI('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
 
     u.removeQuery('foo', 'bar');
-    assertEqual(u.query(), 'foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3', 'removing name, value');
+    equal(u.query(), 'foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3', 'removing name, value');
 
     u.removeQuery('foo');
-    assertEqual(u.query(), 'obj=bam&bar=1&bar=2&bar=3', 'removing name');
+    equal(u.query(), 'obj=bam&bar=1&bar=2&bar=3', 'removing name');
 
     u.removeQuery('bar', ['1', '3']);
-    assertEqual(u.query(), 'obj=bam&bar=2', 'removing name, array');
+    equal(u.query(), 'obj=bam&bar=2', 'removing name, array');
 
     u.query('?obj=bam&bar=1&bar=2');
     u.removeQuery('bar', ['2']);
-    assertEqual(u.query(), 'obj=bam&bar=1', 'removing name, singleton array');
+    equal(u.query(), 'obj=bam&bar=1', 'removing name, singleton array');
 
     u.removeQuery('bar', ['1']);
-    assertEqual(u.query(), 'obj=bam', 'removing the last value via name, singleton array');
+    equal(u.query(), 'obj=bam', 'removing the last value via name, singleton array');
 
     u.query('?foo=one&foo=two').removeQuery('foo', ['one', 'two']);
-    assertEqual(u.query(), '', 'removing name, array, finishes empty');
+    equal(u.query(), '', 'removing name, array, finishes empty');
 
     u.query('?foo=one,two').removeQuery('foo', ['one', 'two']);
-    assertEqual(u.query(), 'foo=one%2Ctwo', 'not removing name, array');
+    equal(u.query(), 'foo=one%2Ctwo', 'not removing name, array');
 
     u.query('?foo=one,two').removeQuery('foo', ['one,two']);
-    assertEqual(u.query(), '', 'removing name, singleton array with comma in value');
+    equal(u.query(), '', 'removing name, singleton array with comma in value');
 
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
     u.removeQuery(['foo', 'bar']);
-    assertEqual(u.query(), 'obj=bam', 'removing array');
+    equal(u.query(), 'obj=bam', 'removing array');
 
     u.query('?bar=1&bar=2');
     u.removeQuery({ bar: 1 });
-    assertEqual(u.query(), 'bar=2', 'removing non-string value from array');
+    equal(u.query(), 'bar=2', 'removing non-string value from array');
 
     u.removeQuery({ bar: 2 });
-    assertEqual(u.query(), '', 'removing a non-string value');
+    equal(u.query(), '', 'removing a non-string value');
 
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
     u.removeQuery({foo: 'bar', obj: undefined, bar: ['1', '2']});
-    assertEqual(u.query(), 'foo=baz&foo=bam&bar=3', 'removing object');
+    equal(u.query(), 'foo=baz&foo=bam&bar=3', 'removing object');
 
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
     u.removeQuery(/^bar/);
-    assertEqual(u.query(), 'foo=bar&foo=baz&foo=bam&obj=bam', 'removing by RegExp');
+    equal(u.query(), 'foo=bar&foo=baz&foo=bam&obj=bam', 'removing by RegExp');
 
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=bar&bar=baz&bar=bam');
     u.removeQuery('foo', /[rz]$/);
-    assertEqual(u.query(), 'foo=bam&obj=bam&bar=bar&bar=baz&bar=bam', 'removing by value RegExp');
+    equal(u.query(), 'foo=bam&obj=bam&bar=bar&bar=baz&bar=bam', 'removing by value RegExp');
   });
 
-  testFn('duplicateQueryParameters', function() {
+  test('duplicateQueryParameters', function() {
     let u = new URI('?bar=1&bar=1&bar=1');
 
     u.normalizeQuery();
-    assertEqual(u.toString(), '?bar=1', 'parameters de-duplicated');
+    equal(u.toString(), '?bar=1', 'parameters de-duplicated');
 
     u = new URI('?bar=1&bar=1&bar=1');
     u.duplicateQueryParameters(true);
-    assertOk((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters enabled');
+    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters enabled');
     u.normalizeQuery();
-    assertEqual(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
-    assertOk((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after normalizeQuery()');
+    equal(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
+    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after normalizeQuery()');
 
     u.duplicateQueryParameters(false);
     u.normalizeQuery();
-    assertEqual(u.toString(), '?bar=1', 'parameters de-duplicated again');
-    assertOk(!(u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still disabled after normalizeQuery()');
+    equal(u.toString(), '?bar=1', 'parameters de-duplicated again');
+    ok(!(u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still disabled after normalizeQuery()');
 
     (URI as any).duplicateQueryParameters = true;
     u = new URI('?bar=1&bar=1&bar=1');
     u.normalizeQuery();
-    assertEqual(u.toString(), '?bar=1&bar=1&bar=1', 'global configuration');
+    equal(u.toString(), '?bar=1&bar=1&bar=1', 'global configuration');
 
     (URI as any).duplicateQueryParameters = false;
 
     // test cloning
     u = new URI('?bar=1&bar=1&bar=1');
     u = u.duplicateQueryParameters(true).clone();
-    assertOk((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after clone()');
+    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after clone()');
     u.normalizeQuery();
-    assertEqual(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
+    equal(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
 
     // test adding
     u = new URI('?bar=1&bar=1&bar=1');
     u.duplicateQueryParameters(true);
     u.addQuery('bar', 1);
-    assertEqual(u.toString(), '?bar=1&bar=1&bar=1&bar=1', 'parameters NOT de-duplicated after addQuery()');
+    equal(u.toString(), '?bar=1&bar=1&bar=1&bar=1', 'parameters NOT de-duplicated after addQuery()');
   });
 
-  testFn('escapeQuerySpace', function() {
+  test('escapeQuerySpace', function() {
     let u = new URI('?bar=foo+bar&bam+baz=foo');
     let data = u.query(true);
 
-    assertEqual((data as any).bar, 'foo bar', 'value un-spac-escaped');
-    assertEqual((data as any)['bam baz'], 'foo', 'name un-spac-escaped');
+    equal((data as any).bar, 'foo bar', 'value un-spac-escaped');
+    equal((data as any)['bam baz'], 'foo', 'name un-spac-escaped');
 
     u.escapeQuerySpace(false);
     data = u.query(true);
-    assertEqual((data as any).bar, 'foo+bar', 'value not un-spac-escaped');
-    assertEqual((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped');
+    equal((data as any).bar, 'foo+bar', 'value not un-spac-escaped');
+    equal((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped');
 
     u.escapeQuerySpace(true);
     data = u.query(true);
 
-    assertEqual((data as any).bar, 'foo bar', 'value un-spac-escaped again');
-    assertEqual((data as any)['bam baz'], 'foo', 'name un-spac-escaped again');
+    equal((data as any).bar, 'foo bar', 'value un-spac-escaped again');
+    equal((data as any)['bam baz'], 'foo', 'name un-spac-escaped again');
 
     u.escapeQuerySpace(false);
 
     u.addQuery('alpha bravo', 'charlie delta');
-    assertEqual(u.toString(), '?bar=foo%2Bbar&bam%2Bbaz=foo&alpha%20bravo=charlie%20delta', 'serialized un/escaped space');
+    equal(u.toString(), '?bar=foo%2Bbar&bam%2Bbaz=foo&alpha%20bravo=charlie%20delta', 'serialized un/escaped space');
 
     (URI as any).escapeQuerySpace = false;
     u = new URI('?bar=foo+bar&bam+baz=foo');
     data = u.query(true);
-    assertEqual((data as any).bar, 'foo+bar', 'value not un-spac-escaped by default');
-    assertEqual((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped by default');
+    equal((data as any).bar, 'foo+bar', 'value not un-spac-escaped by default');
+    equal((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped by default');
 
     // reset
     (URI as any).escapeQuerySpace = true;
   });
 
-  testFn('hasQuery', function() {
+  test('hasQuery', function() {
     const u = URI('?string=bar&list=one&list=two&number=123&null&empty=&nested[one]=1&nested[two]=2');
 
     // exists
-    assertEqual(u.hasQuery('string'), true, 'simple exists check - passing');
-    assertEqual(u.hasQuery('nono'), false, 'simple exists check - failing');
+    equal(u.hasQuery('string'), true, 'simple exists check - passing');
+    equal(u.hasQuery('nono'), false, 'simple exists check - failing');
 
     // truthy value
-    assertEqual(u.hasQuery('string', true), true, 'has truthy value check - passing string');
-    assertEqual(u.hasQuery('number', true), true, 'has truthy value check - passing number');
-    assertEqual(u.hasQuery('list', true), true, 'has truthy value check - passing list');
-    assertEqual(u.hasQuery('empty', true), false, 'has truthy value check - failing empty');
-    assertEqual(u.hasQuery('null', true), false, 'has truthy value check - failing null');
+    equal(u.hasQuery('string', true), true, 'has truthy value check - passing string');
+    equal(u.hasQuery('number', true), true, 'has truthy value check - passing number');
+    equal(u.hasQuery('list', true), true, 'has truthy value check - passing list');
+    equal(u.hasQuery('empty', true), false, 'has truthy value check - failing empty');
+    equal(u.hasQuery('null', true), false, 'has truthy value check - failing null');
 
     // falsy value
-    assertEqual(u.hasQuery('string', false), false, 'has falsy value check - failing string');
-    assertEqual(u.hasQuery('number', false), false, 'has falsy value check - failing number');
-    assertEqual(u.hasQuery('list', false), false, 'has falsy value check - failing list');
-    assertEqual(u.hasQuery('empty', false), true, 'has falsy value check - passing empty');
-    assertEqual(u.hasQuery('null', false), true, 'has falsy value check - passing null');
+    equal(u.hasQuery('string', false), false, 'has falsy value check - failing string');
+    equal(u.hasQuery('number', false), false, 'has falsy value check - failing number');
+    equal(u.hasQuery('list', false), false, 'has falsy value check - failing list');
+    equal(u.hasQuery('empty', false), true, 'has falsy value check - passing empty');
+    equal(u.hasQuery('null', false), true, 'has falsy value check - passing null');
 
     // match value
-    assertEqual(u.hasQuery('string', 'bar'), true, 'value check - passing string');
-    assertEqual(u.hasQuery('number', 123), true, 'value check - passing number');
-    assertEqual(u.hasQuery('number', '123'), true, 'value check - passing number as string');
-    assertEqual(u.hasQuery('list', 'one'), false, 'value check - failing list');
-    assertEqual(u.hasQuery('empty', ''), true, 'value check - passing empty');
-    assertEqual(u.hasQuery('null', ''), false, 'value check - failing null');
+    equal(u.hasQuery('string', 'bar'), true, 'value check - passing string');
+    equal(u.hasQuery('number', 123), true, 'value check - passing number');
+    equal(u.hasQuery('number', '123'), true, 'value check - passing number as string');
+    equal(u.hasQuery('list', 'one'), false, 'value check - failing list');
+    equal(u.hasQuery('empty', ''), true, 'value check - passing empty');
+    equal(u.hasQuery('null', ''), false, 'value check - failing null');
 
     // matching RegExp
-    assertEqual(u.hasQuery('string', /ar$/), true, 'RegExp check - passing string');
-    assertEqual(u.hasQuery('number', /2/), true, 'RegExp check - passing number');
-    assertEqual(u.hasQuery('string', /nono/), false, 'RegExp check - failing string');
-    assertEqual(u.hasQuery('number', /999/), false, 'RegExp check - failing number');
-    assertEqual(u.hasQuery(/^nested/), true, 'RegExp name check - passing');
-    assertEqual(u.hasQuery(/^nested/, 2), true, 'RegExp name and value - passing number');
-    assertEqual(u.hasQuery(/^nested/, '2'), true, 'RegExp name and value - passing number as string');
-    assertEqual(u.hasQuery(/^nested/, 'nono'), false, 'RegExp name and value - failing string');
-    assertEqual(u.hasQuery(/^nested/, /2/), true, 'RegExp name and value - passing RegExp number');
-    assertEqual(u.hasQuery(/^nested/, /3/), false, 'RegExp name and value exists check - failing');
-    assertEqual(u.hasQuery(/^lis/, ['one']), false, 'RegExp name andarray check - failing incomplete list');
-    assertEqual(u.hasQuery(/^lis/, ['one', 'two']), true, 'RegExp name and array check - passing list');
+    equal(u.hasQuery('string', /ar$/), true, 'RegExp check - passing string');
+    equal(u.hasQuery('number', /2/), true, 'RegExp check - passing number');
+    equal(u.hasQuery('string', /nono/), false, 'RegExp check - failing string');
+    equal(u.hasQuery('number', /999/), false, 'RegExp check - failing number');
+    equal(u.hasQuery(/^nested/), true, 'RegExp name check - passing');
+    equal(u.hasQuery(/^nested/, 2), true, 'RegExp name and value - passing number');
+    equal(u.hasQuery(/^nested/, '2'), true, 'RegExp name and value - passing number as string');
+    equal(u.hasQuery(/^nested/, 'nono'), false, 'RegExp name and value - failing string');
+    equal(u.hasQuery(/^nested/, /2/), true, 'RegExp name and value - passing RegExp number');
+    equal(u.hasQuery(/^nested/, /3/), false, 'RegExp name and value exists check - failing');
+    equal(u.hasQuery(/^lis/, ['one']), false, 'RegExp name andarray check - failing incomplete list');
+    equal(u.hasQuery(/^lis/, ['one', 'two']), true, 'RegExp name and array check - passing list');
 
     // matching array
-    assertEqual(u.hasQuery('string', ['one']), false, 'array check - failing string');
-    assertEqual(u.hasQuery('list', ['one']), false, 'array check - failing incomplete list');
-    assertEqual(u.hasQuery('list', ['one', 'two']), true, 'array check - passing list');
-    assertEqual(u.hasQuery('list', ['two', 'one']), true, 'array check - passing unsorted list');
+    equal(u.hasQuery('string', ['one']), false, 'array check - failing string');
+    equal(u.hasQuery('list', ['one']), false, 'array check - failing incomplete list');
+    equal(u.hasQuery('list', ['one', 'two']), true, 'array check - passing list');
+    equal(u.hasQuery('list', ['two', 'one']), true, 'array check - passing unsorted list');
 
     // matching part of array
-    assertEqual(u.hasQuery('string', ['one'], true), false, 'in array check - failing string');
-    assertEqual(u.hasQuery('list', 'one', true), true, 'in array check - passing value');
-    assertEqual(u.hasQuery('list', ['one'], true), true, 'in array check - passing incomplete list');
-    assertEqual(u.hasQuery('list', ['one', 'two'], true), true, 'in array check - passing list');
-    assertEqual(u.hasQuery('list', ['two', 'one'], true), true, 'in array check - passing unsorted list');
-    assertEqual(u.hasQuery('list', /ne$/, true), true, 'in array check - passing RegExp');
-    assertEqual(u.hasQuery('list', [/ne$/], true), true, 'in array check - passing RegExp list');
+    equal(u.hasQuery('string', ['one'], true), false, 'in array check - failing string');
+    equal(u.hasQuery('list', 'one', true), true, 'in array check - passing value');
+    equal(u.hasQuery('list', ['one'], true), true, 'in array check - passing incomplete list');
+    equal(u.hasQuery('list', ['one', 'two'], true), true, 'in array check - passing list');
+    equal(u.hasQuery('list', ['two', 'one'], true), true, 'in array check - passing unsorted list');
+    equal(u.hasQuery('list', /ne$/, true), true, 'in array check - passing RegExp');
+    equal(u.hasQuery('list', [/ne$/], true), true, 'in array check - passing RegExp list');
 
     // comparison function
-    assertEqual(u.hasQuery('string', function(value: any, name: any, data: any) {
-      assertEqual(value, 'bar', 'Function check - param value');
-      assertEqual(name, 'string', 'Function check - param name');
-      assertEqual(typeof data, 'object', 'Function check - param data');
+    equal(u.hasQuery('string', function(value: any, name: any, data: any) {
+      equal(value, 'bar', 'Function check - param value');
+      equal(name, 'string', 'Function check - param name');
+      equal(typeof data, 'object', 'Function check - param data');
       return true;
     }), true, 'Function check - passing true');
-    assertEqual(u.hasQuery('string', function() {
+    equal(u.hasQuery('string', function() {
       return false;
     }), false, 'Function check - passing false');
   });
 
-  moduleFn('normalizing');
-  testFn('normalize', function() {
+  module('normalizing');
+  test('normalize', function() {
     const u = new URI('http://www.exämple.org:80/food/woo/.././../baz.html?&foo=bar&&baz=bam&&baz=bau&#');
     u.normalize();
-    assertEqual(u+'', 'http://www.xn--exmple-cua.org/baz.html?foo=bar&baz=bam&baz=bau', 'fully normalized URL');
+    equal(u+'', 'http://www.xn--exmple-cua.org/baz.html?foo=bar&baz=bam&baz=bau', 'fully normalized URL');
   });
 
-  testFn('normalizeProtocol', function() {
+  test('normalizeProtocol', function() {
     const u = new URI('hTTp://example.org/foobar.html');
     u.normalizeProtocol();
-    assertEqual(u+'', 'http://example.org/foobar.html', 'lowercase http');
+    equal(u+'', 'http://example.org/foobar.html', 'lowercase http');
   });
 
-  testFn('normalizeHost', function() {
+  test('normalizeHost', function() {
     let u: any;
 
     if (typeof punycode !== 'undefined') {
       u = new URI('http://exämple.org/foobar.html');
       u.normalizeHostname();
-      assertEqual(u+'', 'http://xn--exmple-cua.org/foobar.html', 'converting IDN to punycode');
+      equal(u+'', 'http://xn--exmple-cua.org/foobar.html', 'converting IDN to punycode');
     }
 
     if (typeof IPv6 !== 'undefined') {
       u = new URI('http://[fe80:0000:0000:0000:0204:61ff:fe9d:f156]/foobar.html');
       u.normalizeHostname();
-      assertEqual(u+'', 'http://[fe80::204:61ff:fe9d:f156]/foobar.html', 'best IPv6 representation');
+      equal(u+'', 'http://[fe80::204:61ff:fe9d:f156]/foobar.html', 'best IPv6 representation');
     }
 
     if (typeof IPv6 !== 'undefined') {
       u = new URI('http://[::1]/foobar.html');
       u.normalizeHostname();
-      assertEqual(u+'', 'http://[::1]/foobar.html', 'best IPv6 representation');
+      equal(u+'', 'http://[::1]/foobar.html', 'best IPv6 representation');
     }
 
     u = new URI('http://wWw.eXamplE.Org/foobar.html');
     u.normalizeHostname();
-    assertEqual(u+'', 'http://www.example.org/foobar.html', 'lower case hostname');
+    equal(u+'', 'http://www.example.org/foobar.html', 'lower case hostname');
   });
 
-  testFn('normalizePort', function() {
+  test('normalizePort', function() {
     let u = new URI('http://example.org:80/foobar.html');
     u.normalizePort();
-    assertEqual(u+'', 'http://example.org/foobar.html', 'dropping port 80 for http');
+    equal(u+'', 'http://example.org/foobar.html', 'dropping port 80 for http');
 
     u = new URI('ftp://example.org:80/foobar.html');
     u.normalizePort();
-    assertEqual(u+'', 'ftp://example.org:80/foobar.html', 'keeping port 80 for ftp');
+    equal(u+'', 'ftp://example.org:80/foobar.html', 'keeping port 80 for ftp');
   });
 
-  testFn('normalizePath', function() {
+  test('normalizePath', function() {
     // relative URL
     let u = new URI('/food/bar/baz.html');
 
     u.normalizePath();
-    assertEqual(u.path(), '/food/bar/baz.html', 'absolute path without change');
+    equal(u.path(), '/food/bar/baz.html', 'absolute path without change');
 
     u.path('food/bar/baz.html').normalizePath();
-    assertEqual(u.path(), 'food/bar/baz.html', 'relative path without change');
+    equal(u.path(), 'food/bar/baz.html', 'relative path without change');
 
     u.path('/food/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/bar/baz.html', 'single parent');
+    equal(u.path(), '/bar/baz.html', 'single parent');
 
     u.path('/food/woo/../../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/bar/baz.html', 'double parent');
+    equal(u.path(), '/bar/baz.html', 'double parent');
 
     u.path('/food/woo/../bar/../baz.html').normalizePath();
-    assertEqual(u.path(), '/food/baz.html', 'split double parent');
+    equal(u.path(), '/food/baz.html', 'split double parent');
 
     u.path('/food/woo/.././../baz.html').normalizePath();
-    assertEqual(u.path(), '/baz.html', 'cwd-split double parent');
+    equal(u.path(), '/baz.html', 'cwd-split double parent');
 
     u.path('food/woo/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), 'food/bar/baz.html', 'relative parent');
+    equal(u.path(), 'food/bar/baz.html', 'relative parent');
 
     u.path('./food/woo/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), 'food/bar/baz.html', 'dot-relative parent');
+    equal(u.path(), 'food/bar/baz.html', 'dot-relative parent');
 
     // absolute URL
     u = new URI('http://example.org/foo/bar/baz.html');
     u.normalizePath();
-    assertEqual(u.path(), '/foo/bar/baz.html', 'URL: absolute path without change');
+    equal(u.path(), '/foo/bar/baz.html', 'URL: absolute path without change');
 
     u.path('foo/bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/foo/bar/baz.html', 'URL: relative path without change');
+    equal(u.path(), '/foo/bar/baz.html', 'URL: relative path without change');
 
     u.path('/foo/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/bar/baz.html', 'URL: single parent');
+    equal(u.path(), '/bar/baz.html', 'URL: single parent');
 
     u.path('/foo/woo/../../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/bar/baz.html', 'URL: double parent');
+    equal(u.path(), '/bar/baz.html', 'URL: double parent');
 
     u.path('/foo/woo/../bar/../baz.html').normalizePath();
-    assertEqual(u.path(), '/foo/baz.html', 'URL: split double parent');
+    equal(u.path(), '/foo/baz.html', 'URL: split double parent');
 
     u.path('/foo/woo/.././../baz.html').normalizePath();
-    assertEqual(u.path(), '/baz.html', 'URL: cwd-split double parent');
+    equal(u.path(), '/baz.html', 'URL: cwd-split double parent');
 
     u.path('foo/woo/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/foo/bar/baz.html', 'URL: relative parent');
+    equal(u.path(), '/foo/bar/baz.html', 'URL: relative parent');
 
     u.path('./foo/woo/../bar/baz.html').normalizePath();
-    assertEqual(u.path(), '/foo/bar/baz.html', 'URL: dot-relative parent');
+    equal(u.path(), '/foo/bar/baz.html', 'URL: dot-relative parent');
 
     u.path('/.//').normalizePath();
-    assertEqual(u.path(), '/', 'root /.//');
+    equal(u.path(), '/', 'root /.//');
 
     // encoding
     (u as any)._parts.path = '/~userhome/@mine;is %2F and/';
     u.normalize();
-    assertEqual(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
+    equal(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
 
     // relative URL
     u = URI('/.').normalizePath();
-    assertEqual(u.path(), '/', 'root /.');
+    equal(u.path(), '/', 'root /.');
 
     u = URI('/..').normalizePath();
-    assertEqual(u.path(), '/', 'root /..');
+    equal(u.path(), '/', 'root /..');
 
     u = URI('/foo/.').normalizePath();
-    assertEqual(u.path(), '/foo/', 'root /foo/.');
+    equal(u.path(), '/foo/', 'root /foo/.');
 
     u = URI('/foo/..').normalizePath();
-    assertEqual(u.path(), '/', 'root /foo/..');
+    equal(u.path(), '/', 'root /foo/..');
 
     u = URI('/foo/.bar').normalizePath();
-    assertEqual(u.path(), '/foo/.bar', 'root /foo/.bar');
+    equal(u.path(), '/foo/.bar', 'root /foo/.bar');
 
     u = URI('/foo/..bar').normalizePath();
-    assertEqual(u.path(), '/foo/..bar', 'root /foo/..bar');
+    equal(u.path(), '/foo/..bar', 'root /foo/..bar');
 
     // Percent Encoding normalization has to happen before dot segment normalization
     u = URI('/foo/%2E%2E').normalizePath();
-    assertEqual(u.path(), '/', 'root /foo/%2E%2E');
+    equal(u.path(), '/', 'root /foo/%2E%2E');
 
     u = URI('/foo/%2E').normalizePath();
-    assertEqual(u.path(), '/foo/', 'root /foo/%2E');
+    equal(u.path(), '/foo/', 'root /foo/%2E');
 
     u = URI('/foo/%2E%2E%2Fbar').normalizePath();
-    assertEqual(u.path(), '/foo/..%2Fbar', 'root /foo/%2E%2E%2Fbar');
+    equal(u.path(), '/foo/..%2Fbar', 'root /foo/%2E%2E%2Fbar');
 
     u = URI('../../../../../www/common/js/app/../../../../www_test/common/js/app/views/view-test.html');
     u.normalize();
-    assertEqual(u.path(), '../../../../../www_test/common/js/app/views/view-test.html', 'parent relative');
+    equal(u.path(), '../../../../../www_test/common/js/app/views/view-test.html', 'parent relative');
 
     u = URI('/../../../../../www/common/js/app/../../../../www_test/common/js/app/views/view-test.html');
     u.normalize();
-    assertEqual(u.path(), '/www_test/common/js/app/views/view-test.html', 'parent absolute');
+    equal(u.path(), '/www_test/common/js/app/views/view-test.html', 'parent absolute');
 
     // URNs
     u = URI('urn:people:authors:poets:Shel Silverstein');
     u.normalize();
-    assertEqual(u.path(), 'people:authors:poets:Shel%20Silverstein');
+    equal(u.path(), 'people:authors:poets:Shel%20Silverstein');
 
     u = URI('urn:people:authors:philosophers:Søren Kierkegaard');
     u.normalize();
-    assertEqual(u.path(), 'people:authors:philosophers:S%C3%B8ren%20Kierkegaard');
+    equal(u.path(), 'people:authors:philosophers:S%C3%B8ren%20Kierkegaard');
 
     // URNs path separator preserved
     u = URI('urn:games:cards:Magic%3A the Gathering');
     u.normalize();
-    assertEqual(u.path(), 'games:cards:Magic%3A%20the%20Gathering');
+    equal(u.path(), 'games:cards:Magic%3A%20the%20Gathering');
   });
 
-  testFn('normalizeQuery', function() {
+  test('normalizeQuery', function() {
     let u = new URI('http://example.org/foobar.html?');
     u.normalizeQuery();
-    assertEqual(u+'', 'http://example.org/foobar.html', 'dropping empty query sign');
+    equal(u+'', 'http://example.org/foobar.html', 'dropping empty query sign');
 
     u.query('?&foo=bar&&baz=bam&').normalizeQuery();
-    assertEqual(u.query(), 'foo=bar&baz=bam', 'bad query resolution');
+    equal(u.query(), 'foo=bar&baz=bam', 'bad query resolution');
 
     u.query('?&foo=bar&&baz=bam&&baz=bau&').normalizeQuery();
-    assertEqual(u.query(), 'foo=bar&baz=bam&baz=bau', 'bad query resolution');
+    equal(u.query(), 'foo=bar&baz=bam&baz=bau', 'bad query resolution');
 
     u.query('?&foo=bar&foo=bar').normalizeQuery();
-    assertEqual(u.query(), 'foo=bar', 'duplicate key=value resolution');
+    equal(u.query(), 'foo=bar', 'duplicate key=value resolution');
 
     u.query('?=bar').normalizeQuery();
-    assertEqual(u.query(), '=bar', 'query without key');
+    equal(u.query(), '=bar', 'query without key');
   });
 
-  testFn('normalizeFragment', function() {
+  test('normalizeFragment', function() {
     const u = new URI('http://example.org/foobar.html#');
     u.normalizeFragment();
-    assertEqual(u+'', 'http://example.org/foobar.html', 'dropping empty fragment sign');
+    equal(u+'', 'http://example.org/foobar.html', 'dropping empty fragment sign');
   });
 
-  testFn('readable', function() {
+  test('readable', function() {
     let u = new URI('http://foo:bar@www.xn--exmple-cua.org/hello%20world/ä.html?foo%5B%5D=b+är#fragment');
-    assertEqual(u.readable(), 'http://www.exämple.org/hello world/ä.html?foo[]=b är#fragment', 'readable URL');
+    equal(u.readable(), 'http://www.exämple.org/hello world/ä.html?foo[]=b är#fragment', 'readable URL');
 
     u = new URI('http://example.org/?=5640');
-    assertEqual(u.readable(), 'http://example.org/?=5640', 'readable URL: query without key');
+    equal(u.readable(), 'http://example.org/?=5640', 'readable URL: query without key');
   });
 
-  moduleFn('resolving URLs');
-  testFn('absoluteTo', function() {
+  module('resolving URLs');
+  test('absoluteTo', function() {
     // this being '../bar/baz.html?foo=bar'
     // base being 'http://example.org/foo/other/file.html'
     // return being http://example.org/foo/bar/baz.html?foo=bar'
@@ -1564,11 +1564,11 @@ declare var SecondLevelDomains: any;
       const u = new URI(t.url);
       const r = u.absoluteTo(t.base);
 
-      assertEqual(r + '', t.result, t.name);
+      equal(r + '', t.result, t.name);
     }
   });
 
-  testFn('absoluteTo - RFC3986 reference resolution', function() {
+  test('absoluteTo - RFC3986 reference resolution', function() {
     // http://tools.ietf.org/html/rfc3986#section-5.4
     const base = 'http://a/b/c/d;p?q';
     const map: { [key: string]: string } = {
@@ -1605,11 +1605,11 @@ declare var SecondLevelDomains: any;
       const u = new URI(key);
       const r = u.absoluteTo(base);
 
-      assertEqual(r + '', map[key], 'resolution "' + key + '"');
+      equal(r + '', map[key], 'resolution "' + key + '"');
     }
   });
 
-  testFn('relativeTo', function() {
+  test('relativeTo', function() {
     const tests = [{
       name: 'same parent',
       url: '/relative/path?blubber=1#hash1',
@@ -1762,18 +1762,18 @@ declare var SecondLevelDomains: any;
       /*jshint sub:true */
       if ((t as any)['throws']) {
         /*jshint sub:false */
-        assertOk(caught, t.name + ' should throw exception');
+        ok(caught, t.name + ' should throw exception');
       } else {
-        assertOk(!caught, t.name + ' should not throw exception');
-        assertEqual(r + '', t.result, t.name);
+        ok(!caught, t.name + ' should not throw exception');
+        equal(r + '', t.result, t.name);
 
         const a = r.absoluteTo(t.base);
         const n = u.clone().normalize();
-        assertEqual(a.toString(), n.toString(), t.name + ' reversed');
+        equal(a.toString(), n.toString(), t.name + ' reversed');
       }
     }
 
-    assertEqual('b/c',
+    equal('b/c',
       new URI('http://example.org/a/b/c')
         .scheme('')
         .authority('')
@@ -1781,7 +1781,7 @@ declare var SecondLevelDomains: any;
         .toString(),
       'bug #103');
 
-    assertEqual('b/c',
+    equal('b/c',
       new URI('//example.org/a/b/c')
         .authority('')
         .relativeTo('/a/')
@@ -1793,8 +1793,8 @@ declare var SecondLevelDomains: any;
 
 
 
-  moduleFn('static helpers');
-  testFn('withinString', function() {
+  module('static helpers');
+  test('withinString', function() {
     /*jshint laxbreak: true */
     const source = 'Hello www.example.com,\n'
       + 'http://google.com is a search engine, like http://www.bing.com\n'
@@ -1817,10 +1817,10 @@ declare var SecondLevelDomains: any;
       return '<a>' + url + '</a>';
     });
 
-    assertEqual(result, expected, 'in string URI identification');
+    equal(result, expected, 'in string URI identification');
   });
 
-  testFn('withinString - ignore', function() {
+  test('withinString - ignore', function() {
     const decorate = function(url: string) {
       return '<a>' + url + '</a>';
     };
@@ -1832,10 +1832,10 @@ declare var SecondLevelDomains: any;
     /*jshint laxbreak: false */
     const result = (URI as any).withinString(source, decorate, {ignore: /^proto:/i});
 
-    assertEqual(result, expected, 'filtered in string URI identification');
+    equal(result, expected, 'filtered in string URI identification');
   });
 
-  testFn('withinString - ignoreHtml', function() {
+  test('withinString - ignoreHtml', function() {
     const decorate = function(url: string) {
       return '<a>' + url + '</a>';
     };
@@ -1851,10 +1851,10 @@ declare var SecondLevelDomains: any;
     /*jshint laxbreak: false */
     const result = (URI as any).withinString(source, decorate, {ignoreHtml: true});
 
-    assertEqual(result, expected, 'filtered in string URI identification');
+    equal(result, expected, 'filtered in string URI identification');
   });
 
-  testFn('withinString - capture only', function() {
+  test('withinString - capture only', function() {
     /*jshint laxbreak: true */
     const source = 'Hello www.example.com,\n'
       + 'http://google.com is a search engine, like http://www.bing.com\n'
@@ -1878,11 +1878,11 @@ declare var SecondLevelDomains: any;
       links.push(url);
     });
 
-    assertDeepEqual(links, expected, 'urls extracted');
-    assertEqual(result, source, 'source not modified');
+    deepEqual(links, expected, 'urls extracted');
+    equal(result, source, 'source not modified');
   });
 
-  testFn('ensureValidPort', function() {
+  test('ensureValidPort', function() {
     function testPort(value: any) {
       let result = true;
       try {
@@ -1894,37 +1894,37 @@ declare var SecondLevelDomains: any;
       return result;
     }
 
-    assertEqual(testPort(8000), true);
-    assertEqual(testPort('8080'), true);
+    equal(testPort(8000), true);
+    equal(testPort('8080'), true);
 
-    assertEqual(testPort(0), true);
-    assertEqual(testPort(1), true);
+    equal(testPort(0), true);
+    equal(testPort(1), true);
 
-    assertEqual(testPort(65535), true);
-    assertEqual(testPort(65536), false);
+    equal(testPort(65535), true);
+    equal(testPort(65536), false);
 
-    assertEqual(testPort(-8080), false);
-    assertEqual(testPort('-8080'), false);
+    equal(testPort(-8080), false);
+    equal(testPort('-8080'), false);
 
-    assertEqual(testPort('aaa8080'), false);
-    assertEqual(testPort('8080a'), false);
+    equal(testPort('aaa8080'), false);
+    equal(testPort('8080a'), false);
 
-    assertEqual(testPort(8080.2), false);
+    equal(testPort(8080.2), false);
   });
-  testFn('noConflict', function() {
+  test('noConflict', function() {
     const actual_lib = URI; // actual library; after loading, before noConflict()
     const unconflicted = URI.noConflict();
 
-    assertStrictEqual(unconflicted, actual_lib, 'noConflict() returns the URI object');
+    strictEqual(unconflicted, actual_lib, 'noConflict() returns the URI object');
 
     // In browser environment, check if URI was restored
-    assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
+    strictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
 
     // restore for other tests
     (window as any).URI = actual_lib;
   });
 
-  testFn('noConflict(removeAll=true)', function() {
+  test('noConflict(removeAll=true)', function() {
     const actual = {
       URI:        URI,
       URITemplate:    URITemplate,
@@ -1934,14 +1934,14 @@ declare var SecondLevelDomains: any;
 
     const unconflicted = (URI as any).noConflict(true);
 
-    assertDeepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
+    deepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
 
     // In browser environment, check if all variables were restored
     if (typeof window !== 'undefined') {
-      assertStrictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
-      assertStrictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
-      assertStrictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
-      assertStrictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
+      strictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
+      strictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
+      strictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
+      strictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
 
       // restore for other tests
       (window as any).URI        = actual.URI;
@@ -1950,84 +1950,84 @@ declare var SecondLevelDomains: any;
       (window as any).SecondLevelDomains = actual.SecondLevelDomains;
     } else {
       // In Node.js environment, we can't test global restoration the same way
-      assertOk(unconflicted, 'noConflict(true) returns the libraries object in Node.js');
+      ok(unconflicted, 'noConflict(true) returns the libraries object in Node.js');
     }
   });
 
-  testFn('joinPaths', function() {
+  test('joinPaths', function() {
     let result;
 
     result = (URI as any).joinPaths('/a/b', '/c', 'd', '/e').toString();
-    assertEqual(result, '/a/b/c/d/e', 'absolute paths');
+    equal(result, '/a/b/c/d/e', 'absolute paths');
 
     result = (URI as any).joinPaths('a/b', 'http://example.com/c', new URI('d/'), '/e').toString();
-    assertEqual(result, 'a/b/c/d/e', 'relative path');
+    equal(result, 'a/b/c/d/e', 'relative path');
 
     result = (URI as any).joinPaths('/a/').toString();
-    assertEqual(result, '/a/', 'single absolute directory');
+    equal(result, '/a/', 'single absolute directory');
 
     result = (URI as any).joinPaths('/a').toString();
-    assertEqual(result, '/a', 'single absolute segment');
+    equal(result, '/a', 'single absolute segment');
 
     result = (URI as any).joinPaths('a').toString();
-    assertEqual(result, 'a', 'single relative segment');
+    equal(result, 'a', 'single relative segment');
 
     result = (URI as any).joinPaths('').toString();
-    assertEqual(result, '', 'empty string');
+    equal(result, '', 'empty string');
 
     result = (URI as any).joinPaths().toString();
-    assertEqual(result, '', 'no argument');
+    equal(result, '', 'no argument');
 
     result = (URI as any).joinPaths('', 'a', '', '', 'b').toString();
-    assertEqual(result, '/a/b', 'leading empty segment');
+    equal(result, '/a/b', 'leading empty segment');
 
     result = (URI as any).joinPaths('a', '', '', 'b', '', '').toString();
-    assertEqual(result, 'a/b/', 'trailing empty segment');
+    equal(result, 'a/b/', 'trailing empty segment');
   });
 
-  testFn('setQuery', function () {
+  test('setQuery', function () {
     const o: any = {foo: 'bar'};
 
     (URI as any).setQuery(o, 'foo', 'bam');
-    assertDeepEqual(o, {foo: 'bam'}, 'set name, value');
+    deepEqual(o, {foo: 'bam'}, 'set name, value');
 
     (URI as any).setQuery(o, 'array', ['one', 'two']);
-    assertDeepEqual(o, {foo: 'bam', array: ['one', 'two']}, 'set name, array');
+    deepEqual(o, {foo: 'bam', array: ['one', 'two']}, 'set name, array');
 
     (URI as any).setQuery(o, 'foo', 'qux');
-    assertDeepEqual(o, {foo: 'qux', array: ['one', 'two']}, 'override name, value');
+    deepEqual(o, {foo: 'qux', array: ['one', 'two']}, 'override name, value');
 
     const o2: any = {foo: 'bar'};
     (URI as any).setQuery(o2, {baz: 'qux'});
-    assertDeepEqual(o2, {foo: 'bar', baz: 'qux'}, 'set {name: value}');
+    deepEqual(o2, {foo: 'bar', baz: 'qux'}, 'set {name: value}');
 
     (URI as any).setQuery(o2, {bar: ['1', '2']});
-    assertDeepEqual(o2, {foo: 'bar', bar: ['1', '2'], baz: 'qux'}, 'set {name: array}');
+    deepEqual(o2, {foo: 'bar', bar: ['1', '2'], baz: 'qux'}, 'set {name: array}');
 
     (URI as any).setQuery(o2, {foo: 'qux'});
-    assertDeepEqual(o2, {foo: 'qux', bar: ['1', '2'], baz: 'qux'}, 'override {name: value}');
+    deepEqual(o2, {foo: 'qux', bar: ['1', '2'], baz: 'qux'}, 'override {name: value}');
 
     const o3: any = {foo: 'bar'};
     (URI as any).setQuery(o3, {bam: null, baz: ''});
-    assertDeepEqual(o3, {foo: 'bar', bam: null, baz: ''}, 'set {name: null}');
+    deepEqual(o3, {foo: 'bar', bam: null, baz: ''}, 'set {name: null}');
 
     const o4: any = {foo: 'bar'};
     (URI as any).setQuery(o4, 'empty');
-    assertDeepEqual(o4, {foo: 'bar', empty: null}, 'set undefined');
+    deepEqual(o4, {foo: 'bar', empty: null}, 'set undefined');
 
     const o5: any = {foo: 'bar'};
     (URI as any).setQuery(o5, 'empty', '');
-    assertDeepEqual(o5, {foo: 'bar', empty: ''}, 'set empty string');
+    deepEqual(o5, {foo: 'bar', empty: ''}, 'set empty string');
 
     const o6: any = {};
     (URI as any).setQuery(o6, 'some value', 'must be encoded because of = and ? and #');
-    assertDeepEqual(o6, {'some value': 'must be encoded because of = and ? and #'}, 'encoding');
+    deepEqual(o6, {'some value': 'must be encoded because of = and ? and #'}, 'encoding');
   });
 
 
 
-  moduleFn('comparing URLs');
-  testFn('equals', function() {
+  module('comparing URLs');
+  test('equals', function() {
     const u = new URI('http://example.org/foo/bar.html?foo=bar&hello=world&hello=mars#fragment');
     const e = [
       'http://example.org/foo/../foo/bar.html?foo=bar&hello=world&hello=mars#fragment',
@@ -2049,132 +2049,132 @@ declare var SecondLevelDomains: any;
     let i, c;
 
     for (i = 0; (c = e[i]); i++) {
-      assertEqual(u.equals(c), true, 'equality ' + i);
+      equal(u.equals(c), true, 'equality ' + i);
     }
 
     for (i = 0; (c = d[i]); i++) {
-      assertEqual(u.equals(c), false, 'different ' + i);
+      equal(u.equals(c), false, 'different ' + i);
     }
   });
 
-  moduleFn('Charset');
-  testFn('iso8859', function() {
+  module('Charset');
+  test('iso8859', function() {
     let u = new URI('/ä.html');
     u.normalizePath();
-    assertEqual(u.path(), '/%C3%A4.html', 'Unicode');
+    equal(u.path(), '/%C3%A4.html', 'Unicode');
 
     (URI as any).iso8859();
     u = new URI('/ä.html');
     u.normalizePath();
-    assertEqual(u.path(), '/%E4.html', 'ISO8859');
+    equal(u.path(), '/%E4.html', 'ISO8859');
     u.path('/ö.html');
-    assertEqual(u.path(), '/%F6.html', 'ISO8859');
+    equal(u.path(), '/%F6.html', 'ISO8859');
 
     (URI as any).unicode();
     u = new URI('/ä.html');
     u.normalizePath();
-    assertEqual(u.path(), '/%C3%A4.html', 'Unicode again');
+    equal(u.path(), '/%C3%A4.html', 'Unicode again');
 
     u = new URI('/ä.html');
     u.normalizePath();
-    assertEqual(u.path(), '/%C3%A4.html', 'convert unicode start');
+    equal(u.path(), '/%C3%A4.html', 'convert unicode start');
     u.iso8859();
-    assertEqual(u.path(), '/%E4.html', 'convert iso8859');
+    equal(u.path(), '/%E4.html', 'convert iso8859');
     u.unicode();
-    assertEqual(u.path(), '/%C3%A4.html', 'convert unicode');
+    equal(u.path(), '/%C3%A4.html', 'convert unicode');
   });
 
-  testFn('bad charset in QueryString', function() {
+  test('bad charset in QueryString', function() {
     const uri = new URI('http://www.google.com.hk/search?q=pennytel%20downloads&sa=%20%CB%D1%20%CB%F7%20&forid=1&prog=aff&ie=GB2312&oe=GB2312&safe=active&source=sdo_sb_html&hl=zh-CN');
     let data = uri.query(true);
 
-    assertEqual((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
-    assertEqual((data as any).forid, '1', 'decodable value returned');
+    equal((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
+    equal((data as any).forid, '1', 'decodable value returned');
 
     uri.normalizeQuery();
     data = uri.query(true);
-    assertEqual((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
-    assertEqual((data as any).forid, '1', 'decodable value returned');
+    equal((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
+    equal((data as any).forid, '1', 'decodable value returned');
   });
 
-  moduleFn('Encoding');
-  testFn('decode malformed URI', function() {
+  module('Encoding');
+  test('decode malformed URI', function() {
     try {
       decodeURIComponent('%%20');
-      assertOk(false, 'decodeURIComponent() must throw URIError: URI malformed');
+      ok(false, 'decodeURIComponent() must throw URIError: URI malformed');
     } catch(e) {}
 
     try {
       (URI as any).decode('%%20');
-      assertOk(false, 'URI.decode() must throw URIError: URI malformed');
+      ok(false, 'URI.decode() must throw URIError: URI malformed');
     } catch(e) {}
 
-    assertEqual((URI as any).decodeQuery('%%20'), '%%20', 'malformed URI component returned');
-    assertEqual((URI as any).decodePathSegment('%%20'), '%%20', 'malformed URI component returned');
-    assertEqual((URI as any).decodeUrnPathSegment('%%20'), '%%20', 'malformed URN component returned');
+    equal((URI as any).decodeQuery('%%20'), '%%20', 'malformed URI component returned');
+    equal((URI as any).decodePathSegment('%%20'), '%%20', 'malformed URI component returned');
+    equal((URI as any).decodeUrnPathSegment('%%20'), '%%20', 'malformed URN component returned');
   });
 
-  testFn('encodeQuery', function() {
+  test('encodeQuery', function() {
     const escapeQuerySpace = (URI as any).escapeQuerySpace;
 
     (URI as any).escapeQuerySpace = true;
-    assertEqual((URI as any).encodeQuery(' '), '+');
-    assertEqual((URI as any).encode(' '), '%20');
+    equal((URI as any).encodeQuery(' '), '+');
+    equal((URI as any).encode(' '), '%20');
 
     (URI as any).escapeQuerySpace = false;
-    assertEqual((URI as any).encodeQuery(' '), '%20');
-    assertEqual((URI as any).encode(' '), '%20');
+    equal((URI as any).encodeQuery(' '), '%20');
+    equal((URI as any).encode(' '), '%20');
 
     (URI as any).escapeQuerySpace = escapeQuerySpace;
   });
 
-  testFn('decodeQuery', function() {
+  test('decodeQuery', function() {
     const escapeQuerySpace = (URI as any).escapeQuerySpace;
 
     (URI as any).escapeQuerySpace = true;
-    assertEqual((URI as any).decodeQuery('+'), ' ');
-    assertEqual((URI as any).decodeQuery('%20'), ' ');
-    assertEqual((URI as any).decode('%20'), ' ');
-    assertEqual((URI as any).decode('+'), '+');
+    equal((URI as any).decodeQuery('+'), ' ');
+    equal((URI as any).decodeQuery('%20'), ' ');
+    equal((URI as any).decode('%20'), ' ');
+    equal((URI as any).decode('+'), '+');
 
     (URI as any).escapeQuerySpace = false;
-    assertEqual((URI as any).decodeQuery('+'), '+');
-    assertEqual((URI as any).decodeQuery('%20'), ' ');
-    assertEqual((URI as any).decode('%20'), ' ');
-    assertEqual((URI as any).decode('+'), '+');
+    equal((URI as any).decodeQuery('+'), '+');
+    equal((URI as any).decodeQuery('%20'), ' ');
+    equal((URI as any).decode('%20'), ' ');
+    equal((URI as any).decode('+'), '+');
 
     (URI as any).escapeQuerySpace = escapeQuerySpace;
   });
 
-  testFn('encodeReserved', function() {
-    assertEqual((URI as any).encodeReserved('ä:/?#[]@!$&\'()*+,;='), '%C3%A4:/?#[]@!$&\'()*+,;=');
+  test('encodeReserved', function() {
+    equal((URI as any).encodeReserved('ä:/?#[]@!$&\'()*+,;='), '%C3%A4:/?#[]@!$&\'()*+,;=');
   });
 
-  moduleFn('SecondLevelDomains');
-  testFn('SecondLevelDomains.get()', function() {
-    assertEqual(SecondLevelDomains.get('www.example.ch'), null, 'www.example.ch');
-    assertEqual(SecondLevelDomains.get('www.example.com'), null, 'www.example.com');
-    assertEqual(SecondLevelDomains.get('www.example.eu.com'), 'eu.com', 'www.example.eu.com');
-    assertEqual(SecondLevelDomains.get('www.example.co.uk'), 'co.uk', 'www.example.co.uk');
+  module('SecondLevelDomains');
+  test('SecondLevelDomains.get()', function() {
+    equal(SecondLevelDomains.get('www.example.ch'), null, 'www.example.ch');
+    equal(SecondLevelDomains.get('www.example.com'), null, 'www.example.com');
+    equal(SecondLevelDomains.get('www.example.eu.com'), 'eu.com', 'www.example.eu.com');
+    equal(SecondLevelDomains.get('www.example.co.uk'), 'co.uk', 'www.example.co.uk');
   });
 
-  testFn('SecondLevelDomains.has()', function() {
-    assertEqual(SecondLevelDomains.has('www.example.ch'), false, 'www.example.ch');
-    assertEqual(SecondLevelDomains.has('www.example.com'), false, 'www.example.com');
-    assertEqual(SecondLevelDomains.has('www.example.eu.com'), true, 'www.example.eu.com');
-    assertEqual(SecondLevelDomains.has('www.example.co.uk'), true, 'www.example.co.uk');
+  test('SecondLevelDomains.has()', function() {
+    equal(SecondLevelDomains.has('www.example.ch'), false, 'www.example.ch');
+    equal(SecondLevelDomains.has('www.example.com'), false, 'www.example.com');
+    equal(SecondLevelDomains.has('www.example.eu.com'), true, 'www.example.eu.com');
+    equal(SecondLevelDomains.has('www.example.co.uk'), true, 'www.example.co.uk');
   });
 
-  testFn('SecondLevelDomains.is()', function() {
-    assertEqual(SecondLevelDomains.is('ch'), false, 'ch');
-    assertEqual(SecondLevelDomains.is('example.ch'), false, 'example.ch');
+  test('SecondLevelDomains.is()', function() {
+    equal(SecondLevelDomains.is('ch'), false, 'ch');
+    equal(SecondLevelDomains.is('example.ch'), false, 'example.ch');
 
-    assertEqual(SecondLevelDomains.is('com'), false, 'com');
-    assertEqual(SecondLevelDomains.is('eu.com'), true, 'eu.com');
-    assertEqual(SecondLevelDomains.is('example.com'), false, 'example.com');
+    equal(SecondLevelDomains.is('com'), false, 'com');
+    equal(SecondLevelDomains.is('eu.com'), true, 'eu.com');
+    equal(SecondLevelDomains.is('example.com'), false, 'example.com');
 
-    assertEqual(SecondLevelDomains.is('uk'), false, 'uk');
-    assertEqual(SecondLevelDomains.is('co.uk'), true, 'co.uk');
+    equal(SecondLevelDomains.is('uk'), false, 'uk');
+    equal(SecondLevelDomains.is('co.uk'), true, 'co.uk');
   });
 })();
 
