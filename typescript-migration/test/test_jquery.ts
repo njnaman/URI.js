@@ -5,7 +5,6 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/jquery.URI.ts" />
-/// <reference path="qunit/qunit.d.ts" />
 
 // Global declarations for libraries loaded via script tags
 declare var URI: any;

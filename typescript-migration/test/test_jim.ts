@@ -10,7 +10,6 @@
 
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
-/// <reference path="./qunit/qunit.d.ts" />
 
 declare var URI: any;
 

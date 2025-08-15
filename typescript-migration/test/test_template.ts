@@ -2,7 +2,6 @@
 
 // Reference the source files to compile them
 /// <reference path="../src/URITemplate.ts" />
-/// <reference path="./qunit/qunit.d.ts" />
 
 declare var URITemplate: any;
 
