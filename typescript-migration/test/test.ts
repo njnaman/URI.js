@@ -1956,20 +1956,15 @@ declare var SecondLevelDomains: any;
   });
   testFn('noConflict', function() {
     const actual_lib = URI; // actual library; after loading, before noConflict()
-    const unconflicted = (URI as any).noConflict();
+    const unconflicted = URI.noConflict();
 
     assertStrictEqual(unconflicted, actual_lib, 'noConflict() returns the URI object');
-    
+
     // In browser environment, check if URI was restored
-    if (typeof window !== 'undefined') {
-      assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
-      
-      // restore for other tests
-      (window as any).URI = actual_lib;
-    } else {
-      // In Node.js environment, we can't test global restoration the same way
-      assertOk(unconflicted, 'noConflict() returns the library object in Node.js');
-    }
+    assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
+
+    // restore for other tests
+    (window as any).URI = actual_lib;
   });
 
   testFn('noConflict(removeAll=true)', function() {
@@ -1983,13 +1978,13 @@ declare var SecondLevelDomains: any;
     const unconflicted = (URI as any).noConflict(true);
 
     assertDeepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
-    
+
     // In browser environment, check if all variables were restored
     if (typeof window !== 'undefined') {
-      assertStrictEqual(URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
-      assertStrictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
-      assertStrictEqual(IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
-      assertStrictEqual(SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
+      assertStrictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
+      assertStrictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
+      assertStrictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
+      assertStrictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
 
       // restore for other tests
       (window as any).URI        = actual.URI;
