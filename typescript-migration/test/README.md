@@ -123,7 +123,7 @@ The TypeScript migration includes:
 - **Browser**: QUnit framework with compiled JavaScript
 - Cross-browser compatibility testing
 - Real-world environment testing
-- **Dual compatibility**: Tests work in both environments
+- **QUnit-based**: All tests use QUnit framework for consistency
 
 ### Modern Testing Features
 - ES6+ syntax with TypeScript transpilation
@@ -144,21 +144,18 @@ The TypeScript migration includes:
 
 You can modify test behavior through:
 
-1. **Jest Configuration** (`jest.config.js`)
-2. **TypeScript Configuration** (`tsconfig.json`)  
-3. **Test Runner Settings** (`test/test-runner.ts`)
+1. **TypeScript Configuration** (`tsconfig.json`)  
+2. **QUnit Configuration** (in HTML test files)
 
 ### Adding New Tests
 
 ```typescript
-// For Node.js tests (test/new-feature.ts)
-import URI from '../src/URI';
+// For TypeScript tests (test/new-feature.ts)
+/// <reference path="../src/URI.ts" />
 
-describe('New Feature', () => {
-  test('should work correctly', () => {
+QUnit.test('New Feature should work correctly', function() {
     const uri = new URI('http://example.com');
-    expect(uri.hostname()).toBe('example.com');
-  });
+    equal(uri.hostname(), 'example.com');
 });
 ```
 
@@ -189,7 +186,7 @@ describe('New Feature', () => {
 2. **Better IDE Support**: IntelliSense and refactoring tools  
 3. **Modern JavaScript**: ES6+ features and async/await
 4. **Improved Maintainability**: Clear interfaces and documentation
-5. **Dual Testing**: Both Node.js and browser environments
+5. **QUnit Testing**: Unified browser-based testing framework
 6. **Continuous Integration**: Easy integration with CI/CD pipelines
 
 ## 🔍 Troubleshooting

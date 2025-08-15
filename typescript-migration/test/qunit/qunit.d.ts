@@ -1,5 +1,4 @@
 // TypeScript declarations for QUnit
-// Avoiding conflicts with Jest and Node.js types
 
 declare namespace QUnit {
   interface Assert {
@@ -89,7 +88,6 @@ declare const QUnit: QUnit.TestStatic;
 
 // For environments where QUnit functions are in global scope (only when QUnit is loaded)
 declare global {
-  // Only declare these if they're not already declared by Jest
   namespace QUnitGlobals {
     function qunitModule(name: string, lifecycle?: any): void;
     function qunitTest(name: string, callback: (assert?: QUnit.Assert) => void): void;

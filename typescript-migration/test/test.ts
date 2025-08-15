@@ -8,12 +8,7 @@
 /// <reference path="../src/URITemplate.ts" />
 /// <reference path="./urls.ts" />
 
-// Simple type compatibility for QUnit when Jest is not available
-interface QUnitCompat {
-  (name: string, fn: () => void): void;
-}
-
-// Declare QUnit-style functions that might not be available
+// QUnit-only test framework setup
 declare const QUnit: any;
 
 // Declare global variables that will be available after the scripts load
@@ -27,54 +22,16 @@ declare var SecondLevelDomains: any;
 (function() {
   'use strict';
 
-  // Dynamically check for available test frameworks
-  const hasQUnit = typeof (globalThis as any).QUnit !== 'undefined';
-  const hasJest = typeof (globalThis as any).expect !== 'undefined' && typeof (globalThis as any).it !== 'undefined';
+  // QUnit test functions - QUnit is required
+  const testFn = (globalThis as any).QUnit.test;
+  const moduleFn = (globalThis as any).QUnit.module;
 
-  // Test function - try QUnit first, then Jest, then mock
-  const testFn = hasQUnit ? (globalThis as any).QUnit.test :
-                 hasJest ? (globalThis as any).it :
-                 function(name: string, fn: () => void) {
-                   console.log(`Test: ${name}`);
-                   fn();
-                 };
-
-  // Module function - try QUnit first, then Jest describe, then mock
-  const moduleFn = hasQUnit ? (globalThis as any).QUnit.module :
-                   hasJest ? (name: string) => (globalThis as any).describe(name, () => {}) :
-                   function(name: string) {
-                     console.log(`Module: ${name}`);
-                   };
-
-  // Assertion functions with fallbacks
-  const assertOk = hasQUnit ? (globalThis as any).ok :
-                   hasJest ? (value: any) => (globalThis as any).expect(value).toBeTruthy() :
-                   function(value: any, message?: string) {
-                     if (!value) throw new Error(message || 'Assertion failed');
-                   };
-
-  const assertEqual = hasQUnit ? (globalThis as any).equal :
-                      hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toEqual(expected) :
-                      function(actual: any, expected: any, message?: string) {
-                        if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`);
-                      };
-
-  const assertStrictEqual = hasQUnit ? (globalThis as any).strictEqual :
-                            hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toBe(expected) :
-                            function(actual: any, expected: any, message?: string) {
-                              if (actual !== expected) throw new Error(message || `Expected ${expected}, got ${actual}`);
-                            };
-
-  const assertDeepEqual = hasQUnit ? (globalThis as any).deepEqual :
-                          hasJest ? (actual: any, expected: any) => (globalThis as any).expect(actual).toEqual(expected) :
-                          assertEqual;
-
-  const assertRaises = hasQUnit ? (globalThis as any).raises :
-                       hasJest ? (fn: () => void, expectedError?: any) => (globalThis as any).expect(fn).toThrow(expectedError) :
-                       function(fn: () => void, expectedError?: any, message?: string) {
-                         try { fn(); throw new Error('Expected function to throw'); }
-                         catch(e) { /* Expected */ }
-                       };
+  // QUnit assertion functions
+  const assertOk = (globalThis as any).ok;
+  const assertEqual = (globalThis as any).equal;
+  const assertStrictEqual = (globalThis as any).strictEqual;
+  const assertDeepEqual = (globalThis as any).deepEqual;
+  const assertRaises = (globalThis as any).raises;
 
   testFn('loaded', function() {
     if (typeof window !== 'undefined') {
