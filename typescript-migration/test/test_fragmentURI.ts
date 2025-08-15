@@ -3,63 +3,66 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/URI.fragmentURI.ts" />
+/// <reference path="qunit/qunit.d.ts" />
 
 declare var URI: any;
+declare var equal: any;
+declare var ok: any;
 
-describe('URI.fragmentURI', () => {
-  test('storing URLs in fragment', () => {
-    let u = new URI('http://example.org');
-    let f: any;
-  
-    // var uri = URI('http://example.org/#!/foo/bar/baz.html');
-    // var furi = uri.fragment(true);
-    // furi.pathname() === '/foo/bar/baz.html';
-    // furi.pathname('/hello.html');
-    // uri.toString() === 'http://example.org/#!/hello.html'
-  
-    expect(u.fragment(true)).toBeInstanceOf(URI);
+module('URI.fragmentURI');
 
-    u = new URI('http://example.org/#');
-    expect(u.fragment(true)).toBeInstanceOf(URI);
-  
-    u = new URI('http://example.org/#!/foo/bar/baz.html');
-    f = u.fragment(true);
-    expect(f.pathname()).toBe('/foo/bar/baz.html');
-    expect(f.filename()).toBe('baz.html');
-  
-    f.filename('foobar.txt');
-    expect(f.pathname()).toBe('/foo/bar/foobar.txt');
-    expect(u.fragment()).toBe('!/foo/bar/foobar.txt');
-    expect(u.toString()).toBe('http://example.org/#!/foo/bar/foobar.txt');
-  });
+test('storing URLs in fragment', function() {
+  var u = URI('http://example.org');
+  var f: any;
 
-  test('fragmentPrefix', () => {
-    let u: any;
-  
-    (URI as any).fragmentPrefix = '?';
-    u = new URI('http://example.org');
-    expect((u as any)._parts.fragmentPrefix).toBe('?');
-  
-    u.fragment('#!/foo/bar/baz.html');
-    expect(u.fragment()).toBe('!/foo/bar/baz.html');
-    expect(u.fragment(true)).toBeInstanceOf(URI);
-    expect(u.fragment(true).toString()).toBe('');
-  
-    u.fragment('#?/foo/bar/baz.html');
-    expect(u.fragment()).toBe('?/foo/bar/baz.html');
-    expect(u.fragment(true)).toBeInstanceOf(URI);
-    expect(u.fragment(true).toString()).toBe('/foo/bar/baz.html');
-  
-    (u as any).fragmentPrefix('§');
-    expect(u.fragment()).toBe('?/foo/bar/baz.html');
-    expect(u.fragment(true)).toBeInstanceOf(URI);
-    expect(u.fragment(true).toString()).toBe('');
-  
-    u.fragment('#§/foo/bar/baz.html');
-    expect(u.fragment()).toBe('§/foo/bar/baz.html');
-    expect(u.fragment(true)).toBeInstanceOf(URI);
-    expect(u.fragment(true).toString()).toBe('/foo/bar/baz.html');
-  
-    (URI as any).fragmentPrefix = '!';
-  });
-}); 
+  // var uri = URI('http://example.org/#!/foo/bar/baz.html');
+  // var furi = uri.fragment(true);
+  // furi.pathname() === '/foo/bar/baz.html';
+  // furi.pathname('/hello.html');
+  // uri.toString() === 'http://example.org/#!/hello.html'
+
+  ok(u.fragment(true) instanceof URI, 'URI instance for missing fragment');
+
+  u = URI('http://example.org/#');
+  ok(u.fragment(true) instanceof URI, 'URI instance for empty fragment');
+
+  u = URI('http://example.org/#!/foo/bar/baz.html');
+  f = u.fragment(true);
+  equal(f.pathname(), '/foo/bar/baz.html', 'reading path of FragmentURI');
+  equal(f.filename(), 'baz.html', 'reading filename of FragmentURI');
+
+  f.filename('foobar.txt');
+  equal(f.pathname(), '/foo/bar/foobar.txt', 'modifying filename of FragmentURI');
+  equal(u.fragment(), '!/foo/bar/foobar.txt', 'modifying fragment() through FragmentURI on original');
+  equal(u.toString(), 'http://example.org/#!/foo/bar/foobar.txt', 'modifying filename of FragmentURI on original');
+});
+
+test('fragmentPrefix', function() {
+  var u: any;
+
+  (URI as any).fragmentPrefix = '?';
+  u = URI('http://example.org');
+  equal(u._parts.fragmentPrefix, '?', 'init using global property');
+
+  u.fragment('#!/foo/bar/baz.html');
+  equal(u.fragment(), '!/foo/bar/baz.html', 'unparsed ?');
+  ok(u.fragment(true) instanceof URI, 'parsing ? prefix - is URI');
+  equal(u.fragment(true).toString(), '', 'parsing ? prefix - result');
+
+  u.fragment('#?/foo/bar/baz.html');
+  equal(u.fragment(), '?/foo/bar/baz.html', 'unparsed ?');
+  ok(u.fragment(true) instanceof URI, 'parsing ? prefix - is URI');
+  equal(u.fragment(true).toString(), '/foo/bar/baz.html', 'parsing ? prefix - result');
+
+  u.fragmentPrefix('§');
+  equal(u.fragment(), '?/foo/bar/baz.html', 'unparsed §');
+  ok(u.fragment(true) instanceof URI, 'parsing § prefix - is URI');
+  equal(u.fragment(true).toString(), '', 'parsing § prefix - result');
+
+  u.fragment('#§/foo/bar/baz.html');
+  equal(u.fragment(), '§/foo/bar/baz.html', 'unparsed §');
+  ok(u.fragment(true) instanceof URI, 'parsing § prefix - is URI');
+  equal(u.fragment(true).toString(), '/foo/bar/baz.html', 'parsing § prefix - result');
+
+  (URI as any).fragmentPrefix = '!';
+});

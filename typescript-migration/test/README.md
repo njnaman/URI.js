@@ -1,16 +1,16 @@
 # URI.js TypeScript Test Suite
 
-This directory contains the complete test suite for the TypeScript migration of URI.js, supporting both browser-based QUnit tests and Node.js Jest tests.
+This directory contains the complete test suite for the TypeScript migration of URI.js, using QUnit for browser-based testing.
 
 ## 📁 Test File Structure
 
-### TypeScript Test Files (Node.js/Jest)
+### TypeScript Test Files (QUnit)
 - `test.ts` - Core URI functionality tests (main test suite)
 - `test_jim.ts` - Edge case and injection tests
 - `test_template.ts` - URI Template functionality tests  
 - `test_fragmentQuery.ts` - Fragment query handling tests
 - `test_fragmentURI.ts` - Fragment URI tests
-- `test_jquery.ts` - jQuery integration tests (adapted for Node.js)
+- `test_jquery.ts` - jQuery integration tests
 - `urls.ts` - Test URL data and test cases
 - `pre_libs.ts` - Pre-library setup for testing
 
@@ -40,30 +40,9 @@ This directory contains the complete test suite for the TypeScript migration of 
 # 1. Build the TypeScript code
 npm run build
 
-# 2. Run Node.js tests
-npm test
-
-# 3. View test environment info
-npm run test:info
-
-# 4. Run browser tests
+# 2. Run browser tests
 npm run test:browser
 # Then open test/test.URI.html in your browser
-```
-
-### Node.js Tests (Jest)
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
-
-# Type check without running tests
-npm run type-check
 ```
 
 ### Browser Tests (QUnit)
@@ -77,6 +56,15 @@ open test/index.html              # All test suites
 open test/test.jQuery-3.6.0.html  # Specific jQuery version
 ```
 
+### Development
+```bash
+# Type check without running tests
+npm run type-check
+
+# Watch mode for continuous compilation
+npm run build:watch
+```
+
 ## 🔧 Development Workflow
 
 ### 1. TypeScript Development
@@ -84,17 +72,13 @@ open test/test.jQuery-3.6.0.html  # Specific jQuery version
 # Watch mode for continuous compilation
 npm run build:watch
 
-# In another terminal, watch tests
-npm run test:watch
+# Then refresh your browser test pages to see changes
 ```
 
 ### 2. Testing Changes
 ```bash
-# Quick verification
-npm run test:info
-
-# Full test suite
-npm test && npm run test:browser
+# Build and open tests
+npm run build && npm run test:browser
 ```
 
 ### 3. Pre-commit Checks
@@ -110,22 +94,22 @@ npm run lint:fix
 
 The TypeScript migration includes:
 
-- ✅ **7 TypeScript test files** - Full Node.js Jest compatibility
+- ✅ **7 TypeScript test files** - Full QUnit compatibility
 - ✅ **6 HTML test files** - Complete browser QUnit suite  
 - ✅ **Type-safe test framework** - QUnit TypeScript declarations
-- ✅ **Dual environment support** - Node.js and browser testing
+- ✅ **Browser-based testing** - QUnit framework
 - ✅ **Legacy compatibility** - All original test cases preserved
 
 ### Original vs TypeScript Test Mapping
 
 | Original JS | TypeScript | Framework | Status |
 |------------|------------|-----------|---------|
-| `test.js` | `test.ts` | Jest/QUnit | ✅ Migrated |
-| `test_jim.js` | `test_jim.ts` | Jest | ✅ Migrated |
-| `test_template.js` | `test_template.ts` | Jest | ✅ Migrated |
-| `test_fragmentQuery.js` | `test_fragmentQuery.ts` | Jest | ✅ Migrated |
-| `test_fragmentURI.js` | `test_fragmentURI.ts` | Jest | ✅ Migrated |
-| `test_jquery.js` | `test_jquery.ts` | Jest | ✅ Migrated |
+| `test.js` | `test.ts` | QUnit | ✅ Migrated |
+| `test_jim.js` | `test_jim.ts` | QUnit | ✅ Migrated |
+| `test_template.js` | `test_template.ts` | QUnit | ✅ Migrated |
+| `test_fragmentQuery.js` | `test_fragmentQuery.ts` | QUnit | ✅ Migrated |
+| `test_fragmentURI.js` | `test_fragmentURI.ts` | QUnit | ✅ Migrated |
+| `test_jquery.js` | `test_jquery.ts` | QUnit | ✅ Migrated |
 | `urls.js` | `urls.ts` | Data | ✅ Migrated |
 | `pre_libs.js` | `pre_libs.ts` | Setup | ✅ Migrated |
 
@@ -134,11 +118,11 @@ The TypeScript migration includes:
 ### Type Safety
 - Full TypeScript type checking for all test code
 - QUnit TypeScript declarations for browser tests
-- Jest integration for Node.js testing
 
-### Cross-Environment Compatibility  
-- **Node.js**: Jest framework with TypeScript support
+### Browser Testing
 - **Browser**: QUnit framework with compiled JavaScript
+- Cross-browser compatibility testing
+- Real-world environment testing
 - **Dual compatibility**: Tests work in both environments
 
 ### Modern Testing Features

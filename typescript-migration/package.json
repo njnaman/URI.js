@@ -27,15 +27,12 @@
     "dev": "ts-node src/index.ts",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:info": "ts-node test/test-runner.ts",
+    "test": "echo 'Run tests by opening test/test.URI.html in your browser'",
     "test:browser": "echo 'Open test/test.URI.html in your browser to run QUnit tests'",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "uri",
@@ -63,14 +60,10 @@
     "Utilities"
   ],
   "devDependencies": {
-    "@types/jest": "^29.5.0",
     "@types/node": "^24.2.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

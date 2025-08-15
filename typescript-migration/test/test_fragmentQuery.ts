@@ -3,69 +3,74 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/URI.fragmentQuery.ts" />
+/// <reference path="qunit/qunit.d.ts" />
 
 declare var URI: any;
+declare var module: any;
+declare var test: any;
+declare var equal: any;
+declare var deepEqual: any;
 
-describe('URI.fragmentQuery', () => {
-  test('storing query-data in fragment', () => {
-    let u = new URI('http://example.org');
+module('URI.fragmentQuery');
 
-    expect(u.fragment(true)).toEqual({});
+test('storing query-data in fragment', function() {
+  var u = URI('http://example.org');
 
-    u = new URI('http://example.org/#');
-    expect(u.fragment(true)).toEqual({});
+  deepEqual(u.fragment(true), {}, 'empty map for missing fragment');
 
-    u = new URI('http://example.org/#?hello=world');
-    expect(u.fragment(true)).toEqual({hello: 'world'});
+  u = URI('http://example.org/#');
+  deepEqual(u.fragment(true), {}, 'empty map for empty fragment');
 
-    u.fragment({bar: 'foo'});
-    expect(u.fragment(true)).toEqual({bar: 'foo'});
-    expect(u.toString()).toBe('http://example.org/#?bar=foo');
+  u = URI('http://example.org/#?hello=world');
+  deepEqual(u.fragment(true), {hello: 'world'}, 'reading data object');
 
-    u.addFragment('name', 'value');
-    expect(u.fragment(true)).toEqual({bar: 'foo', name: 'value'});
-    expect(u.toString()).toBe('http://example.org/#?bar=foo&name=value');
+  u.fragment({bar: 'foo'});
+  deepEqual(u.fragment(true), {bar: 'foo'}, 'setting data object');
+  equal(u.toString(), 'http://example.org/#?bar=foo', 'setting data object serialized');
 
-    u.removeFragment('bar');
-    expect(u.fragment(true)).toEqual({name: 'value'});
-    expect(u.toString()).toBe('http://example.org/#?name=value');
+  u.addFragment('name', 'value');
+  deepEqual(u.fragment(true), {bar: 'foo', name: 'value'}, 'adding value');
+  equal(u.toString(), 'http://example.org/#?bar=foo&name=value', 'adding value serialized');
 
-    u.removeFragment('name');
-    expect(u.fragment(true)).toEqual({});
-    expect(u.toString()).toBe('http://example.org/#?');
+  u.removeFragment('bar');
+  deepEqual(u.fragment(true), {name: 'value'}, 'removing value bar');
+  equal(u.toString(), 'http://example.org/#?name=value', 'removing value bar serialized');
 
-    u.setFragment('name', 'value1');
-    expect(u.fragment(true)).toEqual({name: 'value1'});
-    expect(u.toString()).toBe('http://example.org/#?name=value1');
+  u.removeFragment('name');
+  deepEqual(u.fragment(true), {}, 'removing value name');
+  equal(u.toString(), 'http://example.org/#?', 'removing value name serialized');
 
-    u.setFragment('name', 'value2');
-    expect(u.fragment(true)).toEqual({name: 'value2'});
-    expect(u.toString()).toBe('http://example.org/#?name=value2');
-  });
+  u.setFragment('name', 'value1');
+  deepEqual(u.fragment(true), {name: 'value1'}, 'setting name to value1');
+  equal(u.toString(), 'http://example.org/#?name=value1', 'setting name to value1 serialized');
 
-  test('fragmentPrefix', () => {
-    let u: any;
+  u.setFragment('name', 'value2');
+  deepEqual(u.fragment(true), {name: 'value2'}, 'setting name to value2');
+  equal(u.toString(), 'http://example.org/#?name=value2', 'setting name to value2 serialized');
+});
 
-    (URI as any).fragmentPrefix = '!';
-    u = new URI('http://example.org');
-    expect((u as any)._parts.fragmentPrefix).toBe('!');
+test('fragmentPrefix', function() {
+  var u: any;
 
-    u.fragment('#?hello=world');
-    expect(u.fragment()).toBe('?hello=world');
-    expect(u.fragment(true)).toEqual({});
+  (URI as any).fragmentPrefix = '!';
+  u = URI('http://example.org');
+  equal(u._parts.fragmentPrefix, '!', 'init using global property');
 
-    u.fragment('#!hello=world');
-    expect(u.fragment()).toBe('!hello=world');
-    expect(u.fragment(true)).toEqual({hello: 'world'});
+  u.fragment('#?hello=world');
+  equal(u.fragment(), '?hello=world', 'unparsed ?');
+  deepEqual(u.fragment(true), {}, 'parsing ? prefix');
 
-    (u as any).fragmentPrefix('§');
-    expect(u.fragment()).toBe('!hello=world');
-    expect(u.fragment(true)).toEqual({});
+  u.fragment('#!hello=world');
+  equal(u.fragment(), '!hello=world', 'unparsed !');
+  deepEqual(u.fragment(true), {hello: 'world'}, 'parsing ! prefix');
 
-    u.fragment('#§hello=world');
-    expect(u.fragment()).toBe('§hello=world');
-    expect(u.fragment(true)).toEqual({hello: 'world'});
+  u.fragmentPrefix('§');
+  equal(u.fragment(), '!hello=world', 'unparsed §');
+  deepEqual(u.fragment(true), {}, 'parsing § prefix');
 
-    (URI as any).fragmentPrefix = '?';
-  });
+  u.fragment('#§hello=world');
+  equal(u.fragment(), '§hello=world', 'unparsed §');
+  deepEqual(u.fragment(true), {hello: 'world'}, 'parsing § prefix');
+
+  (URI as any).fragmentPrefix = '?';
 }); 
