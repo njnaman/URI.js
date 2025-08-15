@@ -145,6 +145,7 @@ var levels: Levels = {
         '{/var:1,var}': '/v/value',
         '{/list}': '/red,green,blue',
         '{/list*}': '/red/green/blue',
+        '{/list*,path:4}': '/red/green/blue/%2Ffoo',
         '{/keys}': '/semi,%3B,dot,.,comma,%2C',
         '{/keys*}': '/semi=%3B/dot=./comma=%2C'
       },
@@ -379,19 +380,51 @@ QUnit.test('Data Callbacks', function(assert) {
     var data: { [key: string]: string } = {'var': 'hello world.html'};
     return data[key];
   };
-  var expansion = template.expand(global);
-  assert.equal(expansion, 'hello%20world.html', 'Data callback expansion');
+  var local = function() {
+    return 'hello world.html';
+  };
+
+  assert.equal(template.expand(global), 'hello%20world.html', 'global callback');
+  assert.equal(template.expand({'var': local}), 'hello%20world.html', 'local callback');
 });
 
-QUnit.test('Strict callbacks', function(assert) {
-  var template = new URITemplate('{var}{undef}');
-  var getValues = function(key: string) {
-    var data: { [key: string]: string | null } = {'var': 'hello'};
-    return data[key] || null;
-  };
-  var expansion = template.expand(getValues);
-  assert.equal(expansion, 'hello', 'Strict callback expansion');
+
+QUnit.test('Parse errors', function(assert) {
+  assert.throws(function() {
+    new URITemplate('AB{var$}IJ').parse();
+  }, 'Failing invalid variable name');
+
+  assert.throws(function() {
+    new URITemplate('AB{$var}IJ').parse();
+  }, 'Failing invalid operator');
+
+  assert.throws(function() {
+    new URITemplate('AB{var:3IJ').parse();
+  }, 'Failing missing closing }');
+
+  assert.throws(function() {
+    new URITemplate('AB{var:3*}IJ').parse();
+  }, 'Failing invalid modifier');
 });
+
+QUnit.test('Expansion errors', function(assert) {
+    assert.throws(function() {
+      var data = {'composite_var': ['multiple', 'values']};
+      new URITemplate('{composite_var:3}').expand(data);
+    }, 'Failing prefix modifier after composite variable');
+  });
+
+  QUnit.test('noConflict mode', function(assert) {
+    var actual_lib = URITemplate; // actual library; after loading, before noConflict()
+    var unconflicted = URITemplate.noConflict();
+
+    assert.strictEqual(unconflicted, actual_lib, 'noConflict() returns the URITemplate object');
+    assert.strictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict() restores the `URITemplate` variable');
+
+    // restore for other tests
+    (window as any).URITemplate = actual_lib;
+  });
+
 
 QUnit.test('Periods in varnames', function(assert) {
   var literal = 'replacement';
@@ -401,11 +434,13 @@ QUnit.test('Periods in varnames', function(assert) {
   assert.equal(expansion, literal, 'Periods in variable names');
 });
 
+
 QUnit.test('Invalid literals', function(assert) {
   assert.throws(function() {
     new URITemplate('invalid.char}acter').parse();
   }, 'Invalid literals should throw');
 });
+
 
 QUnit.test('Strict mode', function(assert) {
   assert.throws(function() {
