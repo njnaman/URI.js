@@ -35,7 +35,7 @@ declare var SecondLevelDomains: any;
 
   test('loaded', function() {
     if (typeof window !== 'undefined') {
-      ok((window as any).URI);
+      ok(window.URI);
     } else {
       ok(URI);
     }
@@ -51,26 +51,26 @@ declare var SecondLevelDomains: any;
 
   test('URI(undefined)', function() {
     raises(function() {
-      URI(undefined as any);
+      URI(undefined);
     }, TypeError, 'Failing undefined input');
   });
 
   test('URI(null)', function() {
     raises(function() {
-      URI(null as any);
+      URI(null);
     }, TypeError, 'Failing undefined input');
   });
 
   test('new URI(string)', function() {
     const u = new URI('http://example.org/');
     ok(u instanceof URI, 'instanceof URI');
-    ok((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u._parts.hostname !== undefined, 'host undefined');
   });
 
   test('new URI(object)', function() {
     const u = new URI({protocol: 'http', hostname: 'example.org'});
     ok(u instanceof URI, 'instanceof URI');
-    ok((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u._parts.hostname !== undefined, 'host undefined');
   });
 
   test('new URI(object)', function() {
@@ -136,42 +136,42 @@ declare var SecondLevelDomains: any;
   if (typeof document !== 'undefined') {
     const testDomAttribute = function(element: HTMLElement, attribute: string) {
       test('new URI(Element ' + element.nodeName + ')', function() {
-        (element as any)[attribute] = 'http://example.org/foobar.html';
+        element[attribute] = 'http://example.org/foobar.html';
 
         const u = new URI(element);
         equal(u.scheme(), 'http', 'scheme');
         equal(u.host(), 'example.org', 'host');
         equal(u.path(), '/foobar.html', 'path');
 
-        (element as any)[attribute] = 'file:///C:/foo/bar.html';
+        element[attribute] = 'file:///C:/foo/bar.html';
         const u2 = new URI(element);
-        equal(u2.href(), (element as any)[attribute], 'file');
+        equal(u2.href(), element[attribute], 'file');
       });
     };
 
     const testUnsupportedDomAttribute = function(element: HTMLElement, attribute: string) {
       test('new URI(unsupported Element ' + element.nodeName + ')', function() {
-        (element as any)[attribute] = 'http://example.org/foobar.html';
+        element[attribute] = 'http://example.org/foobar.html';
 
         const u = new URI(element);
         equal(u.scheme(), '', 'scheme');
         equal(u.host(), '', 'host');
         equal(u.path(), '', 'path');
 
-        (element as any)[attribute] = 'file:///C:/foo/bar.html';
+        element[attribute] = 'file:///C:/foo/bar.html';
         const u2 = new URI(element);
         equal(u2.href(), '', 'file');
       });
     };
 
     // Test supported DOM attributes
-    for (const nodeName in (URI as any).domAttributes) {
-      if (!Object.prototype.hasOwnProperty.call((URI as any).domAttributes, nodeName) || nodeName === 'input') {
+    for (const nodeName in URI.domAttributes) {
+      if (!Object.prototype.hasOwnProperty.call(URI.domAttributes, nodeName) || nodeName === 'input') {
         continue;
       }
 
       const element = document.createElement(nodeName);
-      testDomAttribute(element, (URI as any).domAttributes[nodeName]);
+      testDomAttribute(element, URI.domAttributes[nodeName]);
     }
 
     // Test input elements with image type
@@ -191,18 +191,18 @@ declare var SecondLevelDomains: any;
   test('new URI(URI)', function() {
     const u = new URI(new URI({protocol: 'http', hostname: 'example.org'}));
     ok(u instanceof URI, 'instanceof URI');
-    ok((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u._parts.hostname !== undefined, 'host undefined');
   });
 
   test('new URI(new Date())', function() {
     raises(function() {
-      new URI(new Date() as any);
+      new URI(new Date());
     }, TypeError, 'Failing unknown input');
   });
 
   test('new URI(undefined)', function() {
     raises(function() {
-      new URI(undefined as any);
+      new URI(undefined);
     }, TypeError, 'Failing undefined input');
   });
 
@@ -211,14 +211,14 @@ declare var SecondLevelDomains: any;
     ok(u instanceof URI, 'instanceof URI');
     const expectedHostname = (typeof window !== 'undefined' && typeof location !== 'undefined') ?
       (location.hostname === '' ? null : location.hostname) : null;
-    const actualHostname = (u as any)._parts.hostname;
+    const actualHostname = u._parts.hostname;
     ok(actualHostname === expectedHostname, 'hostname == location.hostname');
   });
 
   test('function URI(string)', function() {
     const u = URI('http://example.org/');
     ok(u instanceof URI, 'instanceof URI');
-    ok((u as any)._parts.hostname !== undefined, 'host undefined');
+    ok(u._parts.hostname !== undefined, 'host undefined');
   });
 
   test('function URI(string) with invalid port "port" throws', function () {
@@ -242,12 +242,12 @@ declare var SecondLevelDomains: any;
   test('function URI(string) with protocol and without hostname should throw', function () {
     new URI('http://');
 
-    (URI as any).preventInvalidHostname = true;
+    URI.preventInvalidHostname = true;
     raises(function () {
       new URI('http://');
     }, TypeError, "throws TypeError");
 
-    (URI as any).preventInvalidHostname = false;
+    URI.preventInvalidHostname = false;
     new URI('http://');
   });
 
@@ -271,14 +271,14 @@ declare var SecondLevelDomains: any;
         // test parsed parts
         for (const key in t.parts) {
           if (Object.hasOwnProperty.call(t.parts, key)) {
-            equal((u as any)._parts[key], t.parts[key], 'part: ' + key);
+            equal(u._parts[key], t.parts[key], 'part: ' + key);
           }
         }
 
         // test accessors
         for (const key in t.accessors) {
           if (Object.hasOwnProperty.call(t.accessors, key)) {
-            equal((u as any)[key](), t.accessors[key], 'accessor: ' + key);
+            equal(u[key](), t.accessors[key], 'accessor: ' + key);
           }
         }
 
@@ -321,7 +321,7 @@ declare var SecondLevelDomains: any;
       ok(false, 'do not accept invalid protocol');
     } catch(e) {}
 
-    u.protocol(null as any);
+    u.protocol(null);
     equal(u.protocol(), '', 'missing protocol');
     equal(u+'', '//example.org/foo.html', 'missing-scheme url');
   });
@@ -372,18 +372,18 @@ declare var SecondLevelDomains: any;
     }, TypeError, 'Failing backslash detection in hostname');
 
     // instance does not fall back to global setting
-    (URI as any).preventInvalidHostname = true;
+    URI.preventInvalidHostname = true;
     u.hostname('');
-    u.hostname(null as any);
-    (URI as any).preventInvalidHostname = false;
+    u.hostname(null);
+    URI.preventInvalidHostname = false;
 
-    (u as any).preventInvalidHostname(true);
+    u.preventInvalidHostname(true);
     raises(function() {
       u.hostname('');
     }, TypeError, "Trying to set an empty hostname with http(s) protocol throws a TypeError");
 
     raises(function() {
-      u.hostname(null as any);
+      u.hostname(null);
     }, TypeError, "Trying to set hostname to null with http(s) protocol throws a TypeError");
   });
 
@@ -622,7 +622,7 @@ declare var SecondLevelDomains: any;
     equal(u.href(), '../path/index.html', 'href removed url');
 
     /*jshint -W053 */
-    u.href(new String('/narf') as any);
+    u.href(new String('/narf'));
     /*jshint +W053 */
     equal(u.pathname(), '/narf', 'href from String instance');
   });
@@ -879,7 +879,7 @@ declare var SecondLevelDomains: any;
 
     u.segment(3, '');
     equal(u.path(), '/goodbye/world/bar.html/zapp', 'segment del 3 ""');
-    u.segment(3, null as any);
+    u.segment(3, null);
     equal(u.path(), '/goodbye/world/bar.html', 'segment del 3 null');
 
     u = new URI('http://www.example.org/some/directory/foo.html');
@@ -942,7 +942,7 @@ declare var SecondLevelDomains: any;
 
     u.segmentCoded(2, '');
     equal(u.path(), '/hello%20world/mars/zapp%20zerapp', 'segmentCoded del 3 ""');
-    u.segmentCoded(2, null as any);
+    u.segmentCoded(2, null);
     equal(u.path(), '/hello%20world/mars', 'segmentCoded del 3 null');
 
     u.segmentCoded('');
@@ -956,15 +956,15 @@ declare var SecondLevelDomains: any;
     const u = new URI('?foo=bar&baz=bam&baz=bau');
     const q = u.query(true);
 
-    (q as any).something = ['new', 'and', 'funky'];
+    q.something = ['new', 'and', 'funky'];
     u.query(q);
     equal(u.query(), 'foo=bar&baz=bam&baz=bau&something=new&something=and&something=funky', 'adding array');
 
-    (q as any).foo = undefined;
+    q.foo = undefined;
     u.query(q);
     equal(u.query(), 'baz=bam&baz=bau&something=new&something=and&something=funky', 'removing field');
 
-    (q as any).baz = undefined;
+    q.baz = undefined;
     u.query(q);
     equal(u.query(), 'something=new&something=and&something=funky', 'removing array');
   });
@@ -1118,27 +1118,27 @@ declare var SecondLevelDomains: any;
 
     u = new URI('?bar=1&bar=1&bar=1');
     u.duplicateQueryParameters(true);
-    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters enabled');
+    ok(u._parts.duplicateQueryParameters, 'duplicateQueryParameters enabled');
     u.normalizeQuery();
     equal(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
-    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after normalizeQuery()');
+    ok(u._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after normalizeQuery()');
 
     u.duplicateQueryParameters(false);
     u.normalizeQuery();
     equal(u.toString(), '?bar=1', 'parameters de-duplicated again');
-    ok(!(u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still disabled after normalizeQuery()');
+    ok(!u._parts.duplicateQueryParameters, 'duplicateQueryParameters still disabled after normalizeQuery()');
 
-    (URI as any).duplicateQueryParameters = true;
+    URI.duplicateQueryParameters = true;
     u = new URI('?bar=1&bar=1&bar=1');
     u.normalizeQuery();
     equal(u.toString(), '?bar=1&bar=1&bar=1', 'global configuration');
 
-    (URI as any).duplicateQueryParameters = false;
+    URI.duplicateQueryParameters = false;
 
     // test cloning
     u = new URI('?bar=1&bar=1&bar=1');
     u = u.duplicateQueryParameters(true).clone();
-    ok((u as any)._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after clone()');
+    ok(u._parts.duplicateQueryParameters, 'duplicateQueryParameters still enabled after clone()');
     u.normalizeQuery();
     equal(u.toString(), '?bar=1&bar=1&bar=1', 'parameters NOT de-duplicated');
 
@@ -1172,14 +1172,14 @@ declare var SecondLevelDomains: any;
     u.addQuery('alpha bravo', 'charlie delta');
     equal(u.toString(), '?bar=foo%2Bbar&bam%2Bbaz=foo&alpha%20bravo=charlie%20delta', 'serialized un/escaped space');
 
-    (URI as any).escapeQuerySpace = false;
+    URI.escapeQuerySpace = false;
     u = new URI('?bar=foo+bar&bam+baz=foo');
     data = u.query(true);
     equal((data as any).bar, 'foo+bar', 'value not un-spac-escaped by default');
     equal((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped by default');
 
     // reset
-    (URI as any).escapeQuerySpace = true;
+    URI.escapeQuerySpace = true;
   });
 
   test('hasQuery', function() {
@@ -1359,7 +1359,7 @@ declare var SecondLevelDomains: any;
     equal(u.path(), '/', 'root /.//');
 
     // encoding
-    (u as any)._parts.path = '/~userhome/@mine;is %2F and/';
+    u._parts.path = '/~userhome/@mine;is %2F and/';
     u.normalize();
     equal(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
 
@@ -1813,7 +1813,7 @@ declare var SecondLevelDomains: any;
       + '<a>https://example.com/with_unbalanced_parentheses</a>) does not.\n'
       + 'Note that www. is not a URL and neither is http://.';
     /*jshint laxbreak: false */
-    const result = (URI as any).withinString(source, function(url: string) {
+    const result = URI.withinString(source, function(url: string) {
       return '<a>' + url + '</a>';
     });
 
@@ -1830,7 +1830,7 @@ declare var SecondLevelDomains: any;
     const expected = 'Hello <a>www.example.com</a>,\n'
       + 'proto://example.org/foo.html?baz=la#bumm is an URL.\n';
     /*jshint laxbreak: false */
-    const result = (URI as any).withinString(source, decorate, {ignore: /^proto:/i});
+    const result = URI.withinString(source, decorate, {ignore: /^proto:/i});
 
     equal(result, expected, 'filtered in string URI identification');
   });
@@ -1849,7 +1849,7 @@ declare var SecondLevelDomains: any;
       + '<a href="http://example.org/foo.html?baz=la#bumm> is an URL</a>.\n'
       + '<a href=\'http://example.org/foo.html?baz=la#bumm\'> is an URL</a>.\n';
     /*jshint laxbreak: false */
-    const result = (URI as any).withinString(source, decorate, {ignoreHtml: true});
+    const result = URI.withinString(source, decorate, {ignoreHtml: true});
 
     equal(result, expected, 'filtered in string URI identification');
   });
@@ -1874,7 +1874,7 @@ declare var SecondLevelDomains: any;
 
     /*jshint laxbreak: false */
     const links: string[] = [];
-    const result = (URI as any).withinString(source, function(url: string) {
+    const result = URI.withinString(source, function(url: string) {
       links.push(url);
     });
 
@@ -1886,7 +1886,7 @@ declare var SecondLevelDomains: any;
     function testPort(value: any) {
       let result = true;
       try {
-        (URI as any).ensureValidPort(value);
+        URI.ensureValidPort(value);
       } catch(e) {
         result = false;
       }
@@ -1932,7 +1932,7 @@ declare var SecondLevelDomains: any;
       SecondLevelDomains: SecondLevelDomains
     };
 
-    const unconflicted = (URI as any).noConflict(true);
+    const unconflicted = URI.noConflict(true);
 
     deepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
 
@@ -1957,70 +1957,70 @@ declare var SecondLevelDomains: any;
   test('joinPaths', function() {
     let result;
 
-    result = (URI as any).joinPaths('/a/b', '/c', 'd', '/e').toString();
+    result = URI.joinPaths('/a/b', '/c', 'd', '/e').toString();
     equal(result, '/a/b/c/d/e', 'absolute paths');
 
-    result = (URI as any).joinPaths('a/b', 'http://example.com/c', new URI('d/'), '/e').toString();
+    result = URI.joinPaths('a/b', 'http://example.com/c', new URI('d/'), '/e').toString();
     equal(result, 'a/b/c/d/e', 'relative path');
 
-    result = (URI as any).joinPaths('/a/').toString();
+    result = URI.joinPaths('/a/').toString();
     equal(result, '/a/', 'single absolute directory');
 
-    result = (URI as any).joinPaths('/a').toString();
+    result = URI.joinPaths('/a').toString();
     equal(result, '/a', 'single absolute segment');
 
-    result = (URI as any).joinPaths('a').toString();
+    result = URI.joinPaths('a').toString();
     equal(result, 'a', 'single relative segment');
 
-    result = (URI as any).joinPaths('').toString();
+    result = URI.joinPaths('').toString();
     equal(result, '', 'empty string');
 
-    result = (URI as any).joinPaths().toString();
+    result = URI.joinPaths().toString();
     equal(result, '', 'no argument');
 
-    result = (URI as any).joinPaths('', 'a', '', '', 'b').toString();
+    result = URI.joinPaths('', 'a', '', '', 'b').toString();
     equal(result, '/a/b', 'leading empty segment');
 
-    result = (URI as any).joinPaths('a', '', '', 'b', '', '').toString();
+    result = URI.joinPaths('a', '', '', 'b', '', '').toString();
     equal(result, 'a/b/', 'trailing empty segment');
   });
 
   test('setQuery', function () {
     const o: any = {foo: 'bar'};
 
-    (URI as any).setQuery(o, 'foo', 'bam');
+    URI.setQuery(o, 'foo', 'bam');
     deepEqual(o, {foo: 'bam'}, 'set name, value');
 
-    (URI as any).setQuery(o, 'array', ['one', 'two']);
+    URI.setQuery(o, 'array', ['one', 'two']);
     deepEqual(o, {foo: 'bam', array: ['one', 'two']}, 'set name, array');
 
-    (URI as any).setQuery(o, 'foo', 'qux');
+    URI.setQuery(o, 'foo', 'qux');
     deepEqual(o, {foo: 'qux', array: ['one', 'two']}, 'override name, value');
 
     const o2: any = {foo: 'bar'};
-    (URI as any).setQuery(o2, {baz: 'qux'});
+    URI.setQuery(o2, {baz: 'qux'});
     deepEqual(o2, {foo: 'bar', baz: 'qux'}, 'set {name: value}');
 
-    (URI as any).setQuery(o2, {bar: ['1', '2']});
+    URI.setQuery(o2, {bar: ['1', '2']});
     deepEqual(o2, {foo: 'bar', bar: ['1', '2'], baz: 'qux'}, 'set {name: array}');
 
-    (URI as any).setQuery(o2, {foo: 'qux'});
+    URI.setQuery(o2, {foo: 'qux'});
     deepEqual(o2, {foo: 'qux', bar: ['1', '2'], baz: 'qux'}, 'override {name: value}');
 
     const o3: any = {foo: 'bar'};
-    (URI as any).setQuery(o3, {bam: null, baz: ''});
+    URI.setQuery(o3, {bam: null, baz: ''});
     deepEqual(o3, {foo: 'bar', bam: null, baz: ''}, 'set {name: null}');
 
     const o4: any = {foo: 'bar'};
-    (URI as any).setQuery(o4, 'empty');
+    URI.setQuery(o4, 'empty');
     deepEqual(o4, {foo: 'bar', empty: null}, 'set undefined');
 
     const o5: any = {foo: 'bar'};
-    (URI as any).setQuery(o5, 'empty', '');
+    URI.setQuery(o5, 'empty', '');
     deepEqual(o5, {foo: 'bar', empty: ''}, 'set empty string');
 
     const o6: any = {};
-    (URI as any).setQuery(o6, 'some value', 'must be encoded because of = and ? and #');
+    URI.setQuery(o6, 'some value', 'must be encoded because of = and ? and #');
     deepEqual(o6, {'some value': 'must be encoded because of = and ? and #'}, 'encoding');
   });
 
@@ -2063,14 +2063,14 @@ declare var SecondLevelDomains: any;
     u.normalizePath();
     equal(u.path(), '/%C3%A4.html', 'Unicode');
 
-    (URI as any).iso8859();
+    URI.iso8859();
     u = new URI('/ä.html');
     u.normalizePath();
     equal(u.path(), '/%E4.html', 'ISO8859');
     u.path('/ö.html');
     equal(u.path(), '/%F6.html', 'ISO8859');
 
-    (URI as any).unicode();
+    URI.unicode();
     u = new URI('/ä.html');
     u.normalizePath();
     equal(u.path(), '/%C3%A4.html', 'Unicode again');
@@ -2105,49 +2105,49 @@ declare var SecondLevelDomains: any;
     } catch(e) {}
 
     try {
-      (URI as any).decode('%%20');
+      URI.decode('%%20');
       ok(false, 'URI.decode() must throw URIError: URI malformed');
     } catch(e) {}
 
-    equal((URI as any).decodeQuery('%%20'), '%%20', 'malformed URI component returned');
-    equal((URI as any).decodePathSegment('%%20'), '%%20', 'malformed URI component returned');
-    equal((URI as any).decodeUrnPathSegment('%%20'), '%%20', 'malformed URN component returned');
+    equal(URI.decodeQuery('%%20'), '%%20', 'malformed URI component returned');
+    equal(URI.decodePathSegment('%%20'), '%%20', 'malformed URI component returned');
+    equal(URI.decodeUrnPathSegment('%%20'), '%%20', 'malformed URN component returned');
   });
 
   test('encodeQuery', function() {
-    const escapeQuerySpace = (URI as any).escapeQuerySpace;
+    const escapeQuerySpace = URI.escapeQuerySpace;
 
-    (URI as any).escapeQuerySpace = true;
-    equal((URI as any).encodeQuery(' '), '+');
-    equal((URI as any).encode(' '), '%20');
+    URI.escapeQuerySpace = true;
+    equal(URI.encodeQuery(' '), '+');
+    equal(URI.encode(' '), '%20');
 
-    (URI as any).escapeQuerySpace = false;
-    equal((URI as any).encodeQuery(' '), '%20');
-    equal((URI as any).encode(' '), '%20');
+    URI.escapeQuerySpace = false;
+    equal(URI.encodeQuery(' '), '%20');
+    equal(URI.encode(' '), '%20');
 
-    (URI as any).escapeQuerySpace = escapeQuerySpace;
+    URI.escapeQuerySpace = escapeQuerySpace;
   });
 
   test('decodeQuery', function() {
-    const escapeQuerySpace = (URI as any).escapeQuerySpace;
+    const escapeQuerySpace = URI.escapeQuerySpace;
 
-    (URI as any).escapeQuerySpace = true;
-    equal((URI as any).decodeQuery('+'), ' ');
-    equal((URI as any).decodeQuery('%20'), ' ');
-    equal((URI as any).decode('%20'), ' ');
-    equal((URI as any).decode('+'), '+');
+    URI.escapeQuerySpace = true;
+    equal(URI.decodeQuery('+'), ' ');
+    equal(URI.decodeQuery('%20'), ' ');
+    equal(URI.decode('%20'), ' ');
+    equal(URI.decode('+'), '+');
 
-    (URI as any).escapeQuerySpace = false;
-    equal((URI as any).decodeQuery('+'), '+');
-    equal((URI as any).decodeQuery('%20'), ' ');
-    equal((URI as any).decode('%20'), ' ');
-    equal((URI as any).decode('+'), '+');
+    URI.escapeQuerySpace = false;
+    equal(URI.decodeQuery('+'), '+');
+    equal(URI.decodeQuery('%20'), ' ');
+    equal(URI.decode('%20'), ' ');
+    equal(URI.decode('+'), '+');
 
-    (URI as any).escapeQuerySpace = escapeQuerySpace;
+    URI.escapeQuerySpace = escapeQuerySpace;
   });
 
   test('encodeReserved', function() {
-    equal((URI as any).encodeReserved('ä:/?#[]@!$&\'()*+,;='), '%C3%A4:/?#[]@!$&\'()*+,;=');
+    equal(URI.encodeReserved('ä:/?#[]@!$&\'()*+,;='), '%C3%A4:/?#[]@!$&\'()*+,;=');
   });
 
   module('SecondLevelDomains');
