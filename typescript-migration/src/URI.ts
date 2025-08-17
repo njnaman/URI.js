@@ -275,7 +275,7 @@ interface URIProto {
     }
 
     // Initialize the instance with _parts (cast as any for migration compatibility)
-    const self = this as any;
+    const self = this;
     if (!self._parts) {
       self._parts = URIObj._parts();
       self._string = '';
@@ -749,7 +749,7 @@ interface URIProto {
     pos = string.indexOf('#');
     if (pos > -1) {
       // escaping?
-      (parts as any).fragment = string.substring(pos + 1) || null;
+      parts.fragment = string.substring(pos + 1) || null;
       string = string.substring(0, pos);
     }
 
@@ -757,7 +757,7 @@ interface URIProto {
     pos = string.indexOf('?');
     if (pos > -1) {
       // escaping?
-      (parts as any).query = string.substring(pos + 1) || null;
+      parts.query = string.substring(pos + 1) || null;
       string = string.substring(0, pos);
     }
 
@@ -769,17 +769,17 @@ interface URIProto {
     // extract protocol
     if (string.substring(0, 2) === '//') {
       // relative-scheme
-      (parts as any).protocol = null;
+      parts.protocol = null;
       string = string.substring(2);
       // extract "user:pass@host:port"
       string = URIObj.parseAuthority(string, parts);
     } else {
       pos = string.indexOf(':');
       if (pos > -1) {
-        (parts as any).protocol = string.substring(0, pos) || null;
-        if ((parts as any).protocol && !(parts as any).protocol.match(URIObj.protocol_expression)) {
+        parts.protocol = string.substring(0, pos) || null;
+        if (parts.protocol && !parts.protocol.match(URIObj.protocol_expression)) {
           // : may be within the path
-          (parts as any).protocol = undefined;
+          parts.protocol = undefined;
         } else if (string.substring(pos + 1, pos + 3).replace(/\\/g, '/') === '//') {
           string = string.substring(pos + 3);
 
@@ -787,13 +787,13 @@ interface URIProto {
           string = URIObj.parseAuthority(string, parts);
         } else {
           string = string.substring(pos + 1);
-          (parts as any).urn = true;
+          parts.urn = true;
         }
       }
     }
 
     // what's left must be the path
-    (parts as any).path = string;
+    parts.path = string;
 
     // and we're done
     return parts as URIParts;
@@ -825,10 +825,10 @@ interface URIProto {
       // I claim most client software breaks on IPv6 anyways. To simplify things, URI only accepts
       // IPv6+port in the format [2001:db8::1]:80 (for the time being)
       bracketPos = string.indexOf(']');
-      (parts as any).hostname = string.substring(1, bracketPos) || null;
-      (parts as any).port = string.substring(bracketPos + 2, pos) || null;
-      if ((parts as any).port === '/') {
-        (parts as any).port = null;
+      parts.hostname = string.substring(1, bracketPos) || null;
+      parts.port = string.substring(bracketPos + 2, pos) || null;
+      if (parts.port === '/') {
+        parts.port = null;
       }
     } else {
       const firstColon = string.indexOf(':');
@@ -837,25 +837,25 @@ interface URIProto {
       if (nextColon !== -1 && (firstSlash === -1 || nextColon < firstSlash)) {
         // IPv6 host contains multiple colons - but no port
         // this notation is actually not allowed by RFC 3986, but we're a liberal parser
-        (parts as any).hostname = string.substring(0, pos) || null;
-        (parts as any).port = null;
+        parts.hostname = string.substring(0, pos) || null;
+        parts.port = null;
       } else {
         t = string.substring(0, pos).split(':');
-        (parts as any).hostname = t[0] || null;
-        (parts as any).port = t[1] || null;
+        parts.hostname = t[0] || null;
+        parts.port = t[1] || null;
       }
     }
 
-    if ((parts as any).hostname && string.substring(pos).charAt(0) !== '/') {
+    if (parts.hostname && string.substring(pos).charAt(0) !== '/') {
       pos++;
       string = '/' + string;
     }
 
-    if ((parts as any).preventInvalidHostname) {
+    if (parts.preventInvalidHostname) {
       URIObj.ensureValidHostname(parts.hostname, parts.protocol);
     }
 
-    if ((parts as any).port) {
+    if (parts.port) {
       URIObj.ensureValidPort(parts.port);
     }
 
@@ -881,13 +881,13 @@ interface URIProto {
     // authority@ must come before /path or \path
     if (pos > -1 && (firstSlash === -1 || pos < firstSlash)) {
       t = string.substring(0, pos).split(':');
-      (parts as any).username = t[0] ? URIObj.decode(t[0]) : null;
+      parts.username = t[0] ? URIObj.decode(t[0]) : null;
       t.shift();
-      (parts as any).password = t[0] ? URIObj.decode(t.join(':')) : null;
+      parts.password = t[0] ? URIObj.decode(t.join(':')) : null;
       string = _string.substring(pos + 1);
     } else {
-      (parts as any).username = null;
-      (parts as any).password = null;
+      parts.username = null;
+      parts.password = null;
     }
 
     return string;
