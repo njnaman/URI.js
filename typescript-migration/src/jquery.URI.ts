@@ -236,7 +236,7 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
         return false;
       }
 
-      return (compare[property] as any)(uri, match[4]);
+      return compare[property](uri, match[4]);
     } else {
       property = match[1].toLowerCase();
       if (!comparable[property]) {
