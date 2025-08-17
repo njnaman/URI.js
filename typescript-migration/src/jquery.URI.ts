@@ -180,8 +180,8 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
       }
     }
 
-    (uri as any)._dom_element = elem;
-    (uri as any)._dom_attribute = property;
+    uri._dom_element = elem;
+    uri._dom_attribute = property;
     uri.normalize();
     $this.data('uri', uri);
     return uri;
