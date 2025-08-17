@@ -29,7 +29,7 @@ interface SecondLevelDomainsInterface {
   if (typeof module === 'object' && module.exports) {
     // Node
     SecondLevelDomains = module.exports = factory();
-  } else if (typeof define === 'function' && (define as any).amd) {
+  } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(factory);
   } else {

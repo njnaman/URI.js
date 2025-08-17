@@ -29,7 +29,7 @@ let punycode: PunycodeInterface;
 	var freeExports = typeof exports == 'object' && exports &&
 		!exports.nodeType && exports;
 	var freeModule = typeof module == 'object' && module &&
-		!(module as any).nodeType && module;
+		module.nodeType && module;
 	var freeGlobal = typeof global == 'object' && global;
 	if (
 		freeGlobal.global === freeGlobal ||
