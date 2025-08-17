@@ -431,7 +431,7 @@ interface Levels {
     strictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict() restores the `URITemplate` variable');
 
     // restore for other tests
-    (window as any).URITemplate = actual_lib;
+    window.URITemplate = actual_lib;
   });
 
 

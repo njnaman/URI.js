@@ -42,7 +42,7 @@ test('storing URLs in fragment', function () {
 test('fragmentPrefix', function () {
   var u: any;
 
-  (URI as any).fragmentPrefix = '?';
+  URI.fragmentPrefix = '?';
   u = URI('http://example.org');
   equal(u._parts.fragmentPrefix, '?', 'init using global property');
 
@@ -66,5 +66,5 @@ test('fragmentPrefix', function () {
   ok(u.fragment(true) instanceof URI, 'parsing § prefix - is URI');
   equal(u.fragment(true).toString(), '/foo/bar/baz.html', 'parsing § prefix - result');
 
-  (URI as any).fragmentPrefix = '!';
+  URI.fragmentPrefix = '!';
 });

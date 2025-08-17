@@ -51,7 +51,7 @@ test('storing query-data in fragment', function() {
 test('fragmentPrefix', function() {
   var u: any;
 
-  (URI as any).fragmentPrefix = '!';
+  URI.fragmentPrefix = '!';
   u = URI('http://example.org');
   equal(u._parts.fragmentPrefix, '!', 'init using global property');
 
@@ -71,5 +71,5 @@ test('fragmentPrefix', function() {
   equal(u.fragment(), '§hello=world', 'unparsed §');
   deepEqual(u.fragment(true), {hello: 'world'}, 'parsing § prefix');
 
-  (URI as any).fragmentPrefix = '?';
+  URI.fragmentPrefix = '?';
 });
