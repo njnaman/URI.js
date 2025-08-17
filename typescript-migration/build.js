@@ -1,75 +1,78 @@
-#!/usr/bin/env node
+(function($, undefined){
+    window.URL = window.webkitURL || window.URL;
+    window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+function build(files) {
+    var $out = $('#output'),
+        $progress = $('#prog'),
+        sources = [],
+        connections = [],
+        source;
 
-const packageJson = require('./package.json');
+    $out.parent().hide();
+    $progress.show().prop('value', 1).text('Loading Files');
 
-console.log(`Building ${packageJson.name} v${packageJson.version}...`);
-
-// Clean previous build
-console.log('🧹 Cleaning previous build...');
-try {
-    fs.rmSync('dist', { recursive: true, force: true });
-} catch (err) {
-    // Directory doesn't exist, that's fine
-}
-
-// Type check
-console.log('🔍 Type checking...');
-try {
-    execSync('npm run type-check', { stdio: 'inherit' });
-    console.log('✅ Type check passed');
-} catch (err) {
-    console.error('❌ Type check failed');
-    process.exit(1);
-}
-
-// Run tests
-console.log('🧪 Running tests...');
-try {
-    execSync('npm test', { stdio: 'inherit' });
-    console.log('✅ Tests passed');
-} catch (err) {
-    console.error('❌ Tests failed');
-    process.exit(1);
-}
-
-// Build TypeScript
-console.log('🔨 Building TypeScript...');
-try {
-    execSync('npm run build', { stdio: 'inherit' });
-    console.log('✅ TypeScript build completed');
-} catch (err) {
-    console.error('❌ TypeScript build failed');
-    process.exit(1);
-}
-
-// Add license header to built files
-console.log('📄 Adding license headers...');
-const licenseHeader = `/*! ${packageJson.title || packageJson.name} v${packageJson.version} ${packageJson.homepage || ''} */\n/* TypeScript migration of URI.js by ${packageJson.author.name} */\n`;
-
-const distDir = path.join(__dirname, 'dist');
-const jsFiles = fs.readdirSync(distDir).filter(file => file.endsWith('.js'));
-
-jsFiles.forEach(file => {
-    const filePath = path.join(distDir, file);
-    const content = fs.readFileSync(filePath, 'utf8');
-    if (!content.startsWith('/*!')) {
-        fs.writeFileSync(filePath, licenseHeader + content);
+    for (var i = 0, length = files.length; i < length; i++) {
+        sources.push("");
+        (function(i, file){
+            connections.push($.get("src/" + file, function(data) {
+                sources[i] = data;
+            }, "text"));
+        })(i, files[i]);
     }
+
+    $.when.apply($, connections).done(function() {
+        $progress.prop('value', 2).text('Compiling Scripts');
+        $.post('https://closure-compiler.appspot.com/compile', {
+            js_code: sources.join("\n\n"),
+            compilation_level: "SIMPLE_OPTIMIZATIONS",
+            output_format: "text",
+            output_info: "compiled_code"
+        }, function(data) {
+            var code = "/*! URI.js v1.19.11 http://medialize.github.io/URI.js/ */\n/* build contains: " + files.join(', ') + " */\n" + data;
+            $progress.hide();
+            $out.val(code).parent().show();
+            $out.prev().find('a').remove();
+            $out.prev().prepend(download(code));
+        }).error(function() {
+            alert("Your browser is incapable of cross-domain communication.\nPlease see instructions for manual build below.");
+        });
+    });
+};
+
+function download(code) {
+    var blob = new Blob([code], {type: 'text\/javascript'});
+
+    var a = document.createElement('a');
+    a.download = 'URI.js';
+    a.href = window.URL.createObjectURL(blob);
+    a.textContent = 'Download';
+    a.dataset.downloadurl = ['text/javascript', a.download, a.href].join(':');
+
+    return a;
+};
+
+$(function(){
+    $('#builder').on('submit', function(e) {
+        var $this = $(this),
+            $files = $this.find('input:checked'),
+            files = [];
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        if (!$files.length) {
+            alert("please choose at least one file!");
+            return;
+        }
+
+        $files.each(function() {
+            var val = $(this).val();
+            val.length && files.push(val);
+        });
+
+        build(files);
+    });
 });
 
-console.log('🎉 Build completed successfully!');
-
-// Show build statistics
-const stats = fs.readdirSync(distDir).map(file => {
-    const filePath = path.join(distDir, file);
-    const stat = fs.statSync(filePath);
-    const sizeKB = (stat.size / 1024).toFixed(2);
-    return `  ${file}: ${sizeKB} KB`;
-});
-
-console.log('\n📊 Build output:');
-console.log(stats.join('\n')); 
+})(jQuery);
