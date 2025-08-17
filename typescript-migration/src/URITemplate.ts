@@ -106,8 +106,8 @@ interface DataInterface {
 
   function URITemplate(this: any, expression: string): any {
     // serve from cache where possible
-    if ((URITemplate as any)._cache[expression]) {
-      return (URITemplate as any)._cache[expression];
+    if (URITemplate._cache[expression]) {
+      return URITemplate._cache[expression];
     }
 
     // Allow instantiation without the 'new' keyword
@@ -116,7 +116,7 @@ interface DataInterface {
     }
 
     (this as any).expression = expression;
-    (URITemplate as any)._cache[expression] = this;
+    URITemplate._cache[expression] = this;
     return this;
   }
 
