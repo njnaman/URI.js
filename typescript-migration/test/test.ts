@@ -1014,7 +1014,7 @@ declare var SecondLevelDomains: any;
     u.query('');
     u.setQuery('some value', 'must be encoded because of = and ? and #');
     equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    equal((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal(u.query(true)['some value'], 'must be encoded because of = and ? and #', 'decoding');
 
     u.query('?foo=bar');
     u.setQuery('__proto__', 'hasOwnProperty');
@@ -1055,7 +1055,7 @@ declare var SecondLevelDomains: any;
     u.query('');
     u.addQuery('some value', 'must be encoded because of = and ? and #');
     equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    equal((u.query(true) as any)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal(u.query(true)['some value'], 'must be encoded because of = and ? and #', 'decoding');
   });
 
   test('removeQuery', function() {
@@ -1153,19 +1153,19 @@ declare var SecondLevelDomains: any;
     let u = new URI('?bar=foo+bar&bam+baz=foo');
     let data = u.query(true);
 
-    equal((data as any).bar, 'foo bar', 'value un-spac-escaped');
-    equal((data as any)['bam baz'], 'foo', 'name un-spac-escaped');
+    equal(data.bar, 'foo bar', 'value un-spac-escaped');
+    equal(data['bam baz'], 'foo', 'name un-spac-escaped');
 
     u.escapeQuerySpace(false);
     data = u.query(true);
-    equal((data as any).bar, 'foo+bar', 'value not un-spac-escaped');
-    equal((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped');
+    equal(data.bar, 'foo+bar', 'value not un-spac-escaped');
+    equal(data['bam+baz'], 'foo', 'name not un-spac-escaped');
 
     u.escapeQuerySpace(true);
     data = u.query(true);
 
-    equal((data as any).bar, 'foo bar', 'value un-spac-escaped again');
-    equal((data as any)['bam baz'], 'foo', 'name un-spac-escaped again');
+    equal(data.bar, 'foo bar', 'value un-spac-escaped again');
+    equal(data['bam baz'], 'foo', 'name un-spac-escaped again');
 
     u.escapeQuerySpace(false);
 
@@ -1175,8 +1175,8 @@ declare var SecondLevelDomains: any;
     URI.escapeQuerySpace = false;
     u = new URI('?bar=foo+bar&bam+baz=foo');
     data = u.query(true);
-    equal((data as any).bar, 'foo+bar', 'value not un-spac-escaped by default');
-    equal((data as any)['bam+baz'], 'foo', 'name not un-spac-escaped by default');
+    equal(data.bar, 'foo+bar', 'value not un-spac-escaped by default');
+    equal(data['bam+baz'], 'foo', 'name not un-spac-escaped by default');
 
     // reset
     URI.escapeQuerySpace = true;
@@ -1760,7 +1760,7 @@ declare var SecondLevelDomains: any;
         caught = true;
       }
       /*jshint sub:true */
-      if ((t as any)['throws']) {
+      if (t['throws']) {
         /*jshint sub:false */
         ok(caught, t.name + ' should throw exception');
       } else {
@@ -2088,13 +2088,13 @@ declare var SecondLevelDomains: any;
     const uri = new URI('http://www.google.com.hk/search?q=pennytel%20downloads&sa=%20%CB%D1%20%CB%F7%20&forid=1&prog=aff&ie=GB2312&oe=GB2312&safe=active&source=sdo_sb_html&hl=zh-CN');
     let data = uri.query(true);
 
-    equal((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
-    equal((data as any).forid, '1', 'decodable value returned');
+    equal(data.sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
+    equal(data.forid, '1', 'decodable value returned');
 
     uri.normalizeQuery();
     data = uri.query(true);
-    equal((data as any).sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
-    equal((data as any).forid, '1', 'decodable value returned');
+    equal(data.sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
+    equal(data.forid, '1', 'decodable value returned');
   });
 
   module('Encoding');
