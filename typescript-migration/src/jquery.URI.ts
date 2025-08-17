@@ -14,7 +14,9 @@
 
 interface JQueryStatic {
   (selector: any): JQuery;
+
   each(obj: any, callback: (index: any, value: any) => void): void;
+
   attrHooks: { [key: string]: any };
   expr: any;
   fn: any;
@@ -22,11 +24,17 @@ interface JQueryStatic {
 
 interface JQuery {
   first(): JQuery;
+
   get(index: number): Element;
+
   data(key: string): any;
+
   data(key: string, value: any): JQuery;
+
   attr(name: string): string;
+
   uri(): any;
+
   uri(uri: string | any): any;
 }
 
@@ -44,7 +52,7 @@ interface URICompareFunctions {
   if (typeof module === 'object' && module.exports) {
     // Node
     module.exports = factory(require('jquery'), require('./URI'));
-  } else if (typeof define === 'function' && (define as any).amd) {
+  } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['jquery', './URI'], factory);
   } else {
@@ -61,21 +69,21 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   const comparable: { [key: string]: boolean } = {};
   const compare: URICompareFunctions = {
     // equals
-    '=': function(value: string, target: string): boolean {
+    '=': function (value: string, target: string): boolean {
       return value === target;
     },
     // ~= translates to value.match((?:^|\s)target(?:\s|$)) which is useless for URIs
     // |= translates to value.match((?:\b)target(?:-|\s|$)) which is useless for URIs
     // begins with
-    '^=': function(value: string, target: string): boolean {
+    '^=': function (value: string, target: string): boolean {
       return !!(value + '').match(new RegExp('^' + escapeRegEx(target), 'i'));
     },
     // ends with
-    '$=': function(value: string, target: string): boolean {
+    '$=': function (value: string, target: string): boolean {
       return !!(value + '').match(new RegExp(escapeRegEx(target) + '$', 'i'));
     },
     // contains
-    '*=': function(value: string, target: string, property?: string): boolean {
+    '*=': function (value: string, target: string, property?: string): boolean {
       if (property === 'directory') {
         // add trailing slash so /dir/ will match the deep-end as well
         value += '/';
@@ -83,10 +91,10 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
 
       return !!(value + '').match(new RegExp(escapeRegEx(target), 'i'));
     },
-    'equals:': function(uri: any, target: string): boolean {
+    'equals:': function (uri: any, target: string): boolean {
       return uri.equals(target);
     },
-    'is:': function(uri: any, target: string): boolean {
+    'is:': function (uri: any, target: string): boolean {
       return uri.is(target);
     }
   };
@@ -112,32 +120,32 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
 
   function generateAccessor(property: string): any {
     return {
-      get: function(elem: Element): any {
-        return ($ as any)(elem).uri()[property]();
+      get: function (elem: Element): any {
+        return $(elem).uri()[property]();
       },
-      set: function(elem: Element, value: any): any {
-        ($ as any)(elem).uri()[property](value);
+      set: function (elem: Element, value: any): any {
+        $(elem).uri()[property](value);
         return value;
       }
     };
   }
 
   // populate lookup table and register $.attr('uri:accessor') handlers
-  $.each('origin authority directory domain filename fragment hash host hostname href password path pathname port protocol query resource scheme search subdomain suffix tld username'.split(' '), function(k: number, v: string) {
+  $.each('origin authority directory domain filename fragment hash host hostname href password path pathname port protocol query resource scheme search subdomain suffix tld username'.split(' '), function (k: number, v: string) {
     comparable[v] = true;
     $.attrHooks['uri:' + v] = generateAccessor(v);
   });
 
   // pipe $.attr('src') and $.attr('href') through URI.js
   const _attrHooks = {
-    get: function(elem: Element): any {
-      return ($ as any)(elem).uri();
+    get: function (elem: Element): any {
+      return $(elem).uri();
     },
-    set: function(elem: Element, value: any): string {
-      return ($ as any)(elem).uri().href(value).toString();
+    set: function (elem: Element, value: any): string {
+      return $(elem).uri().href(value).toString();
     }
   };
-  $.each(['src', 'href', 'action', 'uri', 'cite'], function(k: number, v: string) {
+  $.each(['src', 'href', 'action', 'uri', 'cite'], function (k: number, v: string) {
     $.attrHooks[v] = {
       set: _attrHooks.set
     };
@@ -145,7 +153,7 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   $.attrHooks.uri.get = _attrHooks.get;
 
   // general URI accessor
-  ($ as any).fn.uri = function(uri?: any): any {
+  $.fn.uri = function (uri?: any): any {
     const $this = this.first();
     const elem = $this.get(0);
     const property = getUriProperty(elem);
@@ -180,18 +188,18 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   };
 
   // overwrite URI.build() to update associated DOM element if necessary
-  URI.prototype.build = function(deferBuild?: boolean): any {
-    if ((this as any)._dom_element) {
+  URI.prototype.build = function (deferBuild?: boolean): any {
+    if (this._dom_element) {
       // cannot defer building when hooked into a DOM element
-      (this as any)._string = URI.build((this as any)._parts);
-      (this as any)._deferred_build = false;
-      (this as any)._dom_element.setAttribute((this as any)._dom_attribute, (this as any)._string);
-      (this as any)._dom_element[(this as any)._dom_attribute] = (this as any)._string;
+      this._string = URI.build(this._parts);
+      this._deferred_build = false;
+      this._dom_element.setAttribute(this._dom_attribute, this._string);
+      this._dom_element[this._dom_attribute] = this._string;
     } else if (deferBuild === true) {
-      (this as any)._deferred_build = true;
-    } else if (deferBuild === undefined || (this as any)._deferred_build) {
-      (this as any)._string = URI.build((this as any)._parts);
-      (this as any)._deferred_build = false;
+      this._deferred_build = true;
+    } else if (deferBuild === undefined || this._deferred_build) {
+      this._string = URI.build(this._parts);
+      this._deferred_build = false;
     }
 
     return this;
@@ -200,7 +208,7 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   // add :uri() pseudo class selector to sizzle
   let uriSizzle: any;
   const pseudoArgs = /^([a-zA-Z]+)\s*([\^\$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/;
-  
+
   function uriPseudo(elem: Element, text: string): boolean {
     let match: RegExpMatchArray | null, property: string, uri: any;
 
@@ -217,7 +225,7 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
       return false;
     }
 
-    uri = ($ as any)(elem).uri();
+    uri = $(elem).uri();
 
     if (match[5]) {
       return uri.is(match[5]);
@@ -260,10 +268,3 @@ function jQueryURIFactory($: JQueryStatic, URI: any): JQueryStatic {
   // return jQuery anyway
   return $;
 }
-
-// ES6 export for TypeScript
-function initializeJQueryURI($: JQueryStatic, URI: any) {
-  return jQueryURIFactory($, URI);
-}
-
-// initializeJQueryURI is exported via UMD wrapper above
