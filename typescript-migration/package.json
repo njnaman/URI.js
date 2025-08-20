@@ -1,7 +1,7 @@
 {
-  "name": "uri-js-typescript",
+  "name": "urijs",
   "version": "1.19.11",
-  "title": "URI.js - Mutating URLs (TypeScript)",
+  "title": "URI.js - Mutating URLs",
   "description": "TypeScript migration of URI.js library - Mutating URLs. URI.js is a Javascript library for working with URLs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,21 +19,6 @@
     "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
     "Justin Chase <justin.m.chase@gmail.com> (http://justinmchase.com)"
   ],
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "build:clean": "npm run clean && npm run build",
-    "build:full": "node build.js",
-    "dev": "ts-node src/index.ts",
-    "clean": "rm -rf dist",
-    "type-check": "tsc --noEmit",
-    "test": "echo 'Run tests by opening test/test.URI.html in your browser'",
-    "test:browser": "echo 'Open test/test.URI.html in your browser to run QUnit tests'",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build"
-  },
   "keywords": [
     "uri",
     "url",
@@ -76,5 +61,9 @@
   ],
   "engines": {
     "node": ">=14.0.0"
+  },
+  "scripts": {
+    "test": "ts-node test-runner.ts",
+    "build": "tsc"
   }
 }

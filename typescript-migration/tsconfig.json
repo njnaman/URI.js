@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "none",
-    "lib": ["ES5", "DOM"],
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["ES2018", "DOM"],
     "outDir": "./dist",
     "strict": false,
     "noImplicitThis": false,
@@ -15,11 +15,12 @@
   },
   "include": [
     "src/**/*",
-    "test/**/*"
+    "test/**/*",
+    "test-runner.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "src/index.ts",
+    "src/index.ts"
   ]
 }
