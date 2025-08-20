@@ -13,44 +13,44 @@
  */
 
 // Define the IPv6 interface
-interface IPv6 {
+export interface IPv6Interface {
   best: (address: string) => string;
-  noConflict: () => IPv6;
+  noConflict: () => IPv6Interface;
 }
 
-// IPv6 will be declared by the UMD wrapper below
+// Type definitions for global objects that might have IPv6
+interface GlobalWithIPv6 {
+  IPv6?: IPv6Interface;
+}
 
-(function (root: any, factory: (root?: any) => IPv6) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    IPv6 = module.exports = factory();
-  } else if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(factory);
-  } else {
-    // Browser globals (root is window)
-    IPv6 = factory(root);
-    if (root) {
-      root.IPv6 = IPv6;
-    }
+// Store reference to global IPv6 if it exists (for noConflict)
+declare const globalThis: GlobalWithIPv6 | undefined;
+declare const window: GlobalWithIPv6 | undefined;
+declare const global: GlobalWithIPv6 | undefined;
+
+const _IPv6: IPv6Interface | undefined = (() => {
+  if (typeof globalThis !== 'undefined' && globalThis.IPv6) {
+    return globalThis.IPv6;
   }
-}(this, function (root?: any): IPv6 {
-  'use strict';
+  if (typeof window !== 'undefined' && window.IPv6) {
+    return window.IPv6;
+  }
+  if (typeof global !== 'undefined' && global.IPv6) {
+    return global.IPv6;
+  }
+  return undefined;
+})();
 
-  /*
-  var _in = "fe80:0000:0000:0000:0204:61ff:fe9d:f156";
-  var _out = IPv6.best(_in);
-  var _expected = "fe80::204:61ff:fe9d:f156";
+/*
+Example usage:
+const _in = "fe80:0000:0000:0000:0204:61ff:fe9d:f156";
+const _out = IPv6.best(_in);
+const _expected = "fe80::204:61ff:fe9d:f156";
 
-  console.log(_in, _out, _expected, _out === _expected);
-  */
+console.log(_in, _out, _expected, _out === _expected);
+*/
 
-  // save current IPv6 variable, if any
-  const _IPv6 = root && root.IPv6;
-
-  function bestPresentation(address: string): string {
+function bestPresentation(address: string): string {
     // based on:
     // Javascript to test an IPv6 address for proper format, and to
     // present the "best text representation" according to IETF Draft RFC at
@@ -181,20 +181,24 @@ interface IPv6 {
     return result;
   }
 
-  function noConflict(): IPv6 {
-    /*jshint validthis: true */
-    if (root && root.IPv6 === this) {
-      root.IPv6 = _IPv6;
-    }
-
-    return this;
+function noConflict(): IPv6Interface {
+  // Restore previous IPv6 if it existed
+  if (typeof globalThis !== 'undefined' && globalThis.IPv6 === IPv6) {
+    globalThis.IPv6 = _IPv6;
+  } else if (typeof window !== 'undefined' && window.IPv6 === IPv6) {
+    window.IPv6 = _IPv6;
+  } else if (typeof global !== 'undefined' && global.IPv6 === IPv6) {
+    global.IPv6 = _IPv6;
   }
 
-  return {
-    best: bestPresentation,
-    noConflict: noConflict
-  };
-}));
+  return IPv6;
+}
 
-// ES6 export for TypeScript
-// IPv6 is exported via UMD wrapper above
+// Simple, clean IPv6 object - TypeScript will handle UMD conversion
+const IPv6: IPv6Interface = {
+  best: bestPresentation,
+  noConflict: noConflict
+};
+
+// Export as default - TypeScript will generate UMD wrapper
+export default IPv6;
