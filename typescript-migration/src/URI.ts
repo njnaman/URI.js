@@ -2417,7 +2417,7 @@ p.normalizePath = function (build?: boolean): any {
   if (!_path) {
     return this;
   }
-  
+
   _path = URIObj.recodePath(_path);
 
   let _was_relative: boolean = false;
@@ -2775,5 +2775,4 @@ p.escapeQuerySpace = function (escape?: boolean): any {
   return this;
 };
 
-// ES6 export for TypeScript
-// URI is exported via UMD wrapper above
+export default URI;

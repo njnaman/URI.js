@@ -28,13 +28,7 @@ export default [
         output: {
             file: 'dist/src/URI.js',
             format: 'umd',
-            name: 'URI',
-            globals: {
-                './punycode': 'punycode',
-                './IPv6': 'IPv6',
-                './SecondLevelDomains': 'SecondLevelDomains'
-            }
+            name: 'URI'
         },
-        external: ['./punycode', './IPv6', './SecondLevelDomains']
     },
 ];
