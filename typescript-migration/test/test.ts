@@ -1,11 +1,6 @@
 // TypeScript version of test.js
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
-// QUnit-only test framework setup
-import {IPv6Interface} from "../src/IPv6";
-import {SecondLevelDomainsInterface} from "../src/SecondLevelDomains";
-import {PunycodeInterface} from "../src/punycode";
-
 declare const QUnit: any;
 
 // Declare global variables that will be available after the scripts load

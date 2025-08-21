@@ -12,11 +12,6 @@
  *
  */
 
-// IPv6 interface and types
-export interface IPv6Interface {
-  best: (address: string) => string;
-  noConflict: () => IPv6Interface;
-}
 
 function bestPresentation(address: string): string {
   // based on:
@@ -158,4 +153,4 @@ const IPv6: IPv6Interface = {
   noConflict: noConflict
 };
 
-export default IPv6;
+export default IPv6

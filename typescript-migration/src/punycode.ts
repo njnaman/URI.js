@@ -1,18 +1,6 @@
 /*! https://mths.be/punycode v1.4.0 by @mathias */
 
 
-export interface PunycodeInterface {
-    version: string;
-    ucs2: {
-        decode(input: string): number[];
-        encode(input: number[]): string;
-    };
-    decode: (input: string) => string;
-    encode: (input: string) => string;
-    toASCII: (input: string) => string;
-    toUnicode: (input: string) => string;
-}
-
 /** Highest positive signed 32-bit float value */
 const maxInt = 2147483647; // aka. 0x7FFFFFFF or 2^31-1
 
@@ -426,5 +414,4 @@ const punycode: PunycodeInterface = {
     toUnicode: toUnicode
 };
 
-// Export for ES modules, CommonJS, and UMD
-export default punycode;
+export default punycode
