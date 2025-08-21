@@ -7,7 +7,14 @@ export default [
             name: 'IPv6'
         },
     },
-
+    {
+        input: 'dist/src/punycode.js',
+        output: {
+            file: 'dist/src/punycode.js',
+            format: 'umd',
+            name: 'punycode'
+        },
+    },
     {
         input: 'dist/src/SecondLevelDomains.js',
         output: {
