@@ -1,28 +1,40 @@
 export default [
     {
-        input: 'dist/src/IPv6.js',
+        input: 'dist/IPv6.js',
         output: {
-            file: 'dist/src/IPv6.js',
+            file: 'dist/IPv6.js',
             format: 'umd',
             name: 'IPv6'
         },
     },
     {
-        input: 'dist/src/punycode.js',
+        input: 'dist/punycode.js',
         output: {
-            file: 'dist/src/punycode.js',
+            file: 'dist/punycode.js',
             format: 'umd',
             name: 'punycode'
         },
     },
     {
-        input: 'dist/src/SecondLevelDomains.js',
+        input: 'dist/SecondLevelDomains.js',
         output: {
-            file: 'dist/src/SecondLevelDomains.js',
+            file: 'dist/SecondLevelDomains.js',
             format: 'umd',
             name: 'SecondLevelDomains'
         },
     },
-
-
+    {
+        input: 'dist/URI.js',
+        output: {
+            file: 'dist/URI.js',
+            format: 'umd',
+            name: 'URI',
+            globals: {
+                './punycode': 'punycode',
+                './IPv6': 'IPv6',
+                './SecondLevelDomains': 'SecondLevelDomains'
+            }
+        },
+        external: ['./punycode', './IPv6', './SecondLevelDomains']
+    },
 ];

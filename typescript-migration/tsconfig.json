@@ -14,10 +14,9 @@
   },
   "include": [
     "src/**/*",
-    "test/**/*",
-    "test-runner.ts"
   ],
   "exclude": [
+//    "src/URI.ts",
     "node_modules",
     "dist",
   ]
