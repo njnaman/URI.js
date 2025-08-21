@@ -13,7 +13,7 @@
  */
 
 // Define the SecondLevelDomains interface
-interface SecondLevelDomainsInterface {
+export interface SecondLevelDomainsInterface {
   list: { [key: string]: string };
   has: (domain: string) => boolean;
   is: (domain: string) => boolean;
