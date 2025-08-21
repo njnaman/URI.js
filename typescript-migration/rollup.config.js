@@ -23,6 +23,12 @@ export default [
             name: 'SecondLevelDomains'
         },
     },
-
-
+    {
+        input: 'dist/src/URI.js',
+        output: {
+            file: 'dist/src/URI.js',
+            format: 'umd',
+            name: 'URI'
+        },
+    },
 ];
