@@ -4,7 +4,7 @@
   "title": "URI.js - Mutating URLs",
   "description": "TypeScript migration of URI.js library - Mutating URLs. URI.js is a Javascript library for working with URLs.",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
   "author": {
     "name": "Rodney Rehm (original), TypeScript migration",
     "url": "http://rodneyrehm.de"
@@ -49,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
+    "rollup": "^4.47.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
@@ -64,6 +65,7 @@
   },
   "scripts": {
     "test": "ts-node test-runner.ts",
-    "build": "tsc"
+    "build": "tsc && npm run rollup",
+    "rollup" : "rollup -c"
   }
 }
