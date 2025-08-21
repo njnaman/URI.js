@@ -12,10 +12,6 @@
  */
 
 // Declare global dependencies (will be provided by UMD modules)
-import {PunycodeInterface} from "./punycode";
-import {IPv6Interface} from "./IPv6";
-import {SecondLevelDomainsInterface} from "./SecondLevelDomains";
-
 declare const punycode: PunycodeInterface;
 declare const IPv6: IPv6Interface;
 declare const SLD: SecondLevelDomainsInterface;
@@ -1941,8 +1937,8 @@ p.domain = function (v?: any, build?: boolean): any {
     } else {
       const replace = new RegExp(escapeRegEx(this.domain()) + '$');
       if (this._parts.hostname) {
-      this._parts.hostname = this._parts.hostname.replace(replace, v);
-    }
+        this._parts.hostname = this._parts.hostname.replace(replace, v);
+      }
     }
 
     this.build(!build);
@@ -1981,12 +1977,12 @@ p.tld = function (v?: any, build?: boolean): any {
       throw new TypeError('cannot set TLD empty');
     } else if (v.match(/[^a-zA-Z0-9-]/)) {
       if (SLD && SLD.is(v)) {
-              replace = new RegExp(escapeRegEx(this.tld()) + '$');
-      if (this._parts.hostname) {
+        replace = new RegExp(escapeRegEx(this.tld()) + '$');
         if (this._parts.hostname) {
-      this._parts.hostname = this._parts.hostname.replace(replace, v);
-    }
-      }
+          if (this._parts.hostname) {
+            this._parts.hostname = this._parts.hostname.replace(replace, v);
+          }
+        }
       } else {
         throw new TypeError('TLD "' + v + '" contains characters other than [A-Z0-9]');
       }
@@ -1996,8 +1992,8 @@ p.tld = function (v?: any, build?: boolean): any {
       replace = new RegExp(escapeRegEx(this.tld()) + '$');
       if (this._parts.hostname) {
         if (this._parts.hostname) {
-      this._parts.hostname = this._parts.hostname.replace(replace, v);
-    }
+          this._parts.hostname = this._parts.hostname.replace(replace, v);
+        }
       }
     }
 

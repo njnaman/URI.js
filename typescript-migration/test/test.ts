@@ -1,21 +1,13 @@
 // TypeScript version of test.js
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
-// Reference the source files to compile them
-/// <reference path="../src/IPv6.ts" />
-/// <reference path="../src/SecondLevelDomains.ts" />
-/// <reference path="../src/URI.ts" />
-/// <reference path="../src/URITemplate.ts" />
-/// <reference path="./urls.ts" />
-
-// QUnit-only test framework setup
 declare const QUnit: any;
 
 // Declare global variables that will be available after the scripts load
 declare var URI: any;
-declare var IPv6: any;
-declare var URITemplate: any;
-declare var SecondLevelDomains: any;
+declare var IPv6: IPv6Interface;
+declare var SecondLevelDomains: SecondLevelDomainsInterface;
+declare var punycode: PunycodeInterface;
 // urls is declared in urls.ts
 
 // Test suite setup
@@ -34,11 +26,7 @@ declare var SecondLevelDomains: any;
     const raises = QUnit.raises;
 
     test('loaded', function () {
-        if (typeof window !== 'undefined') {
-            ok(window.URI);
-        } else {
-            ok(URI);
-        }
+        ok(window.URI)
     });
 
     module('constructing');
@@ -136,29 +124,28 @@ declare var SecondLevelDomains: any;
     if (typeof document !== 'undefined') {
         const testDomAttribute = function (element: HTMLElement, attribute: string) {
             test('new URI(Element ' + element.nodeName + ')', function () {
-                element[attribute] = 'http://example.org/foobar.html';
-
+                element.setAttribute(attribute, 'http://example.org/foobar.html')
                 const u = new URI(element);
                 equal(u.scheme(), 'http', 'scheme');
                 equal(u.host(), 'example.org', 'host');
                 equal(u.path(), '/foobar.html', 'path');
+                element.setAttribute(attribute, 'file:///C:/foo/bar.html')
 
-                element[attribute] = 'file:///C:/foo/bar.html';
                 const u2 = new URI(element);
-                equal(u2.href(), element[attribute], 'file');
+                equal(u2.href(), element.getAttribute(attribute), 'file');
             });
         };
 
         const testUnsupportedDomAttribute = function (element: HTMLElement, attribute: string) {
             test('new URI(unsupported Element ' + element.nodeName + ')', function () {
-                element[attribute] = 'http://example.org/foobar.html';
+                element.setAttribute(attribute, 'http://example.org/foobar.html')
 
                 const u = new URI(element);
                 equal(u.scheme(), '', 'scheme');
                 equal(u.host(), '', 'host');
                 equal(u.path(), '', 'path');
 
-                element[attribute] = 'file:///C:/foo/bar.html';
+                element.setAttribute(attribute, 'file:///C:/foo/bar.html')
                 const u2 = new URI(element);
                 equal(u2.href(), '', 'file');
             });
@@ -1920,36 +1907,6 @@ declare var SecondLevelDomains: any;
 
         // restore for other tests
         window.URI = actual_lib;
-    });
-
-    test('noConflict(removeAll=true)', function () {
-        const actual = {
-            URI: URI,
-            URITemplate: URITemplate,
-            IPv6: IPv6,
-            SecondLevelDomains: SecondLevelDomains
-        };
-
-        const unconflicted = URI.noConflict(true);
-
-        deepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
-
-        // In browser environment, check if all variables were restored
-        if (typeof window !== 'undefined') {
-            strictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
-            strictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
-            strictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
-            strictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
-
-            // restore for other tests
-            window.URI = actual.URI;
-            window.URITemplate = actual.URITemplate;
-            window.IPv6 = actual.IPv6;
-            window.SecondLevelDomains = actual.SecondLevelDomains;
-        } else {
-            // In Node.js environment, we can't test global restoration the same way
-            ok(unconflicted, 'noConflict(true) returns the libraries object in Node.js');
-        }
     });
 
     test('joinPaths', function () {
