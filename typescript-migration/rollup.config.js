@@ -24,6 +24,14 @@ export default [
         },
     },
     {
+        input: 'dist/src/URITemplate.js',
+        output: {
+            file: 'dist/src/URITemplate.js',
+            format: 'umd',
+            name: 'URITemplate'
+        },
+    },
+    {
         input: 'dist/src/URI.js',
         output: {
             file: 'dist/src/URI.js',

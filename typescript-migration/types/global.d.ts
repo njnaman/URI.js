@@ -27,6 +27,73 @@ declare global {
     noConflict: () => SecondLevelDomainsInterface;
   }
 
+  interface URIInterface {
+    build(deferBuild?: boolean): URIInterface;
+
+    clone(): URIInterface;
+
+    toString(): string;
+
+    valueOf(): string;
+
+    protocol(): (v?: any, build?: boolean) => any
+
+    username: (v?: any, build?: boolean) => any;
+    password: (v?: any, build?: boolean) => any;
+    hostname: (v?: any, build?: boolean) => any;
+    port: (v?: any, build?: boolean) => any;
+    query: (v?: any, build?: boolean) => any;
+    fragment: (v?: any, build?: boolean) => any;
+    search: (v?: any, build?: boolean) => any;
+    hash: (v?: any, build?: boolean) => any;
+    pathname: (v?: any, build?: boolean) => any;
+    path: (v?: any, build?: boolean) => any;
+    href: (href?: any, build?: boolean) => any;
+    is: (what: string) => boolean | null;
+    scheme: (v?: any, build?: boolean) => any;
+    origin: (v?: any, build?: boolean) => any;
+    host: (v?: any, build?: boolean) => any;
+    authority: (v?: any, build?: boolean) => any;
+    userinfo: (v?: any, build?: boolean) => any;
+    resource: (v?: any, build?: boolean) => any;
+    subdomain: (v?: any, build?: boolean) => any;
+    domain: (v?: any, build?: boolean) => any;
+    tld: (v?: any, build?: boolean) => any;
+    directory: (v?: any, build?: boolean) => any;
+    filename: (v?: any, build?: boolean) => any;
+    suffix: (v?: any, build?: boolean) => any;
+    segment: (segment?: any, v?: any, build?: boolean) => any;
+    segmentCoded: (segment?: any, v?: any, build?: boolean) => any;
+    setQuery: (name?: any, value?: any, build?: boolean) => any;
+    addQuery: (name?: any, value?: any, build?: boolean) => any;
+    removeQuery: (name?: any, value?: any, build?: boolean) => any;
+    hasQuery: (name?: any, value?: any, withinArray?: boolean) => any;
+    setSearch:  (name?: any, value?: any, build?: boolean) => any;
+    addSearch:  (name?: any, value?: any, build?: boolean) => any;
+    removeSearch:  (name?: any, value?: any, build?: boolean) => any;
+    hasSearch: (name?: any, value?: any, withinArray?: boolean) => any;
+    normalize: () => any;
+    normalizeProtocol: (build?: boolean) => any ;
+    normalizeHostname: (build?: boolean) => any ;
+    normalizePort: (build?: boolean) => any ;
+    normalizePath: (build?: boolean) => any ;
+    normalizePathname: (build?: boolean) => any ;
+    normalizeQuery: (build?: boolean) => any ;
+    normalizeFragment: (build?: boolean) => any ;
+    normalizeSearch: (build?: boolean) => any ;
+    normalizeHash: (build?: boolean) => any ;
+    iso8859: () => any;
+    unicode: () => any;
+    readable: () => any;
+    absoluteTo: (base?: any) => any ;
+    relativeTo: (base?: any) => any;
+    equals: (uri?: any) => boolean;
+    preventInvalidHostname: (prevent?: boolean) => any ;
+    duplicateQueryParameters: (allow?: boolean) => any;
+    escapeQuerySpace: (escape?: boolean) => any ;
+
+  }
+
   interface Window {
     URI: any,
     URI_pre_lib: any,
