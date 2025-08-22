@@ -14,7 +14,10 @@
 // Declare global dependencies (will be provided by UMD modules)
 declare const punycode: PunycodeInterface;
 declare const IPv6: IPv6Interface;
-declare const SLD: SecondLevelDomainsInterface;
+declare const SecondLevelDomains: SecondLevelDomainsInterface;
+
+// Use the imported SecondLevelDomains as SLD
+const SLD: SecondLevelDomainsInterface = SecondLevelDomains
 
 interface URIParts {
   protocol: string | null;
@@ -32,7 +35,7 @@ interface URIParts {
 }
 
 interface QueryData {
-  [key: string]: string | string[] | null;
+  [key: string]: string | string[] | null | undefined;
 }
 
 interface DomAttributes {
@@ -1166,12 +1169,12 @@ URIObj.removeQuery = function (data: QueryData, name?: string | string[] | RegEx
 
   if (isArray(name)) {
     for (i = 0, length = (name as string[]).length; i < length; i++) {
-      data[(name as string[])[i]] = null;
+      data[(name as string[])[i]] = undefined;
     }
   } else if (getType(name) === 'RegExp') {
     for (key in data) {
       if ((name as RegExp).test(key)) {
-        data[key] = null;
+        data[key] = undefined;
       }
     }
   } else if (typeof name === 'object') {
@@ -1184,19 +1187,17 @@ URIObj.removeQuery = function (data: QueryData, name?: string | string[] | RegEx
     if (value !== undefined) {
       if (getType(value) === 'RegExp') {
         if (!isArray(data[name]) && (value as RegExp).test(data[name] as string)) {
-          data[name] = null;
+          data[name] = undefined;
         } else {
-          const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
-          data[name] = filtered.length === 0 ? null : filtered;
+          data[name] = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
         }
       } else if (data[name] === String(value) && (!isArray(value) || (value as unknown as any[]).length === 1)) {
-        data[name] = null;
+        data[name] = undefined;
       } else if (isArray(data[name])) {
-        const filtered = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
-        data[name] = filtered.length === 0 ? null : filtered;
+        data[name] = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
       }
     } else {
-      data[name] = null;
+      data[name] = undefined;
     }
   } else {
     throw new TypeError('URI.removeQuery() accepts an object, string, RegExp as the first parameter');
