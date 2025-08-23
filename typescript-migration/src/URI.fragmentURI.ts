@@ -17,88 +17,65 @@
 // furi.pathname('/hello.html');
 // uri.toString() === "http://example.org/#!/hello.html"
 
-// Declare URI variable at module level
-var URIFragmentURI: any;
+const p = URI.prototype;
+// old handlers we need to wrap
+const f = p.fragment;
+const b = p.build;
 
-(function (root, factory) {
-  'use strict';
-  // https://github.com/umdjs/umd/blob/master/returnExports.js
-  if (typeof module === 'object' && module.exports) {
-    // Node
-    URIFragmentURI = module.exports = factory(require('./URI'));
-  } else if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['./URI'], factory);
-  } else {
-    // Browser globals (root is window)
-    factory((root as any)?.URI);
-  }
-}(this, function (URI: any) {
-  'use strict';
+// make fragmentPrefix configurable
+URI.fragmentPrefix = '!';
+const _parts = URI._parts;
+URI._parts = function (): any {
+  const parts = _parts();
+  parts.fragmentPrefix = URI.fragmentPrefix;
+  return parts;
+};
 
-  const p = URI.prototype;
-  // old handlers we need to wrap
-  const f = p.fragment;
-  const b = p.build;
+p.fragmentPrefix = function (v: string): any {
+  this._parts.fragmentPrefix = v;
+  return this;
+};
 
-  // make fragmentPrefix configurable
-  URI.fragmentPrefix = '!';
-  const _parts = URI._parts;
-  URI._parts = function(): any {
-    const parts = _parts();
-    parts.fragmentPrefix = URI.fragmentPrefix;
-    return parts;
-  };
-  
-  p.fragmentPrefix = function(v: string): any {
-    this._parts.fragmentPrefix = v;
+// add fragment(true) and fragment(URI) signatures
+p.fragment = function (v?: any, build?: boolean): any {
+  const prefix = this._parts.fragmentPrefix;
+  const fragment = this._parts.fragment || '';
+  let furi: any;
+
+  if (v === true) {
+    if (fragment.substring(0, prefix.length) !== prefix) {
+      furi = URI('');
+    } else {
+      furi = new URI(fragment.substring(prefix.length));
+    }
+
+    this._fragmentURI = furi;
+    furi._parentURI = this;
+    return furi;
+  } else if (v !== undefined && typeof v !== 'string') {
+    this._fragmentURI = v;
+    v._parentURI = v;
+    this._parts.fragment = prefix + v.toString();
+    this.build(!build);
     return this;
-  };
+  } else if (typeof v === 'string') {
+    this._fragmentURI = undefined;
+  }
 
-  // add fragment(true) and fragment(URI) signatures  
-  p.fragment = function(v?: any, build?: boolean): any {
-    const prefix = this._parts.fragmentPrefix;
-    const fragment = this._parts.fragment || '';
-    let furi: any;
+  return f.call(this, v, build);
+};
 
-    if (v === true) {
-      if (fragment.substring(0, prefix.length) !== prefix) {
-        furi = URI('');
-      } else {
-        furi = new URI(fragment.substring(prefix.length));
-      }
-    
-      this._fragmentURI = furi;
-      furi._parentURI = this;
-      return furi;
-    } else if (v !== undefined && typeof v !== 'string') {
-      this._fragmentURI = v;
-      v._parentURI = v;
-      this._parts.fragment = prefix + v.toString();
-      this.build(!build);
-      return this;
-    } else if (typeof v === 'string') {
-      this._fragmentURI = undefined;
-    }
+// make .build() of the actual URI aware of the FragmentURI
+p.build = function (deferBuild?: boolean): any {
+  const t = b.call(this, deferBuild);
 
-    return f.call(this, v, build);
-  };
+  if (deferBuild !== false && this._parentURI) {
+    // update the parent
+    this._parentURI.fragment(this);
+  }
 
-  // make .build() of the actual URI aware of the FragmentURI
-  p.build = function(deferBuild?: boolean): any {
-    const t = b.call(this, deferBuild);
-  
-    if (deferBuild !== false && this._parentURI) {
-      // update the parent
-      this._parentURI.fragment(this);
-    }
+  return t;
+};
 
-    return t;
-  };
-
-  // extending existing object rather than defining something new
-  return URI;
-}));
-
-// ES6 export for TypeScript
-// URI is exported via UMD wrapper above
+// extending existing object rather than defining something new
+export default URI;

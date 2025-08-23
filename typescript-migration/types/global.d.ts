@@ -109,7 +109,7 @@ declare global {
   interface URIInstanceInterface {
     // Index signature to allow string indexing
     [key: string]: any;
-    
+
     // Internal properties
     _parts: any;
     _string: string;
