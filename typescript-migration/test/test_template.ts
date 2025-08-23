@@ -3,7 +3,7 @@
 // Reference the source files to compile them
 /// <reference path="../src/URITemplate.ts" />
 
-declare var URITemplate: any;
+declare var URITemplate: URITemplateStaticInterface;
 
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
@@ -365,8 +365,10 @@ interface Levels {
       var combinedExpansion = '';
       var template: any;
       var expansion: string;
+      var lastType = '';
 
       for (var type in data.expressions) {
+        lastType = type;
         Object.keys(data.expressions[type]).forEach(function (expression) {
           combinedExpression += '/' + expression;
           combinedExpansion += '/' + data.expressions[type][expression];
@@ -379,7 +381,7 @@ interface Levels {
 
       template = new URITemplate(combinedExpression);
       expansion = template.expand(data.values);
-      equal(expansion, combinedExpansion, type + ': combined');
+      equal(expansion, combinedExpansion, lastType + ': combined');
     });
   });
 

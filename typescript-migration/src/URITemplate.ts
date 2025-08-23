@@ -11,7 +11,7 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
-declare const URI: URIInstanceInterface;
+declare const URI: URIStaticInterface;
 
 interface URITemplateOperator {
   prefix: string;
@@ -59,34 +59,6 @@ interface DataInterface {
 
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 /*jshint camelcase: false */
-
-interface URITemplateInstanceInterface {
-  expression: string;
-
-  expand(data: URITemplateData | DataInterface, opts?: URITemplateExpandOptions): string;
-
-
-  parse(): URITemplateInstanceInterface;
-}
-
-interface URITemplateStaticInterface {
-  (this: URITemplateInstanceInterface, expression: string): URITemplateInstanceInterface;
-
-  new(expression: string): URITemplateInstanceInterface;
-
-  expand(expression: URITemplateExpression, data: DataInterface, opts?: URITemplateExpandOptions): string;
-
-  expandNamed(d: URITemplateDataValue, options: URITemplateOperator, explode: boolean, separator: string, length?: number, name?: string): string;
-
-  expandUnnamed(d: URITemplateDataValue, options: URITemplateOperator, explode: boolean, separator: string, length?: number): string;
-
-
-  _cache: Record<string, URITemplateInstanceInterface>;
-  EXPRESSION_PATTERN: RegExp;
-  VARIABLE_PATTERN: RegExp;
-  VARIABLE_NAME_PATTERN: RegExp;
-  LITERAL_PATTERN: RegExp;
-}
 
 
 const URITemplate = function (this: URITemplateInstanceInterface, expression: string): URITemplateInstanceInterface {
@@ -558,11 +530,11 @@ Data.prototype.get = function (key: string): URITemplateDataValue {
 };
 
 // hook into URI for fluid access
-(URI as any).expand = function (expression: string, data: URITemplateData): any {
+URI.expand = function (expression: string, data: URITemplateData): any {
   const template = new (URITemplate as any)(expression);
   const expansion = template.expand(data);
 
-  return new (URI as any)(expansion);
+  return new URI(expansion);
 };
 
 export default URITemplate;
