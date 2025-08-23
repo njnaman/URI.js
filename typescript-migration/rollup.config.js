@@ -39,11 +39,18 @@ export default [
             name: 'URI'
         },
     },
-
     {
         input: 'dist/src/URI.fragmentURI.js',
         output: {
             file: 'dist/src/URI.fragmentURI.js',
+            format: 'umd',
+            name: 'URI'
+        },
+    },
+    {
+        input: 'dist/src/jquery.URI.js',
+        output: {
+            file: 'dist/src/jquery.URI.js',
             format: 'umd',
             name: 'URI'
         },

@@ -3,12 +3,9 @@
 'use strict';
 
 // Reference the source files to compile them
-/// <reference path="../src/URI.ts" />
-/// <reference path="../src/jquery.URI.ts" />
-
 // Global declarations for libraries loaded via script tags
-declare var URI: any;
-declare var $: any;
+declare var URI: URIStaticInterface;
+declare var $: JQueryStatic;
 
 var module = QUnit.module;
 var test = QUnit.test;
@@ -40,7 +37,10 @@ module('jQuery.URI', {
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = '/nonexistant.js';
-        document.getElementById('testestest').appendChild(script);
+        const testElement = document.getElementById('testestest');
+        if (testElement) {
+            testElement.appendChild(script);
+        }
     },
     teardown: function () {
         const t = $('#testestest');
