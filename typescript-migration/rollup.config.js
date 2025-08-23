@@ -4,7 +4,8 @@ export default [
         output: {
             file: 'dist/src/IPv6.js',
             format: 'umd',
-            name: 'IPv6'
+            name: 'IPv6',
+            noConflict: true
         },
     },
     {
@@ -12,7 +13,8 @@ export default [
         output: {
             file: 'dist/src/punycode.js',
             format: 'umd',
-            name: 'punycode'
+            name: 'punycode',
+            noConflict: true
         },
     },
     {
@@ -20,7 +22,17 @@ export default [
         output: {
             file: 'dist/src/SecondLevelDomains.js',
             format: 'umd',
-            name: 'SecondLevelDomains'
+            name: 'SecondLevelDomains',
+            noConflict: true
+        },
+    },
+    {
+        input: 'dist/src/URI.js',
+        output: {
+            file: 'dist/src/URI.js',
+            format: 'umd',
+            name: 'URI',
+            noConflict: true
         },
     },
     {
@@ -28,7 +40,8 @@ export default [
         output: {
             file: 'dist/src/URITemplate.js',
             format: 'umd',
-            name: 'URITemplate'
+            name: 'URITemplate',
+            noConflict: true
         },
     },
     {
@@ -51,14 +64,6 @@ export default [
         input: 'dist/src/jquery.URI.js',
         output: {
             file: 'dist/src/jquery.URI.js',
-            format: 'umd',
-            name: 'URI'
-        },
-    },
-    {
-        input: 'dist/src/URI.js',
-        output: {
-            file: 'dist/src/URI.js',
             format: 'umd',
             name: 'URI'
         },
