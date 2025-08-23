@@ -51,10 +51,6 @@ interface CharacterConfig {
   map: CharacterMap;
 }
 
-interface CharacterGroup {
-  encode?: CharacterConfig;
-  decode?: CharacterConfig;
-}
 interface WithinStringOptions {
   start?: RegExp;
   end?: RegExp;

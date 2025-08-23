@@ -24,6 +24,7 @@
 // uri.setFragment("name", "value2");
 // uri.toString() === "http://example.org/#?bar=foo&name=value2";
 
+
 const p = URI.prototype;
 // old fragment handler we need to wrap
 const f = p.fragment;
@@ -31,19 +32,19 @@ const f = p.fragment;
 // make fragmentPrefix configurable
 URI.fragmentPrefix = '?';
 const _parts = URI._parts;
-URI._parts = function(): any {
+URI._parts = function (): URIParts {
   const parts = _parts();
   parts.fragmentPrefix = URI.fragmentPrefix;
   return parts;
 };
 
-p.fragmentPrefix = function(v: string): any {
+p.fragmentPrefix = function (v: string): URIInstanceInterface {
   this._parts.fragmentPrefix = v;
   return this;
 };
 
 // add fragment(true) and fragment({key: value}) signatures
-p.fragment = function(v?: any, build?: boolean): any {
+p.fragment = function (v?: string | QueryData | true, build?: boolean): URIInstanceInterface | QueryData | string {
   const prefix = this._parts.fragmentPrefix;
   const fragment = this._parts.fragment || '';
 
@@ -62,39 +63,39 @@ p.fragment = function(v?: any, build?: boolean): any {
   }
 };
 
-p.addFragment = function(name: any, value?: any, build?: boolean): any {
+p.addFragment = function (name: string | QueryData, value?: string | string[] | number, build?: boolean): URIInstanceInterface {
   const prefix = this._parts.fragmentPrefix;
   const data = URI.parseQuery((this._parts.fragment || '').substring(prefix.length));
-  URI.addQuery(data, name, value);
+  URI.addQuery(data, name, value as string | string[]);
   this._parts.fragment = prefix + URI.buildQuery(data);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean | undefined;
   }
 
   this.build(!build);
   return this;
 };
 
-p.removeFragment = function(name: any, value?: any, build?: boolean): any {
+p.removeFragment = function (name?: string | string[] | RegExp | QueryData, value?: string | string[] | number | RegExp, build?: boolean): URIInstanceInterface {
   const prefix = this._parts.fragmentPrefix;
   const data = URI.parseQuery((this._parts.fragment || '').substring(prefix.length));
-  URI.removeQuery(data, name, value);
+  URI.removeQuery(data, name, value as string | string[] | RegExp);
   this._parts.fragment = prefix + URI.buildQuery(data);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean | undefined;
   }
 
   this.build(!build);
   return this;
 };
 
-p.setFragment = function(name: any, value?: any, build?: boolean): any {
+p.setFragment = function (name: string | QueryData, value?: string | string[] | number | null, build?: boolean): URIInstanceInterface {
   const prefix = this._parts.fragmentPrefix;
   const data = URI.parseQuery((this._parts.fragment || '').substring(prefix.length));
-  URI.setQuery(data, name, value);
+  URI.setQuery(data, name, value as string | string[] | null);
   this._parts.fragment = prefix + URI.buildQuery(data);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean | undefined;
   }
 
   this.build(!build);
