@@ -2,9 +2,6 @@
 
 // Reference the source files to compile them
 /// <reference path="../src/URITemplate.ts" />
-
-declare var URITemplate: URITemplateStaticInterface;
-
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
 // Define types for test data structure

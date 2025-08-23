@@ -1,15 +1,4 @@
 // TypeScript version of test_fragmentQuery.js
-
-// Reference the source files to compile them
-/// <reference path="../src/URI.ts" />
-/// <reference path="../src/URI.fragmentQuery.ts" />
-declare var URI: URIStaticInterface;
-
-var module = QUnit.module;
-var test = QUnit.test;
-var equal = QUnit.equal;
-var deepEqual = QUnit.deepEqual;
-
 module('URI.fragmentQuery');
 
 test('storing query-data in fragment', function () {

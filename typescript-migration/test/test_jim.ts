@@ -11,15 +11,10 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 
-declare var URI: URIStaticInterface;
+
 
 (function() {
   'use strict';
-  const test = QUnit.test;
-  const module = QUnit.module;
-  const equal = QUnit.equal;
-  const raises = QUnit.raises;
-
   module('injection');
   test('protocol', function() {
     var u = new URI('http://example.com/dir1/dir2/?query1=value1&query2=value2#hash');

@@ -4,13 +4,8 @@
 
 // Reference the source files to compile them
 // Global declarations for libraries loaded via script tags
-declare var URI: URIStaticInterface;
-declare var $: JQueryStatic;
 
-var module = QUnit.module;
-var test = QUnit.test;
-var ok = QUnit.ok;
-var equal = QUnit.equal;
+declare const $: JQueryStatic;
 
 module('jQuery.URI', {
     setup: function () {
