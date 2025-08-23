@@ -11,7 +11,7 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 
-declare var URI: any;
+declare var URI: URIStaticInterface;
 
 (function() {
   'use strict';
