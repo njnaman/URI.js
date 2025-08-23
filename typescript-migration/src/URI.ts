@@ -21,8 +21,11 @@ const SLD: SecondLevelDomainsInterface = SecondLevelDomains
 
 
 interface URIStaticInterface {
+  // Index signature to allow string indexing
+  [key: string]: any;
 
   (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface;
+  (this: URIInstanceInterface): URIInstanceInterface;
 
   new(url?: string, base?: string): URIInstanceInterface;
 
@@ -91,6 +94,11 @@ interface URIStaticInterface {
 
 
 interface URIInstanceInterface {
+  // Internal properties
+  _parts: any;
+  _string: string;
+  _deferred_build: boolean;
+
   build(deferBuild?: boolean): URIInstanceInterface;
 
   clone(): URIInstanceInterface;
@@ -219,253 +227,6 @@ interface DefaultPorts {
   [protocol: string]: string;
 }
 
-// Main URI interface
-interface URIProto {
-  // Core methods
-  build(deferBuild?: boolean): URIProto;
-
-  clone(): URIProto;
-
-  valueOf(): string;
-
-  toString(): string;
-
-  // Component accessors
-  protocol(): string;
-
-  protocol(protocol: string, build?: boolean): URIProto;
-
-  scheme(): string;
-
-  scheme(scheme: string, build?: boolean): URIProto;
-
-  username(): string;
-
-  username(username: string, build?: boolean): URIProto;
-
-  password(): string;
-
-  password(password: string, build?: boolean): URIProto;
-
-  hostname(): string;
-
-  hostname(hostname: string, build?: boolean): URIProto;
-
-  port(): string;
-
-  port(port: string | number, build?: boolean): URIProto;
-
-  query(): string;
-
-  query(query: string, build?: boolean): URIProto;
-
-  query(query: QueryData, build?: boolean): URIProto;
-
-  query(query: boolean): QueryData;
-
-  query(query: (data: QueryData) => QueryData | void, build?: boolean): URIProto;
-
-  fragment(): string;
-
-  fragment(fragment: string, build?: boolean): URIProto;
-
-  // Convenience accessors
-  search(): string;
-
-  search(search: string, build?: boolean): URIProto;
-
-  hash(): string;
-
-  hash(hash: string, build?: boolean): URIProto;
-
-  pathname(): string;
-
-  pathname(pathname: string, build?: boolean): URIProto;
-
-  pathname(decode: boolean): string;
-
-  path(): string;
-
-  path(path: string, build?: boolean): URIProto;
-
-  path(decode: boolean): string;
-
-  href(): string;
-
-  href(href: string | URIProto | object, build?: boolean): URIProto;
-
-  // Identification methods
-  is(what: string): boolean | null;
-
-  // Compound accessors
-  origin(): string;
-
-  origin(origin: string, build?: boolean): URIProto;
-
-  host(): string;
-
-  host(host: string, build?: boolean): URIProto;
-
-  authority(): string;
-
-  authority(authority: string, build?: boolean): URIProto;
-
-  userinfo(): string;
-
-  userinfo(userinfo: string, build?: boolean): URIProto;
-
-  resource(): string;
-
-  resource(resource: string, build?: boolean): URIProto;
-
-  // Domain methods
-  subdomain(): string;
-
-  subdomain(subdomain: string, build?: boolean): URIProto;
-
-  domain(): string;
-
-  domain(domain: string, build?: boolean): URIProto;
-
-  domain(returnSld: boolean): string;
-
-  tld(): string;
-
-  tld(tld: string, build?: boolean): URIProto;
-
-  tld(returnSld: boolean): string;
-
-  // Path methods
-  directory(): string;
-
-  directory(directory: string, build?: boolean): URIProto;
-
-  directory(decode: boolean): string;
-
-  filename(): string;
-
-  filename(filename: string, build?: boolean): URIProto;
-
-  filename(decode: boolean): string;
-
-  suffix(): string;
-
-  suffix(suffix: string, build?: boolean): URIProto;
-
-  suffix(decode: boolean): string;
-
-  // Segment methods
-  segment(): string[];
-
-  segment(segments: string[]): URIProto;
-
-  segment(segment: number): string;
-
-  segment(segment: number, value: string, build?: boolean): URIProto;
-
-  segmentCoded(): string[];
-
-  segmentCoded(segments: string[]): URIProto;
-
-  segmentCoded(segment: number): string;
-
-  segmentCoded(segment: number, value: string, build?: boolean): URIProto;
-
-  // Query methods
-  setQuery(name: string, value: string | null, build?: boolean): URIProto;
-
-  setQuery(data: QueryData, build?: boolean): URIProto;
-
-  addQuery(name: string, value: string | null, build?: boolean): URIProto;
-
-  addQuery(data: QueryData, build?: boolean): URIProto;
-
-  removeQuery(name: string, value?: string | RegExp, build?: boolean): URIProto;
-
-  removeQuery(name: string[], build?: boolean): URIProto;
-
-  removeQuery(name: RegExp, build?: boolean): URIProto;
-
-  removeQuery(data: QueryData, build?: boolean): URIProto;
-
-  hasQuery(name: string, value?: string | number | boolean | RegExp | Function | string[], withinArray?: boolean): boolean;
-
-  hasQuery(name: RegExp, value?: string | number | boolean | RegExp | Function | string[], withinArray?: boolean): boolean;
-
-  hasQuery(data: QueryData): boolean;
-
-  // Alias methods
-  setSearch(name: string, value: string | null, build?: boolean): URIProto;
-
-  setSearch(data: QueryData, build?: boolean): URIProto;
-
-  addSearch(name: string, value: string | null, build?: boolean): URIProto;
-
-  addSearch(data: QueryData, build?: boolean): URIProto;
-
-  removeSearch(name: string, value?: string | RegExp, build?: boolean): URIProto;
-
-  removeSearch(name: string[], build?: boolean): URIProto;
-
-  removeSearch(name: RegExp, build?: boolean): URIProto;
-
-  removeSearch(data: QueryData, build?: boolean): URIProto;
-
-  hasSearch(name: string, value?: string | number | boolean | RegExp | Function | string[], withinArray?: boolean): boolean;
-
-  hasSearch(name: RegExp, value?: string | number | boolean | RegExp | Function | string[], withinArray?: boolean): boolean;
-
-  hasSearch(data: QueryData): boolean;
-
-  // Normalization
-  normalize(): URIProto;
-
-  normalizeProtocol(build?: boolean): URIProto;
-
-  normalizeHostname(build?: boolean): URIProto;
-
-  normalizePort(build?: boolean): URIProto;
-
-  normalizePath(build?: boolean): URIProto;
-
-  normalizePathname(build?: boolean): URIProto;
-
-  normalizeQuery(build?: boolean): URIProto;
-
-  normalizeFragment(build?: boolean): URIProto;
-
-  normalizeSearch(build?: boolean): URIProto;
-
-  normalizeHash(build?: boolean): URIProto;
-
-  // Encoding
-  iso8859(): URIProto;
-
-  unicode(): URIProto;
-
-  readable(): string;
-
-  // Relative/Absolute conversion
-  absoluteTo(base: string | URIProto): URIProto;
-
-  relativeTo(base: string | URIProto): URIProto;
-
-  // Comparison
-  equals(uri: string | URIProto): boolean;
-
-  // State configuration
-  preventInvalidHostname(prevent: boolean): URIProto;
-
-  duplicateQueryParameters(allow: boolean): URIProto;
-
-  escapeQuerySpace(escape: boolean): URIProto;
-
-  // Internal properties
-  _parts: URIParts;
-  _string: string;
-  _deferred_build: boolean;
-}
-
 // Import dependencies
 /*global location, escape, unescape */
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
@@ -522,7 +283,7 @@ function isInteger(value: string): boolean {
 
 URI.version = '1.19.11';
 
-const p: URIProto = URI.prototype;
+const p: URIInstanceInterface = URI.prototype;
 const hasOwn = Object.prototype.hasOwnProperty;
 
 function escapeRegEx(string: string): string {
@@ -1417,7 +1178,7 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
 
 
 // Add joinPaths method
-URI.joinPaths = function (): URIProto {
+URI.joinPaths = function (): URIInstanceInterface {
   const input: any[] = [];
   const segments: string[] = [];
   let nonEmptySegments = 0;
@@ -1622,7 +1383,7 @@ p.build = function (deferBuild?: boolean): any {
 };
 
 p.clone = function (): any {
-  return new URI(this);
+  return new URI(this.toString());
 };
 
 p.valueOf = p.toString = function (): string {
@@ -1898,8 +1659,8 @@ p.origin = function (v?: any, build?: boolean): any {
   } else {
     const origin = new URI(v);
     this
-      .protocol(origin.protocol())
-      .authority(origin.authority())
+      .protocol()(origin.protocol()())
+      .authority()(origin.authority()())
       .build(!build);
     return this;
   }
