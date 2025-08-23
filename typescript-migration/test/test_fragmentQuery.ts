@@ -3,7 +3,9 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/URI.fragmentQuery.ts" />
-declare var URI: any;
+declare const URI: URIInstanceInterface;
+
+declare const QUnit: any;
 
 var module = QUnit.module;
 var test = QUnit.test;
@@ -12,7 +14,7 @@ var deepEqual = QUnit.deepEqual;
 
 module('URI.fragmentQuery');
 
-test('storing query-data in fragment', function() {
+test('storing query-data in fragment', function () {
   var u = URI('http://example.org');
 
   deepEqual(u.fragment(true), {}, 'empty map for missing fragment');
@@ -48,7 +50,7 @@ test('storing query-data in fragment', function() {
   equal(u.toString(), 'http://example.org/#?name=value2', 'setting name to value2 serialized');
 });
 
-test('fragmentPrefix', function() {
+test('fragmentPrefix', function () {
   var u: any;
 
   URI.fragmentPrefix = '!';
