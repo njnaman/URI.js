@@ -87,6 +87,8 @@ interface DefaultPorts {
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 /*jshint camelcase: false */
 
+const _URI: any = (typeof window !== 'undefined' && window.URI) || undefined;
+
 const URI = function (this: URIInstanceInterface, url?: any, base?: string): URIInstanceInterface {
   const _urlSupplied = arguments.length >= 1;
   const _baseSupplied = arguments.length >= 2;
@@ -1220,8 +1222,9 @@ URI.noConflict = function (removeAll?: boolean): any {
     }
 
     return unconflicted;
+  } else if (window.URI === this){
+      window.URI = _URI
   }
-  // In ES module context, noConflict is not needed but kept for API compatibility
   return this;
 };
 

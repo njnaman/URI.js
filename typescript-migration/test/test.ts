@@ -1909,6 +1909,28 @@ declare var punycode: PunycodeInterface;
         window.URI = actual_lib;
     });
 
+    test('noConflict(removeAll=true)', function () {
+        const actual = {
+            URI: URI,
+            URITemplate: URITemplate,
+            IPv6: IPv6,
+            SecondLevelDomains: SecondLevelDomains
+        };
+
+        const unconflicted = URI.noConflict(true);
+
+        deepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
+            strictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
+            strictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
+            strictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
+            strictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
+            // restore for other tests
+            window.URI = actual.URI;
+            window.URITemplate = actual.URITemplate;
+            window.IPv6 = actual.IPv6;
+            window.SecondLevelDomains = actual.SecondLevelDomains;
+    });
+
     test('joinPaths', function () {
         let result;
 

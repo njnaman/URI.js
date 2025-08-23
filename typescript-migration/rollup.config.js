@@ -31,7 +31,6 @@ export default [
             file: 'dist/src/URI.js',
             format: 'umd',
             name: 'URI',
-            noConflict: true
         },
     },
     {
