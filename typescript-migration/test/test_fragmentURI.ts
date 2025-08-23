@@ -4,7 +4,7 @@
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/URI.fragmentURI.ts" />
 
-declare var URI: any;
+declare var URI: URIStaticInterface;
 
 var module = QUnit.module;
 var test = QUnit.test;

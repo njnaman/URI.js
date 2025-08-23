@@ -3,7 +3,7 @@
 // Reference the source files to compile them
 /// <reference path="../src/URI.ts" />
 /// <reference path="../src/URI.fragmentQuery.ts" />
-declare var URI: any;
+declare var URI: URIStaticInterface;
 
 var module = QUnit.module;
 var test = QUnit.test;

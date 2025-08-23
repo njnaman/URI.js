@@ -32,6 +32,23 @@ export default [
         },
     },
     {
+        input: 'dist/src/URI.fragmentQuery.js',
+        output: {
+            file: 'dist/src/URI.fragmentQuery.js',
+            format: 'umd',
+            name: 'URI'
+        },
+    },
+
+    {
+        input: 'dist/src/URI.fragmentURI.js',
+        output: {
+            file: 'dist/src/URI.fragmentURI.js',
+            format: 'umd',
+            name: 'URI'
+        },
+    },
+    {
         input: 'dist/src/URI.js',
         output: {
             file: 'dist/src/URI.js',
