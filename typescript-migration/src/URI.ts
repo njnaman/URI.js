@@ -25,12 +25,12 @@ interface URIStaticInterface {
   [key: string]: any;
 
   (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface;
+  (this: URIInstanceInterface, uriInst: URIInstanceInterface): URIInstanceInterface;
   (this: URIInstanceInterface): URIInstanceInterface;
 
   new(url?: string, base?: string): URIInstanceInterface;
-
+  new(uriInst: URIInstanceInterface): URIInstanceInterface;
   new(url?: string): URIInstanceInterface;
-
   new(): URIInstanceInterface;
 
   version: any;
@@ -107,7 +107,7 @@ interface URIInstanceInterface {
 
   valueOf(): string;
 
-  protocol(): (v?: any, build?: boolean) => any
+  protocol : (v?: any, build?: boolean) => any
 
   username: (v?: any, build?: boolean) => any;
   password: (v?: any, build?: boolean) => any;
@@ -1383,7 +1383,7 @@ p.build = function (deferBuild?: boolean): any {
 };
 
 p.clone = function (): any {
-  return new URI(this.toString());
+  return new URI(this);
 };
 
 p.valueOf = p.toString = function (): string {
@@ -1659,8 +1659,8 @@ p.origin = function (v?: any, build?: boolean): any {
   } else {
     const origin = new URI(v);
     this
-      .protocol()(origin.protocol()())
-      .authority()(origin.authority()())
+      .protocol(origin.protocol())
+      .authority(origin.authority())
       .build(!build);
     return this;
   }
