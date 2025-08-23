@@ -38,8 +38,8 @@ interface URICompareFunctions {
   [key: string]: CompareFunction | ((uri: any, target: string) => boolean);
 }
 
-declare var $: JQueryStatic;
-declare var URI: URIStaticInterface;
+declare let $: JQueryStatic;
+declare let URI: URIStaticInterface;
 
 const comparable: { [key: string]: boolean } = {};
 const compare: URICompareFunctions = {

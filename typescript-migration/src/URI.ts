@@ -1107,7 +1107,7 @@ URI.withinString = function (string: string, callback: (uri: string, start: numb
       break;
     }
 
-    let start = match.index;
+    const start = match.index;
     if (options.ignoreHtml) {
       // attribut(e=["']?$)
       const attributeOpen = string.slice(Math.max(start - 3, 0), start);
@@ -1203,7 +1203,7 @@ URI.ensureValidPort = function (v: string): void {
 // Add noConflict method
 URI.noConflict = function (removeAll?: boolean): any {
   if (removeAll) {
-    var unconflicted: any = {
+    const unconflicted: any = {
       URI: this.noConflict()
     };
 

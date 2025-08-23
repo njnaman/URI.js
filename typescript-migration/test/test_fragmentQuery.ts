@@ -2,7 +2,7 @@
 module('URI.fragmentQuery');
 
 test('storing query-data in fragment', function () {
-  var u = URI('http://example.org');
+  let u = URI('http://example.org');
 
   deepEqual(u.fragment(true), {}, 'empty map for missing fragment');
 
@@ -38,7 +38,7 @@ test('storing query-data in fragment', function () {
 });
 
 test('fragmentPrefix', function () {
-  var u: any;
+  let u: any;
 
   URI.fragmentPrefix = '!';
   u = URI('http://example.org');

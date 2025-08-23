@@ -7,8 +7,8 @@
 module('URI.fragmentURI');
 
 test('storing URLs in fragment', function () {
-  var u = URI('http://example.org');
-  var f: any;
+  let u = URI('http://example.org');
+  let f: any;
 
   // var uri = URI('http://example.org/#!/foo/bar/baz.html');
   // var furi = uri.fragment(true);
@@ -33,7 +33,7 @@ test('storing URLs in fragment', function () {
 });
 
 test('fragmentPrefix', function () {
-  var u: any;
+  let u: any;
 
   URI.fragmentPrefix = '?';
   u = URI('http://example.org');

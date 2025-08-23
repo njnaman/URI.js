@@ -53,7 +53,7 @@
   });
 
   test('new URI(object)', function () {
-    var u = new URI({
+    const u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: {
@@ -70,7 +70,7 @@
   });
 
   test('new URI(object)', function () {
-    var u = new URI({
+    const u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: 'foo=bar&bar=foo',
@@ -84,7 +84,7 @@
   });
 
   test('new URI(object)', function () {
-    var u = new URI({
+    const u = new URI({
       protocol: 'http',
       hostname: 'example.org',
       query: '?foo=bar&bar=foo',
@@ -98,11 +98,11 @@
   });
 
   test('new URI(Location)', function () {
-    var u = new URI(location);
+    const u = new URI(location);
     equal(u.href(), String(location.href), 'location object');
   });
   test('new URI(undefined)', function () {
-    var u = new URI();
+    const u = new URI();
     ok(u instanceof URI, 'instanceof URI');
     equal(u.toString(), window.location && window.location.href || '', 'is location (browser) or empty string (node)');
     raises(function () {
@@ -391,7 +391,7 @@
     equal(u.pathname(), '/~userhome/@mine;is%20%2F%20and/', 'path encoding');
     equal(u.pathname(true), '/~userhome/@mine;is %2F and/', 'path decoded');
 
-    let u2 = new URI('/a/b/c/').relativeTo('/a/b/c/');
+    const u2 = new URI('/a/b/c/').relativeTo('/a/b/c/');
     equal(u2.pathname(), '', 'empty relative path');
     equal(u2.toString(), '', 'empty relative path to string');
 
@@ -898,7 +898,7 @@
   });
 
   test('segmentCoded', function () {
-    let u = new URI('http://www.example.org/some%20thing/directory/foo.html');
+    const u = new URI('http://www.example.org/some%20thing/directory/foo.html');
     const s = u.segmentCoded();
 
     equal(s.join('||'), 'some thing||directory||foo.html', 'segmentCoded get array');
@@ -1038,7 +1038,7 @@
   });
 
   test('removeQuery', function () {
-    let u = new URI('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
+    const u = new URI('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
 
     u.removeQuery('foo', 'bar');
     equal(u.query(), 'foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3', 'removing name, value');
@@ -1395,7 +1395,7 @@
   });
 
   test('normalizeQuery', function () {
-    let u = new URI('http://example.org/foobar.html?');
+    const u = new URI('http://example.org/foobar.html?');
     u.normalizeQuery();
     equal(u + '', 'http://example.org/foobar.html', 'dropping empty query sign');
 

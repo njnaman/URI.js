@@ -38,7 +38,7 @@ interface Levels {
   const strictEqual = QUnit.strictEqual;
   const raises = QUnit.raises;
 
-  var levels: Levels = {
+  const levels: Levels = {
     // http://tools.ietf.org/html/rfc6570#section-1.2
     'Level 1': {
       expressions: {
@@ -355,14 +355,14 @@ interface Levels {
 
 // Test each level
   Object.keys(levels).forEach(function (levelName) {
-    var data = levels[levelName];
+    const data = levels[levelName];
 
     test(levelName, function () {
-      var combinedExpression = '';
-      var combinedExpansion = '';
-      var template: any;
-      var expansion: string;
-      var lastType = '';
+      let combinedExpression = '';
+      let combinedExpansion = '';
+      let template: any;
+      let expansion: string;
+      let lastType = '';
 
       for (var type in data.expressions) {
         lastType = type;
@@ -383,12 +383,12 @@ interface Levels {
   });
 
   test('Data Callbacks', function () {
-    var template = new URITemplate('{var}');
-    var global = function (key: string) {
-      var data: { [key: string]: string } = {'var': 'hello world.html'};
+    const template = new URITemplate('{var}');
+    const global = function (key: string) {
+      const data: { [key: string]: string } = {'var': 'hello world.html'};
       return data[key];
     };
-    var local = function () {
+    const local = function () {
       return 'hello world.html';
     };
 
@@ -417,14 +417,14 @@ interface Levels {
 
   test('Expansion errors', function () {
     raises(function () {
-      var data = {'composite_var': ['multiple', 'values']};
+      const data = {'composite_var': ['multiple', 'values']};
       new URITemplate('{composite_var:3}').expand(data);
     }, Error, 'Failing prefix modifier after composite variable');
   });
 
   test('noConflict mode', function () {
-    var actual_lib = URITemplate; // actual library; after loading, before noConflict()
-    var unconflicted = URITemplate.noConflict();
+    const actual_lib = URITemplate; // actual library; after loading, before noConflict()
+    const unconflicted = URITemplate.noConflict();
 
     strictEqual(unconflicted, actual_lib, 'noConflict() returns the URITemplate object');
     strictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict() restores the `URITemplate` variable');
@@ -435,10 +435,10 @@ interface Levels {
 
 
   test('Periods in varnames', function () {
-    var literal = 'replacement';
-    var template = new URITemplate('{hello.world.var}');
-    var data = {'hello.world.var': literal};
-    var expansion = template.expand(data);
+    const literal = 'replacement';
+    const template = new URITemplate('{hello.world.var}');
+    const data = {'hello.world.var': literal};
+    const expansion = template.expand(data);
     equal(expansion, literal, 'period in varname');
   });
 
