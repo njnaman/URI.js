@@ -19,6 +19,143 @@ declare const SecondLevelDomains: SecondLevelDomainsInterface;
 // Use the imported SecondLevelDomains as SLD
 const SLD: SecondLevelDomainsInterface = SecondLevelDomains
 
+
+interface URIStaticInterface {
+
+  (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface;
+
+  new(url?: string, base?: string): URIInstanceInterface;
+
+  new(url?: string): URIInstanceInterface;
+
+  new(): URIInstanceInterface;
+
+  version: any;
+  _parts: any;
+  preventInvalidHostname: any;
+  duplicateQueryParameters: any;
+  escapeQuerySpace: any;
+  protocol_expression: any;
+  idn_expression: any;
+  punycode_expression: any;
+  ip4_expression: any;
+  ip6_expression: any;
+  find_uri_expression: any;
+  findUri: any;
+  leading_whitespace_expression: any;
+  ascii_tab_whitespace: any;
+  defaultPorts: any;
+  hostProtocols: any;
+  invalid_hostname_characters: any;
+  domAttributes: any;
+  getDomAttribute: any;
+  encode: any;
+  decode: any;
+  iso8859: any;
+  unicode: any;
+  characters: any;
+  encodeQuery: any;
+  decodeQuery: any;
+  encodePathSegment: any;
+  encodeUrnPathSegment: any;
+  decodePathSegment: any;
+  decodeUrnPathSegment: any;
+  decodePath: any;
+  decodeUrnPath: any;
+  recodePath: any;
+  recodeUrnPath: any;
+  encodeReserved: any;
+  parse: any;
+  parseHost: any;
+  parseAuthority: any;
+  parseUserinfo: any;
+  parseQuery: any;
+  build: any;
+  buildHost: any;
+  buildAuthority: any;
+  buildUserinfo: any;
+  buildQuery: any;
+  buildQueryParameter: any;
+  addQuery: any;
+  setQuery: any;
+  removeQuery: any;
+  hasQuery: any;
+  joinPaths: any;
+  commonPath: any;
+  withinString: any;
+  ensureValidHostname: any;
+  ensureValidPort: any;
+  noConflict: any;
+  expan: any;
+}
+
+
+interface URIInstanceInterface {
+  build(deferBuild?: boolean): URIInstanceInterface;
+
+  clone(): URIInstanceInterface;
+
+  toString(): string;
+
+  valueOf(): string;
+
+  protocol(): (v?: any, build?: boolean) => any
+
+  username: (v?: any, build?: boolean) => any;
+  password: (v?: any, build?: boolean) => any;
+  hostname: (v?: any, build?: boolean) => any;
+  port: (v?: any, build?: boolean) => any;
+  query: (v?: any, build?: boolean) => any;
+  fragment: (v?: any, build?: boolean) => any;
+  search: (v?: any, build?: boolean) => any;
+  hash: (v?: any, build?: boolean) => any;
+  pathname: (v?: any, build?: boolean) => any;
+  path: (v?: any, build?: boolean) => any;
+  href: (href?: any, build?: boolean) => any;
+  is: (what: string) => boolean | null;
+  scheme: (v?: any, build?: boolean) => any;
+  origin: (v?: any, build?: boolean) => any;
+  host: (v?: any, build?: boolean) => any;
+  authority: (v?: any, build?: boolean) => any;
+  userinfo: (v?: any, build?: boolean) => any;
+  resource: (v?: any, build?: boolean) => any;
+  subdomain: (v?: any, build?: boolean) => any;
+  domain: (v?: any, build?: boolean) => any;
+  tld: (v?: any, build?: boolean) => any;
+  directory: (v?: any, build?: boolean) => any;
+  filename: (v?: any, build?: boolean) => any;
+  suffix: (v?: any, build?: boolean) => any;
+  segment: (segment?: any, v?: any, build?: boolean) => any;
+  segmentCoded: (segment?: any, v?: any, build?: boolean) => any;
+  setQuery: (name?: any, value?: any, build?: boolean) => any;
+  addQuery: (name?: any, value?: any, build?: boolean) => any;
+  removeQuery: (name?: any, value?: any, build?: boolean) => any;
+  hasQuery: (name?: any, value?: any, withinArray?: boolean) => any;
+  setSearch: (name?: any, value?: any, build?: boolean) => any;
+  addSearch: (name?: any, value?: any, build?: boolean) => any;
+  removeSearch: (name?: any, value?: any, build?: boolean) => any;
+  hasSearch: (name?: any, value?: any, withinArray?: boolean) => any;
+  normalize: () => any;
+  normalizeProtocol: (build?: boolean) => any;
+  normalizeHostname: (build?: boolean) => any;
+  normalizePort: (build?: boolean) => any;
+  normalizePath: (build?: boolean) => any;
+  normalizePathname: (build?: boolean) => any;
+  normalizeQuery: (build?: boolean) => any;
+  normalizeFragment: (build?: boolean) => any;
+  normalizeSearch: (build?: boolean) => any;
+  normalizeHash: (build?: boolean) => any;
+  iso8859: () => any;
+  unicode: () => any;
+  readable: () => any;
+  absoluteTo: (base?: any) => any;
+  relativeTo: (base?: any) => any;
+  equals: (uri?: any) => boolean;
+  preventInvalidHostname: (prevent?: boolean) => any;
+  duplicateQueryParameters: (allow?: boolean) => any;
+  escapeQuerySpace: (escape?: boolean) => any;
+}
+
 interface URIParts {
   protocol: string | null;
   username: string | null;
@@ -334,7 +471,7 @@ interface URIProto {
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 /*jshint camelcase: false */
 
-function URI(this: any, url?: string, base?: string): any {
+const URI = function (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface {
   const _urlSupplied = arguments.length >= 1;
   const _baseSupplied = arguments.length >= 2;
 
@@ -342,21 +479,13 @@ function URI(this: any, url?: string, base?: string): any {
   if (!(this instanceof URI)) {
     if (_urlSupplied) {
       if (_baseSupplied) {
-        return new URIObj(url, base);
+        return new URI(url, base);
       }
 
-      return new URIObj(url);
+      return new URI(url);
     }
 
-    return new URIObj();
-  }
-
-  // Initialize the instance with _parts (cast as any for migration compatibility)
-  const self = this as any;
-  if (!self._parts) {
-    self._parts = URIObj._parts();
-    self._string = '';
-    self._deferred_build = false;
+    return new URI();
   }
 
   if (url === undefined) {
@@ -377,24 +506,21 @@ function URI(this: any, url?: string, base?: string): any {
     }
   }
 
-  self.href(url);
+  this.href(url);
 
   // resolve to base according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#constructor
   if (base !== undefined) {
-    return self.absoluteTo(base);
+    return this.absoluteTo(base);
   }
 
-  return self;
-}
-
-// Use URI as URIObj for internal references
-const URIObj = URI as any;
+  return this;
+} as URIStaticInterface;
 
 function isInteger(value: string): boolean {
   return /^[0-9]+$/.test(value);
 }
 
-URIObj.version = '1.19.11';
+URI.version = '1.19.11';
 
 const p: URIProto = URI.prototype;
 const hasOwn = Object.prototype.hasOwnProperty;
@@ -502,7 +628,7 @@ function trimSlashes(text: string): string {
   return text.replace(trim_expression, '');
 }
 
-URIObj._parts = function (): URIParts {
+URI._parts = function (): URIParts {
   return {
     protocol: null,
     username: null,
@@ -514,36 +640,36 @@ URIObj._parts = function (): URIParts {
     query: null,
     fragment: null,
     // state
-    preventInvalidHostname: URIObj.preventInvalidHostname,
-    duplicateQueryParameters: URIObj.duplicateQueryParameters,
-    escapeQuerySpace: URIObj.escapeQuerySpace
+    preventInvalidHostname: URI.preventInvalidHostname,
+    duplicateQueryParameters: URI.duplicateQueryParameters,
+    escapeQuerySpace: URI.escapeQuerySpace
   };
 };
 
 // state: throw on invalid hostname
 // see https://github.com/medialize/URI.js/pull/345
 // and https://github.com/medialize/URI.js/issues/354
-URIObj.preventInvalidHostname = false;
+URI.preventInvalidHostname = false;
 // state: allow duplicate query parameters (a=1&a=1)
-URIObj.duplicateQueryParameters = false;
+URI.duplicateQueryParameters = false;
 // state: replaces + with %20 (space in query strings)
-URIObj.escapeQuerySpace = true;
+URI.escapeQuerySpace = true;
 // static properties
-URIObj.protocol_expression = /^[a-z][a-z0-9.+-]*$/i;
-URIObj.idn_expression = /[^a-z0-9\._-]/i;
-URIObj.punycode_expression = /(xn--)/i;
+URI.protocol_expression = /^[a-z][a-z0-9.+-]*$/i;
+URI.idn_expression = /[^a-z0-9\._-]/i;
+URI.punycode_expression = /(xn--)/i;
 // well, 333.444.555.666 matches, but it sure ain't no IPv4 - do we care?
-URIObj.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+URI.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
 // credits to Rich Brown
 // source: http://forums.intermapper.com/viewtopic.php?p=1096#1096
 // specification: http://www.ietf.org/rfc/rfc4291.txt
-URIObj.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/;
+URI.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/;
 // expression used is "gruber revised" (@gruber v2) determined to be the
 // best solution in a regex-golf we did a couple of ages ago at
 // * http://mathiasbynens.be/demo/url-regex
 // * http://rodneyrehm.de/t/url-regex.html
-URIObj.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»""'']))/ig;
-URIObj.findUri = {
+URI.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»""'']))/ig;
+URI.findUri = {
   // valid "scheme://" or "www."
   start: /\b(?:([a-z][a-z0-9.+-]*:\/\/)|www\.)/gi,
   // everything up to the next whitespace
@@ -553,12 +679,12 @@ URIObj.findUri = {
   // balanced parens inclusion (), [], {}, <>
   parens: /(\([^\)]*\)|\[[^\]]*\]|\{[^}]*\}|<[^>]*>)/g,
 };
-URIObj.leading_whitespace_expression = /^[\x00-\x20\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/;
+URI.leading_whitespace_expression = /^[\x00-\x20\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/;
 // https://infra.spec.whatwg.org/#ascii-tab-or-newline
-URIObj.ascii_tab_whitespace = /[\u0009\u000A\u000D]+/g;
+URI.ascii_tab_whitespace = /[\u0009\u000A\u000D]+/g;
 // http://www.iana.org/assignments/uri-schemes.html
 // http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports
-URIObj.defaultPorts = {
+URI.defaultPorts = {
   http: '80',
   https: '443',
   ftp: '21',
@@ -567,7 +693,7 @@ URIObj.defaultPorts = {
   wss: '443'
 };
 // list of protocols which always require a hostname
-URIObj.hostProtocols = [
+URI.hostProtocols = [
   'http',
   'https'
 ];
@@ -575,9 +701,9 @@ URIObj.hostProtocols = [
 // allowed hostname characters according to RFC 3986
 // ALPHA DIGIT "-" "." "_" "~" "!" "$" "&" "'" "(" ")" "*" "+" "," ";" "=" %encoded
 // I've never seen a (non-IDN) hostname other than: ALPHA DIGIT . - _
-URIObj.invalid_hostname_characters = /[^a-zA-Z0-9\.\-:_]/;
+URI.invalid_hostname_characters = /[^a-zA-Z0-9\.\-:_]/;
 // map DOM Elements to their URI attribute
-URIObj.domAttributes = {
+URI.domAttributes = {
   'a': 'href',
   'blockquote': 'cite',
   'link': 'href',
@@ -594,7 +720,7 @@ URIObj.domAttributes = {
   'audio': 'src',
   'video': 'src'
 };
-URIObj.getDomAttribute = function (node: Element | null | undefined): string | undefined {
+URI.getDomAttribute = function (node: Element | null | undefined): string | undefined {
   if (!node || !node.nodeName) {
     return undefined;
   }
@@ -605,7 +731,7 @@ URIObj.getDomAttribute = function (node: Element | null | undefined): string | u
     return undefined;
   }
 
-  return URIObj.domAttributes[nodeName];
+  return URI.domAttributes[nodeName];
 };
 
 function escapeForDumbFirefox36(value: string): string {
@@ -621,17 +747,17 @@ function strictEncodeURIComponent(string: string): string {
     .replace(/\*/g, '%2A');
 }
 
-URIObj.encode = strictEncodeURIComponent;
-URIObj.decode = decodeURIComponent;
-URIObj.iso8859 = function (): void {
-  URIObj.encode = escape;
-  URIObj.decode = unescape;
+URI.encode = strictEncodeURIComponent;
+URI.decode = decodeURIComponent;
+URI.iso8859 = function (): void {
+  URI.encode = escape;
+  URI.decode = unescape;
 };
-URIObj.unicode = function (): void {
-  URIObj.encode = strictEncodeURIComponent;
-  URIObj.decode = decodeURIComponent;
+URI.unicode = function (): void {
+  URI.encode = strictEncodeURIComponent;
+  URI.decode = decodeURIComponent;
 };
-URIObj.characters = {
+URI.characters = {
   pathname: {
     encode: {
       // RFC3986 2.1: For consistency, URI producers and normalizers should
@@ -726,23 +852,23 @@ URIObj.characters = {
 };
 
 // Add all the essential static methods that need to be available
-URIObj.encodeQuery = function (string: string, escapeQuerySpace?: boolean): string {
-  const escaped = URIObj.encode(string + '');
+URI.encodeQuery = function (string: string, escapeQuerySpace?: boolean): string {
+  const escaped = URI.encode(string + '');
   if (escapeQuerySpace === undefined) {
-    escapeQuerySpace = URIObj.escapeQuerySpace;
+    escapeQuerySpace = URI.escapeQuerySpace;
   }
 
   return escapeQuerySpace ? escaped.replace(/%20/g, '+') : escaped;
 };
 
-URIObj.decodeQuery = function (string: string, escapeQuerySpace?: boolean): string {
+URI.decodeQuery = function (string: string, escapeQuerySpace?: boolean): string {
   string += '';
   if (escapeQuerySpace === undefined) {
-    escapeQuerySpace = URIObj.escapeQuerySpace;
+    escapeQuerySpace = URI.escapeQuerySpace;
   }
 
   try {
-    return URIObj.decode(escapeQuerySpace ? string.replace(/\+/g, '%20') : string);
+    return URI.decode(escapeQuerySpace ? string.replace(/\+/g, '%20') : string);
   } catch (e) {
     // we're not going to mess with weird encodings,
     // give up and return the undecoded original string
@@ -757,8 +883,8 @@ const _parts = {'encode': 'encode', 'decode': 'decode'};
 const generateAccessor = function (_group: string, _part: string): (str: string) => string {
   return function (string: string): string {
     try {
-      return URIObj[_part](string + '').replace(URIObj.characters[_group][_part].expression, function (c: string) {
-        return URIObj.characters[_group][_part].map[c];
+      return URI[_part](string + '').replace(URI.characters[_group][_part].expression, function (c: string) {
+        return URI.characters[_group][_part].map[c];
       });
     } catch (e) {
       // we're not going to mess with weird encodings,
@@ -770,8 +896,8 @@ const generateAccessor = function (_group: string, _part: string): (str: string)
   };
 };
 for (const _part in _parts) {
-  (URIObj as any)[_part + 'PathSegment'] = generateAccessor('pathname', (_parts as any)[_part]);
-  (URIObj as any)[_part + 'UrnPathSegment'] = generateAccessor('urnpath', (_parts as any)[_part]);
+  (URI as any)[_part + 'PathSegment'] = generateAccessor('pathname', (_parts as any)[_part]);
+  (URI as any)[_part + 'UrnPathSegment'] = generateAccessor('urnpath', (_parts as any)[_part]);
 }
 
 const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: string, _innerCodingFuncName?: string): (str: string) => string {
@@ -782,10 +908,10 @@ const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: s
     // that the functions we use here are "fresh".
     let actualCodingFunc: Function;
     if (!_innerCodingFuncName) {
-      actualCodingFunc = URIObj[_codingFuncName];
+      actualCodingFunc = URI[_codingFuncName];
     } else {
       actualCodingFunc = function (string: string) {
-        return URIObj[_codingFuncName](URIObj[_innerCodingFuncName](string));
+        return URI[_codingFuncName](URI[_innerCodingFuncName](string));
       };
     }
 
@@ -800,26 +926,26 @@ const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: s
 };
 
 // This takes place outside the above loop because we don't want, e.g., encodeUrnPath functions.
-URIObj.decodePath = generateSegmentedPathFunction('/', 'decodePathSegment');
-URIObj.decodeUrnPath = generateSegmentedPathFunction(':', 'decodeUrnPathSegment');
-URIObj.recodePath = generateSegmentedPathFunction('/', 'encodePathSegment', 'decode');
-URIObj.recodeUrnPath = generateSegmentedPathFunction(':', 'encodeUrnPathSegment', 'decode');
+URI.decodePath = generateSegmentedPathFunction('/', 'decodePathSegment');
+URI.decodeUrnPath = generateSegmentedPathFunction(':', 'decodeUrnPathSegment');
+URI.recodePath = generateSegmentedPathFunction('/', 'encodePathSegment', 'decode');
+URI.recodeUrnPath = generateSegmentedPathFunction(':', 'encodeUrnPathSegment', 'decode');
 
-URIObj.encodeReserved = generateAccessor('reserved', 'encode');
+URI.encodeReserved = generateAccessor('reserved', 'encode');
 
 
 // Add essential parsing and building methods
-URIObj.parse = function (string: string, parts?: Partial<URIParts>): URIParts {
+URI.parse = function (string: string, parts?: Partial<URIParts>): URIParts {
   let pos: number;
   if (!parts) {
     parts = {
-      preventInvalidHostname: URIObj.preventInvalidHostname
+      preventInvalidHostname: URI.preventInvalidHostname
     };
   }
 
-  string = string.replace(URIObj.leading_whitespace_expression, '')
+  string = string.replace(URI.leading_whitespace_expression, '')
   // https://infra.spec.whatwg.org/#ascii-tab-or-newline
-  string = string.replace(URIObj.ascii_tab_whitespace, '')
+  string = string.replace(URI.ascii_tab_whitespace, '')
 
   // [protocol"://"[username[":"password]"@"]hostname[":"port]"/"?][path]["?"querystring]["#"fragment]
 
@@ -850,19 +976,19 @@ URIObj.parse = function (string: string, parts?: Partial<URIParts>): URIParts {
     parts.protocol = null;
     string = string.substring(2);
     // extract "user:pass@host:port"
-    string = URIObj.parseAuthority(string, parts);
+    string = URI.parseAuthority(string, parts);
   } else {
     pos = string.indexOf(':');
     if (pos > -1) {
       parts.protocol = string.substring(0, pos) || null;
-      if (parts.protocol && !parts.protocol.match(URIObj.protocol_expression)) {
+      if (parts.protocol && !parts.protocol.match(URI.protocol_expression)) {
         // : may be within the path
         parts.protocol = undefined;
       } else if (string.substring(pos + 1, pos + 3).replace(/\\/g, '/') === '//') {
         string = string.substring(pos + 3);
 
         // extract "user:pass@host:port"
-        string = URIObj.parseAuthority(string, parts);
+        string = URI.parseAuthority(string, parts);
       } else {
         string = string.substring(pos + 1);
         parts.urn = true;
@@ -877,7 +1003,7 @@ URIObj.parse = function (string: string, parts?: Partial<URIParts>): URIParts {
   return parts as URIParts;
 };
 
-URIObj.parseHost = function (string: string, parts: Partial<URIParts>): string {
+URI.parseHost = function (string: string, parts: Partial<URIParts>): string {
   if (!string) {
     string = '';
   }
@@ -930,22 +1056,22 @@ URIObj.parseHost = function (string: string, parts: Partial<URIParts>): string {
   }
 
   if (parts.preventInvalidHostname) {
-    URIObj.ensureValidHostname(parts.hostname, parts.protocol);
+    URI.ensureValidHostname(parts.hostname, parts.protocol);
   }
 
   if (parts.port) {
-    URIObj.ensureValidPort(parts.port);
+    URI.ensureValidPort(parts.port);
   }
 
   return string.substring(pos) || '/';
 };
 
-URIObj.parseAuthority = function (string: string, parts: Partial<URIParts>): string {
-  string = URIObj.parseUserinfo(string, parts);
-  return URIObj.parseHost(string, parts);
+URI.parseAuthority = function (string: string, parts: Partial<URIParts>): string {
+  string = URI.parseUserinfo(string, parts);
+  return URI.parseHost(string, parts);
 };
 
-URIObj.parseUserinfo = function (string: string, parts: Partial<URIParts>): string {
+URI.parseUserinfo = function (string: string, parts: Partial<URIParts>): string {
   // extract username:password
   const _string = string
   const firstBackSlash = string.indexOf('\\');
@@ -959,9 +1085,9 @@ URIObj.parseUserinfo = function (string: string, parts: Partial<URIParts>): stri
   // authority@ must come before /path or \path
   if (pos > -1 && (firstSlash === -1 || pos < firstSlash)) {
     t = string.substring(0, pos).split(':');
-    parts.username = t[0] ? URIObj.decode(t[0]) : null;
+    parts.username = t[0] ? URI.decode(t[0]) : null;
     t.shift();
-    parts.password = t[0] ? URIObj.decode(t.join(':')) : null;
+    parts.password = t[0] ? URI.decode(t.join(':')) : null;
     string = _string.substring(pos + 1);
   } else {
     parts.username = null;
@@ -971,7 +1097,7 @@ URIObj.parseUserinfo = function (string: string, parts: Partial<URIParts>): stri
   return string;
 };
 
-URIObj.parseQuery = function (string: string, escapeQuerySpace?: boolean): QueryData {
+URI.parseQuery = function (string: string, escapeQuerySpace?: boolean): QueryData {
   if (!string) {
     return {};
   }
@@ -990,9 +1116,9 @@ URIObj.parseQuery = function (string: string, escapeQuerySpace?: boolean): Query
 
   for (let i = 0; i < length; i++) {
     v = splits[i].split('=');
-    name = URIObj.decodeQuery(v.shift(), escapeQuerySpace);
+    name = URI.decodeQuery(v.shift(), escapeQuerySpace);
     // no "=" is null according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#collect-url-parameters
-    value = v.length ? URIObj.decodeQuery(v.join('='), escapeQuerySpace) : null;
+    value = v.length ? URI.decodeQuery(v.join('='), escapeQuerySpace) : null;
 
     if (name === '__proto__') {
       // ignore attempt at exploiting JavaScript internals
@@ -1011,7 +1137,7 @@ URIObj.parseQuery = function (string: string, escapeQuerySpace?: boolean): Query
   return items;
 };
 
-URIObj.build = function (parts: URIParts): string {
+URI.build = function (parts: URIParts): string {
   let t = '';
   let requireAbsolutePath = false
 
@@ -1024,7 +1150,7 @@ URIObj.build = function (parts: URIParts): string {
     requireAbsolutePath = true
   }
 
-  t += (URIObj.buildAuthority(parts) || '');
+  t += (URI.buildAuthority(parts) || '');
 
   if (typeof parts.path === 'string') {
     if (parts.path.charAt(0) !== '/' && requireAbsolutePath) {
@@ -1044,12 +1170,12 @@ URIObj.build = function (parts: URIParts): string {
   return t;
 };
 
-URIObj.buildHost = function (parts: URIParts): string {
+URI.buildHost = function (parts: URIParts): string {
   let t = '';
 
   if (!parts.hostname) {
     return '';
-  } else if (URIObj.ip6_expression.test(parts.hostname)) {
+  } else if (URI.ip6_expression.test(parts.hostname)) {
     t += '[' + parts.hostname + ']';
   } else {
     t += parts.hostname;
@@ -1062,19 +1188,19 @@ URIObj.buildHost = function (parts: URIParts): string {
   return t;
 };
 
-URIObj.buildAuthority = function (parts: URIParts): string {
-  return URIObj.buildUserinfo(parts) + URIObj.buildHost(parts);
+URI.buildAuthority = function (parts: URIParts): string {
+  return URI.buildUserinfo(parts) + URI.buildHost(parts);
 };
 
-URIObj.buildUserinfo = function (parts: URIParts): string {
+URI.buildUserinfo = function (parts: URIParts): string {
   let t = '';
 
   if (parts.username) {
-    t += URIObj.encode(parts.username);
+    t += URI.encode(parts.username);
   }
 
   if (parts.password) {
-    t += ':' + URIObj.encode(parts.password);
+    t += ':' + URI.encode(parts.password);
   }
 
   if (t) {
@@ -1084,7 +1210,7 @@ URIObj.buildUserinfo = function (parts: URIParts): string {
   return t;
 };
 
-URIObj.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolean, escapeQuerySpace?: boolean): string {
+URI.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolean, escapeQuerySpace?: boolean): string {
   // according to http://tools.ietf.org/html/rfc3986 or http://labs.apache.org/webarch/uri/rfc/rfc3986.html
   // being »-._~!$&'()*+,;=:@/?« %HEX and alnum are allowed
   // the RFC explicitly states ?/foo being a valid use case, no mention of parameter syntax!
@@ -1102,14 +1228,14 @@ URIObj.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolea
         unique = {};
         for (i = 0, length = (data[key] as any[]).length; i < length; i++) {
           if ((data[key] as any[])[i] !== undefined && unique[(data[key] as any[])[i] + ''] === undefined) {
-            t += '&' + URIObj.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
+            t += '&' + URI.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
             if (duplicateQueryParameters !== true) {
               unique[(data[key] as any[])[i] + ''] = true;
             }
           }
         }
       } else if (data[key] !== undefined) {
-        t += '&' + URIObj.buildQueryParameter(key, data[key] as string, escapeQuerySpace);
+        t += '&' + URI.buildQueryParameter(key, data[key] as string, escapeQuerySpace);
       }
     }
   }
@@ -1117,19 +1243,19 @@ URIObj.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolea
   return t.substring(1);
 };
 
-URIObj.buildQueryParameter = function (name: string, value: string | null, escapeQuerySpace?: boolean): string {
+URI.buildQueryParameter = function (name: string, value: string | null, escapeQuerySpace?: boolean): string {
   // http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type -- application/x-www-form-urlencoded
   // don't append "=" for null values, according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#url-parameter-serialization
-  return URIObj.encodeQuery(name, escapeQuerySpace) + (value !== null ? '=' + URIObj.encodeQuery(value, escapeQuerySpace) : '');
+  return URI.encodeQuery(name, escapeQuerySpace) + (value !== null ? '=' + URI.encodeQuery(value, escapeQuerySpace) : '');
 };
 
 
 // Add missing static query manipulation methods
-URIObj.addQuery = function (data: QueryData, name: string | QueryData, value?: string | string[]): void {
+URI.addQuery = function (data: QueryData, name: string | QueryData, value?: string | string[]): void {
   if (typeof name === 'object') {
     for (const key in name) {
       if (hasOwn.call(name, key)) {
-        URIObj.addQuery(data, key, (name as any)[key]);
+        URI.addQuery(data, key, (name as any)[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -1150,11 +1276,11 @@ URIObj.addQuery = function (data: QueryData, name: string | QueryData, value?: s
   }
 };
 
-URIObj.setQuery = function (data: QueryData, name: string | QueryData, value?: string | null): void {
+URI.setQuery = function (data: QueryData, name: string | QueryData, value?: string | null): void {
   if (typeof name === 'object') {
     for (const key in name) {
       if (hasOwn.call(name, key)) {
-        URIObj.setQuery(data, key, (name as any)[key]);
+        URI.setQuery(data, key, (name as any)[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -1164,7 +1290,7 @@ URIObj.setQuery = function (data: QueryData, name: string | QueryData, value?: s
   }
 };
 
-URIObj.removeQuery = function (data: QueryData, name?: string | string[] | RegExp | QueryData, value?: string | RegExp): void {
+URI.removeQuery = function (data: QueryData, name?: string | string[] | RegExp | QueryData, value?: string | RegExp): void {
   let i: number, length: number, key: string;
 
   if (isArray(name)) {
@@ -1180,7 +1306,7 @@ URIObj.removeQuery = function (data: QueryData, name?: string | string[] | RegEx
   } else if (typeof name === 'object') {
     for (key in name as any) {
       if (hasOwn.call(name, key)) {
-        URIObj.removeQuery(data, key, (name as any)[key]);
+        URI.removeQuery(data, key, (name as any)[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -1204,7 +1330,7 @@ URIObj.removeQuery = function (data: QueryData, name?: string | string[] | RegEx
   }
 };
 
-URIObj.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, value?: any, withinArray?: boolean): boolean {
+URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, value?: any, withinArray?: boolean): boolean {
   switch (getType(name)) {
     case 'String':
       // Nothing to do here
@@ -1213,7 +1339,7 @@ URIObj.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData,
     case 'RegExp':
       for (const key in data) {
         if (hasOwn.call(data, key)) {
-          if ((name as RegExp).test(key) && (value === undefined || URIObj.hasQuery(data, key, value))) {
+          if ((name as RegExp).test(key) && (value === undefined || URI.hasQuery(data, key, value))) {
             return true;
           }
         }
@@ -1223,7 +1349,7 @@ URIObj.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData,
     case 'Object':
       for (const _key in name as any) {
         if (hasOwn.call(name, _key)) {
-          if (!URIObj.hasQuery(data, _key, (name as any)[_key])) {
+          if (!URI.hasQuery(data, _key, (name as any)[_key])) {
             return false;
           }
         }
@@ -1291,13 +1417,13 @@ URIObj.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData,
 
 
 // Add joinPaths method
-URIObj.joinPaths = function (): URIProto {
+URI.joinPaths = function (): URIProto {
   const input: any[] = [];
   const segments: string[] = [];
   let nonEmptySegments = 0;
 
   for (let i = 0; i < arguments.length; i++) {
-    const url = new URIObj(arguments[i]);
+    const url = new URI(arguments[i]);
     input.push(url);
     const _segments = url.segment();
     for (let s = 0; s < _segments.length; s++) {
@@ -1312,10 +1438,10 @@ URIObj.joinPaths = function (): URIProto {
   }
 
   if (!segments.length || !nonEmptySegments) {
-    return new URIObj('');
+    return new URI('');
   }
 
-  const uri = new URIObj('').segment(segments);
+  const uri = new URI('').segment(segments);
 
   if (input[0].path() === '' || input[0].path().slice(0, 1) === '/') {
     uri.path('/' + uri.path());
@@ -1324,7 +1450,7 @@ URIObj.joinPaths = function (): URIProto {
   return uri.normalize();
 };
 
-URIObj.commonPath = function (one: string, two: string): string {
+URI.commonPath = function (one: string, two: string): string {
   const length = Math.min(one.length, two.length);
   let pos: number;
 
@@ -1348,12 +1474,12 @@ URIObj.commonPath = function (one: string, two: string): string {
   return one.substring(0, pos + 1);
 };
 
-URIObj.withinString = function (string: string, callback: (uri: string, start: number, end: number, string: string) => string | void, options?: WithinStringOptions): string {
+URI.withinString = function (string: string, callback: (uri: string, start: number, end: number, string: string) => string | void, options?: WithinStringOptions): string {
   options || (options = {});
-  const _start = options.start || URIObj.findUri.start;
-  const _end = options.end || URIObj.findUri.end;
-  const _trim = options.trim || URIObj.findUri.trim;
-  const _parens = options.parens || URIObj.findUri.parens;
+  const _start = options.start || URI.findUri.start;
+  const _end = options.end || URI.findUri.end;
+  const _trim = options.trim || URI.findUri.trim;
+  const _parens = options.parens || URI.findUri.parens;
   const _attributeOpen = /[a-z0-9-]=["']?$/i;
 
   _start.lastIndex = 0;
@@ -1418,7 +1544,7 @@ URIObj.withinString = function (string: string, callback: (uri: string, start: n
   return string;
 };
 
-URIObj.ensureValidHostname = function (v: string, protocol?: string): void {
+URI.ensureValidHostname = function (v: string, protocol?: string): void {
   // Theoretically URIs allow percent-encoding in Hostnames (according to RFC 3986)
   // they are not part of DNS and therefore ignored by URI.js
 
@@ -1427,23 +1553,23 @@ URIObj.ensureValidHostname = function (v: string, protocol?: string): void {
   let rejectEmptyHostname = false;
 
   if (hasProtocol) {
-    rejectEmptyHostname = arrayContains(URIObj.hostProtocols, protocol);
+    rejectEmptyHostname = arrayContains(URI.hostProtocols, protocol);
   }
 
   if (rejectEmptyHostname && !hasHostname) {
     throw new TypeError('Hostname cannot be empty, if protocol is ' + protocol);
-  } else if (v && v.match(URIObj.invalid_hostname_characters)) {
+  } else if (v && v.match(URI.invalid_hostname_characters)) {
     // test punycode
     if (!punycode) {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-:_] and Punycode.js is not available');
     }
-    if (punycode.toASCII(v).match(URIObj.invalid_hostname_characters)) {
+    if (punycode.toASCII(v).match(URI.invalid_hostname_characters)) {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-:_]');
     }
   }
 };
 
-URIObj.ensureValidPort = function (v: string): void {
+URI.ensureValidPort = function (v: string): void {
   if (!v) {
     return;
   }
@@ -1457,7 +1583,7 @@ URIObj.ensureValidPort = function (v: string): void {
 };
 
 // Add noConflict method
-URIObj.noConflict = function (removeAll?: boolean): any {
+URI.noConflict = function (removeAll?: boolean): any {
   if (removeAll) {
     var unconflicted: any = {
       URI: this.noConflict()
@@ -1488,7 +1614,7 @@ p.build = function (deferBuild?: boolean): any {
   if (deferBuild === true) {
     this._deferred_build = true;
   } else if (deferBuild === undefined || this._deferred_build) {
-    this._string = URIObj.build(this._parts);
+    this._string = URI.build(this._parts);
     this._deferred_build = false;
   }
 
@@ -1496,7 +1622,7 @@ p.build = function (deferBuild?: boolean): any {
 };
 
 p.clone = function (): any {
-  return new URIObj(this);
+  return new URI(this);
 };
 
 p.valueOf = p.toString = function (): string {
@@ -1560,12 +1686,12 @@ p.hash = function (v?: any, build?: boolean): any {
 p.pathname = function (v?: any, build?: boolean): any {
   if (v === undefined || v === true) {
     const res = this._parts.path || (this._parts.hostname ? '/' : '');
-    return v ? (this._parts.urn ? URIObj.decodeUrnPath : URIObj.decodePath)(res) : res;
+    return v ? (this._parts.urn ? URI.decodeUrnPath : URI.decodePath)(res) : res;
   } else {
     if (this._parts.urn) {
-      this._parts.path = v ? URIObj.recodeUrnPath(v) : '';
+      this._parts.path = v ? URI.recodeUrnPath(v) : '';
     } else {
-      this._parts.path = v ? URIObj.recodePath(v) : '/';
+      this._parts.path = v ? URI.recodePath(v) : '/';
     }
     this.build(!build);
     return this;
@@ -1581,12 +1707,12 @@ p.href = function (href?: any, build?: boolean): any {
   }
 
   this._string = '';
-  this._parts = URIObj._parts();
+  this._parts = URI._parts();
 
   const _URI = href instanceof URI;
   const _object = typeof href === 'object' && (href.hostname || href.path || href.pathname);
   if (href.nodeName) {
-    const attribute = URIObj.getDomAttribute(href);
+    const attribute = URI.getDomAttribute(href);
     href = href[attribute] || '';
     // _object = false;
   }
@@ -1603,7 +1729,7 @@ p.href = function (href?: any, build?: boolean): any {
   }
 
   if (typeof href === 'string' || href instanceof String) {
-    this._parts = URIObj.parse(String(href), this._parts);
+    this._parts = URI.parse(String(href), this._parts);
   } else if (_URI || _object) {
     const src = _URI ? href._parts : href;
     for (key in src) {
@@ -1638,13 +1764,13 @@ p.is = function (what: string): boolean | null {
 
   if (this._parts.hostname) {
     relative = false;
-    ip4 = URIObj.ip4_expression.test(this._parts.hostname);
-    ip6 = URIObj.ip6_expression.test(this._parts.hostname);
+    ip4 = URI.ip4_expression.test(this._parts.hostname);
+    ip6 = URI.ip6_expression.test(this._parts.hostname);
     ip = ip4 || ip6;
     name = !ip;
     sld = name && SLD && SLD.has(this._parts.hostname);
-    idn = name && URIObj.idn_expression.test(this._parts.hostname);
-    punycode_test = name && URIObj.punycode_expression.test(this._parts.hostname);
+    idn = name && URI.idn_expression.test(this._parts.hostname);
+    punycode_test = name && URI.punycode_expression.test(this._parts.hostname);
   }
 
   switch (what.toLowerCase()) {
@@ -1701,7 +1827,7 @@ p.protocol = function (v?: any, build?: boolean): any {
     // accept trailing ://
     v = v.replace(/:(\/\/)?$/, '');
 
-    if (!v.match(URIObj.protocol_expression)) {
+    if (!v.match(URI.protocol_expression)) {
       throw new TypeError('Protocol "' + v + '" contains characters other than [A-Z0-9.+-] or doesn\'t start with [A-Z]');
     }
   }
@@ -1727,7 +1853,7 @@ p.port = function (v?: any, build?: boolean): any {
         v = v.substring(1);
       }
 
-      URIObj.ensureValidPort(v);
+      URI.ensureValidPort(v);
     }
   }
   return _port.call(this, v, build);
@@ -1741,14 +1867,14 @@ p.hostname = function (v?: any, build?: boolean): any {
 
   if (v !== undefined) {
     const x: any = {preventInvalidHostname: this._parts.preventInvalidHostname};
-    const res = URIObj.parseHost(v, x);
+    const res = URI.parseHost(v, x);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
     }
 
     v = x.hostname;
     if (this._parts.preventInvalidHostname) {
-      URIObj.ensureValidHostname(v, this._parts.protocol);
+      URI.ensureValidHostname(v, this._parts.protocol);
     }
   }
 
@@ -1770,7 +1896,7 @@ p.origin = function (v?: any, build?: boolean): any {
 
     return (protocol ? protocol + '://' : '') + this.authority();
   } else {
-    const origin = new URIObj(v);
+    const origin = new URI(v);
     this
       .protocol(origin.protocol())
       .authority(origin.authority())
@@ -1785,9 +1911,9 @@ p.host = function (v?: any, build?: boolean): any {
   }
 
   if (v === undefined) {
-    return this._parts.hostname ? URIObj.buildHost(this._parts) : '';
+    return this._parts.hostname ? URI.buildHost(this._parts) : '';
   } else {
-    const res = URIObj.parseHost(v, this._parts);
+    const res = URI.parseHost(v, this._parts);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
     }
@@ -1803,9 +1929,9 @@ p.authority = function (v?: any, build?: boolean): any {
   }
 
   if (v === undefined) {
-    return this._parts.hostname ? URIObj.buildAuthority(this._parts) : '';
+    return this._parts.hostname ? URI.buildAuthority(this._parts) : '';
   } else {
-    const res = URIObj.parseAuthority(v, this._parts);
+    const res = URI.parseAuthority(v, this._parts);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
     }
@@ -1821,14 +1947,14 @@ p.userinfo = function (v?: any, build?: boolean): any {
   }
 
   if (v === undefined) {
-    const t = URIObj.buildUserinfo(this._parts);
+    const t = URI.buildUserinfo(this._parts);
     return t ? t.substring(0, t.length - 1) : t;
   } else {
     if (v[v.length - 1] !== '@') {
       v += '@';
     }
 
-    URIObj.parseUserinfo(v, this._parts);
+    URI.parseUserinfo(v, this._parts);
     this.build(!build);
     return this;
   }
@@ -1841,7 +1967,7 @@ p.resource = function (v?: any, build?: boolean): any {
     return this.path() + this.search() + this.hash();
   }
 
-  parts = URIObj.parse(v);
+  parts = URI.parse(v);
   this._parts.path = parts.path;
   this._parts.query = parts.query;
   this._parts.fragment = parts.fragment;
@@ -1882,7 +2008,7 @@ p.subdomain = function (v?: any, build?: boolean): any {
     }
 
     if (v) {
-      URIObj.ensureValidHostname(v, this._parts.protocol);
+      URI.ensureValidHostname(v, this._parts.protocol);
     }
 
     if (this._parts.hostname) {
@@ -1931,7 +2057,7 @@ p.domain = function (v?: any, build?: boolean): any {
       throw new TypeError('Domains cannot contain colons');
     }
 
-    URIObj.ensureValidHostname(v, this._parts.protocol);
+    URI.ensureValidHostname(v, this._parts.protocol);
 
     if (!this._parts.hostname || this.is('IP')) {
       this._parts.hostname = v;
@@ -2025,7 +2151,7 @@ p.directory = function (v?: any, build?: boolean): any {
     const end = path.length - filenameLength - 1;
     const res = path.substring(0, end) || (this._parts.hostname ? '/' : '');
 
-    return v ? URIObj.decodePath(res) : res;
+    return v ? URI.decodePath(res) : res;
   } else {
     const path = this._parts.path;
     if (!path) return this;
@@ -2051,7 +2177,7 @@ p.directory = function (v?: any, build?: boolean): any {
       v += '/';
     }
 
-    v = URIObj.recodePath(v);
+    v = URI.recodePath(v);
     if (this._parts.path) {
       this._parts.path = this._parts.path.replace(replace, v);
     }
@@ -2073,7 +2199,7 @@ p.filename = function (v?: any, build?: boolean): any {
     const pos = this._parts.path.lastIndexOf('/');
     const res = this._parts.path.substring(pos + 1);
 
-    return v ? URIObj.decodePathSegment(res) : res;
+    return v ? URI.decodePathSegment(res) : res;
   } else {
     let mutatedDirectory = false;
 
@@ -2086,7 +2212,7 @@ p.filename = function (v?: any, build?: boolean): any {
     }
 
     const replace = new RegExp(escapeRegEx(String(this.filename())) + '$');
-    v = URIObj.recodePath(v);
+    v = URI.recodePath(v);
     if (this._parts.path) {
       this._parts.path = this._parts.path.replace(replace, v);
     }
@@ -2122,7 +2248,7 @@ p.suffix = function (v?: any, build?: boolean): any {
     // suffix may only contain alnum characters (yup, I made this up.)
     s = filename.substring(pos + 1);
     res = (/^[a-z0-9%]+$/i).test(s) ? s : '';
-    return v ? URIObj.decodePathSegment(res) : res;
+    return v ? URI.decodePathSegment(res) : res;
   } else {
     if (v.charAt(0) === '.') {
       v = v.substring(1);
@@ -2137,7 +2263,7 @@ p.suffix = function (v?: any, build?: boolean): any {
       }
 
       if (this._parts.path) {
-        this._parts.path += '.' + URIObj.recodePath(v);
+        this._parts.path += '.' + URI.recodePath(v);
       }
     } else if (!v) {
       replace = new RegExp(escapeRegEx('.' + suffix) + '$');
@@ -2146,7 +2272,7 @@ p.suffix = function (v?: any, build?: boolean): any {
     }
 
     if (replace && this._parts.path) {
-      v = URIObj.recodePath(v);
+      v = URI.recodePath(v);
       this._parts.path = this._parts.path.replace(replace, v);
     }
 
@@ -2239,10 +2365,10 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
   if (v === undefined) {
     segments = this.segment(segment, v, build);
     if (!isArray(segments)) {
-      segments = segments !== undefined ? URIObj.decode(segments) : undefined;
+      segments = segments !== undefined ? URI.decode(segments) : undefined;
     } else {
       for (i = 0, l = segments.length; i < l; i++) {
-        segments[i] = URIObj.decode(segments[i]);
+        segments[i] = URI.decode(segments[i]);
       }
     }
 
@@ -2250,10 +2376,10 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
   }
 
   if (!isArray(v)) {
-    v = (typeof v === 'string' || v instanceof String) ? URIObj.encode(String(v)) : v;
+    v = (typeof v === 'string' || v instanceof String) ? URI.encode(String(v)) : v;
   } else {
     for (i = 0, l = v.length; i < l; i++) {
-      v[i] = URIObj.encode(v[i]);
+      v[i] = URI.encode(v[i]);
     }
   }
 
@@ -2264,15 +2390,15 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
 const q = p.query;
 p.query = function (v?: any, build?: boolean): any {
   if (v === true) {
-    return URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+    return URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   } else if (typeof v === 'function') {
-    const data = URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+    const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
     const result = v.call(this, data);
-    this._parts.query = URIObj.buildQuery(result || data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+    this._parts.query = URI.buildQuery(result || data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
     this.build(!build);
     return this;
   } else if (v !== undefined && typeof v !== 'string') {
-    this._parts.query = URIObj.buildQuery(v, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+    this._parts.query = URI.buildQuery(v, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
     this.build(!build);
     return this;
   } else {
@@ -2282,7 +2408,7 @@ p.query = function (v?: any, build?: boolean): any {
 
 // query manipulation methods
 p.setQuery = function (name?: any, value?: any, build?: boolean): any {
-  const data = URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+  const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 
   if (typeof name === 'string' || name instanceof String) {
     data[String(name)] = value !== undefined ? value : null;
@@ -2296,7 +2422,7 @@ p.setQuery = function (name?: any, value?: any, build?: boolean): any {
     throw new TypeError('URI.setQuery() accepts an object, string as the name parameter');
   }
 
-  this._parts.query = URIObj.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+  this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
     build = value;
   }
@@ -2306,9 +2432,9 @@ p.setQuery = function (name?: any, value?: any, build?: boolean): any {
 };
 
 p.addQuery = function (name?: any, value?: any, build?: boolean): any {
-  const data = URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
-  URIObj.addQuery(data, name, value === undefined ? null : value);
-  this._parts.query = URIObj.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+  const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+  URI.addQuery(data, name, value === undefined ? null : value);
+  this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
     build = value;
   }
@@ -2318,9 +2444,9 @@ p.addQuery = function (name?: any, value?: any, build?: boolean): any {
 };
 
 p.removeQuery = function (name?: any, value?: any, build?: boolean): any {
-  const data = URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
-  URIObj.removeQuery(data, name, value);
-  this._parts.query = URIObj.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+  const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+  URI.removeQuery(data, name, value);
+  this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
     build = value;
   }
@@ -2330,8 +2456,8 @@ p.removeQuery = function (name?: any, value?: any, build?: boolean): any {
 };
 
 p.hasQuery = function (name?: any, value?: any, withinArray?: boolean): boolean {
-  const data = URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
-  return URIObj.hasQuery(data, name, value, withinArray);
+  const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
+  return URI.hasQuery(data, name, value, withinArray);
 };
 
 // aliases
@@ -2387,7 +2513,7 @@ p.normalizeHostname = function (build?: boolean): any {
 
 p.normalizePort = function (build?: boolean): any {
   // remove port if it's the protocol's default
-  if (typeof this._parts.protocol === 'string' && this._parts.port === URIObj.defaultPorts[this._parts.protocol]) {
+  if (typeof this._parts.protocol === 'string' && this._parts.port === URI.defaultPorts[this._parts.protocol]) {
     this._parts.port = null;
     this.build(!build);
   }
@@ -2402,7 +2528,7 @@ p.normalizePath = function (build?: boolean): any {
   }
 
   if (this._parts.urn) {
-    this._parts.path = URIObj.recodeUrnPath(this._parts.path);
+    this._parts.path = URI.recodeUrnPath(this._parts.path);
     this.build(!build);
     return this;
   }
@@ -2415,7 +2541,7 @@ p.normalizePath = function (build?: boolean): any {
     return this;
   }
 
-  _path = URIObj.recodePath(_path);
+  _path = URI.recodePath(_path);
 
   let _was_relative: boolean = false;
   let _leadingParents = '';
@@ -2481,7 +2607,7 @@ p.normalizeQuery = function (build?: boolean): any {
     if (!this._parts.query.length) {
       this._parts.query = null;
     } else {
-      this.query(URIObj.parseQuery(this._parts.query, this._parts.escapeQuerySpace));
+      this.query(URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace));
     }
 
     this.build(!build);
@@ -2505,32 +2631,32 @@ p.normalizeHash = p.normalizeFragment;
 // encoding methods
 p.iso8859 = function (): any {
   // expect unicode input, iso8859 output
-  const e = URIObj.encode;
-  const d = URIObj.decode;
+  const e = URI.encode;
+  const d = URI.decode;
 
-  URIObj.encode = escape;
-  URIObj.decode = decodeURIComponent;
+  URI.encode = escape;
+  URI.decode = decodeURIComponent;
   try {
     this.normalize();
   } finally {
-    URIObj.encode = e;
-    URIObj.decode = d;
+    URI.encode = e;
+    URI.decode = d;
   }
   return this;
 };
 
 p.unicode = function (): any {
   // expect iso8859 input, unicode output
-  const e = URIObj.encode;
-  const d = URIObj.decode;
+  const e = URI.encode;
+  const d = URI.decode;
 
-  URIObj.encode = strictEncodeURIComponent;
-  URIObj.decode = unescape;
+  URI.encode = strictEncodeURIComponent;
+  URI.decode = unescape;
   try {
     this.normalize();
   } finally {
-    URIObj.encode = e;
-    URIObj.decode = d;
+    URI.encode = e;
+    URI.decode = d;
   }
   return this;
 };
@@ -2564,18 +2690,18 @@ p.readable = function (): string {
     let q = '';
     for (let i = 0, qp = uri._parts.query.split('&'), l = qp.length; i < l; i++) {
       const kv = (qp[i] || '').split('=');
-      q += '&' + URIObj.decodeQuery(kv[0], this._parts.escapeQuerySpace)
+      q += '&' + URI.decodeQuery(kv[0], this._parts.escapeQuerySpace)
         .replace(/&/g, '%26');
 
       if (kv[1] !== undefined) {
-        q += '=' + URIObj.decodeQuery(kv[1], this._parts.escapeQuerySpace)
+        q += '=' + URI.decodeQuery(kv[1], this._parts.escapeQuerySpace)
           .replace(/&/g, '%26');
       }
     }
     t += '?' + q.substring(1);
   }
 
-  t += URIObj.decodeQuery(uri.hash(), true);
+  t += URI.decodeQuery(uri.hash(), true);
   return t;
 };
 
@@ -2590,7 +2716,7 @@ p.absoluteTo = function (base?: any): any {
   }
 
   if (!(base instanceof URI)) {
-    base = new URIObj(base);
+    base = new URI(base);
   }
 
   if (resolved._parts.protocol) {
@@ -2638,7 +2764,7 @@ p.relativeTo = function (base?: any): any {
     throw new Error('URNs do not have any generally defined hierarchical components');
   }
 
-  base = new URIObj(base).normalize();
+  base = new URI(base).normalize();
   relativeParts = relative._parts;
   baseParts = base._parts;
   relativePath = relative.path();
@@ -2677,7 +2803,7 @@ p.relativeTo = function (base?: any): any {
   }
 
   // determine common sub path
-  common = URIObj.commonPath(relativePath, basePath);
+  common = URI.commonPath(relativePath, basePath);
 
   // If the paths have nothing in common, return a relative URL with the absolute path.
   if (!common) {
@@ -2697,7 +2823,7 @@ p.relativeTo = function (base?: any): any {
 // comparing URIs
 p.equals = function (uri?: any): boolean {
   const one = this.clone();
-  const two = new URIObj(uri);
+  const two = new URI(uri);
   const one_map: any = {};
   const two_map: any = {};
   const checked: any = {};
@@ -2727,8 +2853,8 @@ p.equals = function (uri?: any): boolean {
     return false;
   }
 
-  const one_map_parsed = URIObj.parseQuery(one_query, this._parts.escapeQuerySpace);
-  const two_map_parsed = URIObj.parseQuery(two_query, this._parts.escapeQuerySpace);
+  const one_map_parsed = URI.parseQuery(one_query, this._parts.escapeQuerySpace);
+  const two_map_parsed = URI.parseQuery(two_query, this._parts.escapeQuerySpace);
 
   for (key in one_map_parsed) {
     if (hasOwn.call(one_map_parsed, key)) {

@@ -11,7 +11,7 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
-declare const URI: URIInterface;
+declare const URI: URIInstanceInterface;
 
 interface URITemplateOperator {
   prefix: string;

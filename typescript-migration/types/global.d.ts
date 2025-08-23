@@ -27,10 +27,10 @@ declare global {
     noConflict: () => SecondLevelDomainsInterface;
   }
 
-  interface URIInterface {
-    build(deferBuild?: boolean): URIInterface;
+  interface URIInstanceInterface {
+    build(deferBuild?: boolean): URIInstanceInterface;
 
-    clone(): URIInterface;
+    clone(): URIInstanceInterface;
 
     toString(): string;
 
@@ -91,8 +91,15 @@ declare global {
     preventInvalidHostname: (prevent?: boolean) => any ;
     duplicateQueryParameters: (allow?: boolean) => any;
     escapeQuerySpace: (escape?: boolean) => any ;
+  }
+
+
+  interface URIStaticInterface {
 
   }
+
+
+
 
   interface Window {
     URI: any,
