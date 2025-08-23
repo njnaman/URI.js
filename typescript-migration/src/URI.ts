@@ -55,20 +55,6 @@ interface CharacterGroup {
   encode?: CharacterConfig;
   decode?: CharacterConfig;
 }
-
-interface Characters {
-  pathname: CharacterGroup;
-  reserved: CharacterGroup;
-  urnpath: CharacterGroup;
-}
-
-interface FindUriConfig {
-  start: RegExp;
-  end: RegExp;
-  trim: RegExp;
-  parens: RegExp;
-}
-
 interface WithinStringOptions {
   start?: RegExp;
   end?: RegExp;
@@ -76,10 +62,6 @@ interface WithinStringOptions {
   parens?: RegExp;
   ignoreHtml?: boolean;
   ignore?: RegExp;
-}
-
-interface DefaultPorts {
-  [protocol: string]: string;
 }
 
 // Import dependencies

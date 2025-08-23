@@ -105,7 +105,7 @@ declare global {
     hostProtocols: string[];
     invalid_hostname_characters: RegExp;
     domAttributes: DomAttributes;
-    
+
     // Static methods
     getDomAttribute(node: Element | null | undefined): string | undefined;
     encode(str: string): string;
@@ -166,113 +166,113 @@ declare global {
     // URI component accessors - overloaded to return string when getting, URIInstanceInterface when setting
     protocol(): string;
     protocol(v: string | null, build?: boolean): URIInstanceInterface;
-    
+
     username(): string;
     username(v: string | null, build?: boolean): URIInstanceInterface;
-    
+
     password(): string;
     password(v: string | null, build?: boolean): URIInstanceInterface;
-    
+
     hostname(): string;
     hostname(v: string | null, build?: boolean): URIInstanceInterface;
-    
+
     port(): string;
     port(v: string | number | boolean | null, build?: boolean): URIInstanceInterface;
-    
+
     query(): string;
     query(v: string | QueryData | ((data: any) => QueryData | void), build?: boolean): URIInstanceInterface;
     query(returnAsObject: true): QueryData;
     query(returnAsObject: boolean): QueryData | string;
-    
+
     fragment(): string;
     fragment(v: string | QueryData, build?: boolean): URIInstanceInterface;
     fragment(returnAsObject: true): URIInstanceInterface;
     fragment(returnAsObject: boolean): URIInstanceInterface | QueryData | string;
-    
+
     search(): string;
     search(v: string | QueryData, build?: boolean): string | URIInstanceInterface;
     search(returnAsObject: true): QueryData;
     search(returnAsObject: boolean): QueryData | string;
-    
+
     hash(): string;
     hash(v: string, build?: boolean): URIInstanceInterface;
-    
+
     pathname(): string;
     pathname(v: string, build?: boolean): URIInstanceInterface;
     pathname(decode: true): string;
-    
+
     path(): string;
     path(v: string, build?: boolean): URIInstanceInterface;
     path(decode: true): string;
-    
+
     href(): string;
     href(href: string | String | URIInstanceInterface, build?: boolean): URIInstanceInterface;
-    
+
     is(what: string): boolean | null;
-    
+
     scheme(): string;
     scheme(v: string, build?: boolean): URIInstanceInterface;
-    
+
     origin(): string;
     origin(v: string, build?: boolean): URIInstanceInterface;
-    
+
     host(): string;
     host(v: string, build?: boolean): URIInstanceInterface;
-    
+
     authority(): string;
     authority(v: string, build?: boolean): URIInstanceInterface;
-    
+
     userinfo(): string;
     userinfo(v: string, build?: boolean): URIInstanceInterface;
-    
+
     resource(): string;
     resource(v: string, build?: boolean): URIInstanceInterface;
-    
+
     subdomain(): string;
     subdomain(v: string, build?: boolean): URIInstanceInterface;
-    
+
     domain(): string;
     domain(v: string, build?: boolean): URIInstanceInterface;
     domain(tld: boolean): string;
-    
+
     tld(): string;
     tld(v: string, build?: boolean): URIInstanceInterface;
     tld(tld: boolean): string;
-    
+
     directory(): string;
     directory(v: string, build?: boolean): URIInstanceInterface;
     directory(decode: true): string;
-    
+
     filename(): string;
     filename(v: string | null | boolean | number, build?: boolean): URIInstanceInterface;
     filename(decode: true): string;
-    
+
     suffix(): string;
     suffix(v: string, build?: boolean): URIInstanceInterface;
     suffix(decode: true): string;
-    
+
     segment(): string[];
     segment(segment: number): string;
     segment(segment: number, v: string | string[] | null, build?: boolean): URIInstanceInterface;
     segment(v: string | string[], build?: boolean): URIInstanceInterface;
-    
+
     segmentCoded(): string[];
     segmentCoded(segment: number): string;
     segmentCoded(segment: number, v: string | string[] | null, build?: boolean): URIInstanceInterface;
     segmentCoded(v: string | string[], build?: boolean): URIInstanceInterface;
-    
+
     // Query manipulation methods
     setQuery(name: string | QueryData, value?: string | string[] | number | null, build?: boolean): URIInstanceInterface;
     addQuery(name: string | QueryData, value?: string | string[] | number, build?: boolean): URIInstanceInterface;
     removeQuery(name?: string | string[] | RegExp | QueryData, value?: string | string[] | number | RegExp, build?: boolean): URIInstanceInterface;
     hasQuery(name?: string | RegExp | QueryData, value?: unknown, withinArray?: boolean): boolean;
-    
+
     // Search is an alias for query methods
     setSearch(name: string | QueryData, value?: string | null, build?: boolean): URIInstanceInterface;
     addSearch(name: string | QueryData, value?: string | string[], build?: boolean): URIInstanceInterface;
     removeSearch(name?: string | string[] | RegExp | QueryData, value?: string | RegExp, build?: boolean): URIInstanceInterface;
     hasSearch(name?: string | RegExp | QueryData, value?: unknown, withinArray?: boolean): boolean;
-    
+
     // Normalization methods
     normalize(): URIInstanceInterface;
     normalizeProtocol(build?: boolean): URIInstanceInterface;
@@ -284,19 +284,19 @@ declare global {
     normalizeFragment(build?: boolean): URIInstanceInterface;
     normalizeSearch(build?: boolean): URIInstanceInterface;
     normalizeHash(build?: boolean): URIInstanceInterface;
-    
+
     // Encoding methods
     iso8859(): URIInstanceInterface;
     unicode(): URIInstanceInterface;
     readable(): string;
-    
+
     // Relative/absolute conversion
     absoluteTo(base: string | URIInstanceInterface): URIInstanceInterface;
     relativeTo(base: string | URIInstanceInterface): URIInstanceInterface;
-    
+
     // Comparison
     equals(uri: string | URIInstanceInterface): boolean;
-    
+
     // Configuration methods
     preventInvalidHostname(): boolean;
     preventInvalidHostname(prevent: boolean): URIInstanceInterface;
@@ -304,9 +304,9 @@ declare global {
     duplicateQueryParameters(allow: boolean): URIInstanceInterface;
     escapeQuerySpace(): boolean;
     escapeQuerySpace(escape: boolean): URIInstanceInterface;
-    
+
     // Fragment extension methods (from URI.fragmentQuery and URI.fragmentURI)
-    fragmentPrefix(prefix?: string): string | URIInstanceInterface;
+    fragmentPrefix(prefix?: string): URIInstanceInterface;
     addFragment(name: string, value?: string): URIInstanceInterface;
     removeFragment(name: string): URIInstanceInterface;
     setFragment(name: string, value?: string): URIInstanceInterface;
