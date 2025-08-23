@@ -38,10 +38,8 @@ test('storing query-data in fragment', function () {
 });
 
 test('fragmentPrefix', function () {
-  let u: any;
-
   URI.fragmentPrefix = '!';
-  u = URI('http://example.org');
+  const u = URI('http://example.org');
   equal(u._parts.fragmentPrefix, '!', 'init using global property');
 
   u.fragment('#?hello=world');

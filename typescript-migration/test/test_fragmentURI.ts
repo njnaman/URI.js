@@ -1,15 +1,8 @@
 // TypeScript version of test_fragmentURI.js
-
-// Reference the source files to compile them
-/// <reference path="../src/URI.ts" />
-/// <reference path="../src/URI.fragmentURI.ts" />
-
 module('URI.fragmentURI');
 
 test('storing URLs in fragment', function () {
   let u = URI('http://example.org');
-  let f: any;
-
   // var uri = URI('http://example.org/#!/foo/bar/baz.html');
   // var furi = uri.fragment(true);
   // furi.pathname() === '/foo/bar/baz.html';
@@ -22,7 +15,7 @@ test('storing URLs in fragment', function () {
   ok(u.fragment(true) instanceof URI, 'URI instance for empty fragment');
 
   u = URI('http://example.org/#!/foo/bar/baz.html');
-  f = u.fragment(true);
+  const f = u.fragment(true);
   equal(f.pathname(), '/foo/bar/baz.html', 'reading path of FragmentURI');
   equal(f.filename(), 'baz.html', 'reading filename of FragmentURI');
 
@@ -33,10 +26,8 @@ test('storing URLs in fragment', function () {
 });
 
 test('fragmentPrefix', function () {
-  let u: any;
-
   URI.fragmentPrefix = '?';
-  u = URI('http://example.org');
+  const u = URI('http://example.org');
   equal(u._parts.fragmentPrefix, '?', 'init using global property');
 
   u.fragment('#!/foo/bar/baz.html');

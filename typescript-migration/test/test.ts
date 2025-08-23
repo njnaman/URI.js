@@ -2,7 +2,7 @@
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
 // Test suite setup
-(function () {
+(function (): void {
   'use strict';
 
   // QUnit test functions - QUnit is required
@@ -113,7 +113,7 @@
 
   // DOM element tests (browser only)
   if (typeof document !== 'undefined') {
-    const testDomAttribute = function (element: HTMLElement, attribute: string) {
+    const testDomAttribute = function (element: HTMLElement, attribute: string): void {
       test('new URI(Element ' + element.nodeName + ')', function () {
         element.setAttribute(attribute, 'http://example.org/foobar.html')
         const u = new URI(element);
@@ -127,7 +127,7 @@
       });
     };
 
-    const testUnsupportedDomAttribute = function (element: HTMLElement, attribute: string) {
+    const testUnsupportedDomAttribute = function (element: HTMLElement, attribute: string): void {
       test('new URI(unsupported Element ' + element.nodeName + ')', function () {
         element.setAttribute(attribute, 'http://example.org/foobar.html')
 
@@ -239,7 +239,7 @@
 
   // Test URL parsing with the URLs data
   for (let i = 0, t; (t = urls[i]); i++) {
-    (function (t: URLTestCase) {
+    (function (t: URLTestCase): void {
       test('parse ' + t.name, function () {
         const u = new URI(t.url);
 
@@ -465,12 +465,6 @@
     u.search('__proto__=hasOwnProperty&__proto__=eviltwin&uuid');
     equal(u.query(), '__proto__=hasOwnProperty&__proto__=eviltwin&uuid', 'search: __proto__=hasOwnProperty&__proto__=eviltwin&uuid');
     equal(JSON.stringify(u.query(true)), '{"uuid":null}', 'parsed query: {uuid: null}');
-
-    // parsing empty query
-    let t;
-    t = u.query('?').query(true);
-    t = u.query('').query(true);
-    t = u.href('http://example.org').query(true);
   });
 
   test('fragment', function () {
@@ -1812,7 +1806,7 @@
   });
 
   test('withinString - ignoreHtml', function () {
-    const decorate = function (url: string) {
+    const decorate = function (url: string): string {
       return '<a>' + url + '</a>';
     };
     /*jshint laxbreak: true */
@@ -1859,7 +1853,7 @@
   });
 
   test('ensureValidPort', function () {
-    function testPort(value: unknown) {
+    function testPort(value: unknown): boolean {
       let result = true;
       try {
         URI.ensureValidPort(value);

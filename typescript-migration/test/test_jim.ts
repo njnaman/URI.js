@@ -8,12 +8,8 @@
 
 // TypeScript version of test_jim.js
 
-// Reference the source files to compile them
-/// <reference path="../src/URI.ts" />
 
-
-
-(function() {
+(function() : void {
   'use strict';
   module('injection');
   test('protocol', function() {

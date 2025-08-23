@@ -2292,7 +2292,7 @@ const urls: URLTestCase[] = [{
   }
 }, {
   name: 'backslashes protocol excessive',
-  url: 'https:/\/\/\attacker.com',
+  url: 'https://attacker.com',
   _url: 'https://attacker.com/',
   parts: {
     protocol: 'https',

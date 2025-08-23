@@ -104,7 +104,7 @@ test('.attr("href")', function () {
     const $first = $links.children().first();
     const first = $first.get(0);
     const uri = $first.uri();
-    const href = function (elem: Element) {
+    const href = function (elem: Element): string | null {
         return elem.getAttribute('href');
     };
 
@@ -129,9 +129,6 @@ test('.attr("uri:accessor")', function () {
     const $links = $('#testestest');
     const $first = $links.children().first();
     const uri = $first.uri();
-    const href = function (elem: Element) {
-        return elem.getAttribute('href');
-    };
 
     // Note: Skipping $.support.hrefNormalized check since it's jQuery-specific
     // and not relevant for TypeScript version
