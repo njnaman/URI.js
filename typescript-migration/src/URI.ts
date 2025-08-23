@@ -25,12 +25,12 @@ interface URIStaticInterface {
   [key: string]: any;
 
   (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface;
+  (this: URIInstanceInterface, uriInst: URIInstanceInterface): URIInstanceInterface;
   (this: URIInstanceInterface): URIInstanceInterface;
 
   new(url?: string, base?: string): URIInstanceInterface;
-
+  new(uriInst: URIInstanceInterface): URIInstanceInterface;
   new(url?: string): URIInstanceInterface;
-
   new(): URIInstanceInterface;
 
   version: any;
