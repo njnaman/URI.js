@@ -3,14 +3,14 @@
 
 declare global {
     interface Window {
-        URI: any,
-        URI_pre_lib: any,
-        URITemplate_pre_lib: any,
-        URITemplate: any,
-        IPv6_pre_lib: any,
-        IPv6: any,
-        SecondLevelDomains: any,
-        SecondLevelDomains_pre_lib: any,
+        URI: string | URIStaticInterface,
+        URI_pre_lib: string,
+        URITemplate_pre_lib: string,
+        URITemplate: string | URITemplateStaticInterface,
+        IPv6_pre_lib: string,
+        IPv6: string | IPv6Interface,
+        SecondLevelDomains: string | SecondLevelDomainsInterface,
+        SecondLevelDomains_pre_lib: string,
     }
 }
 

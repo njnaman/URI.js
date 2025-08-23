@@ -146,6 +146,7 @@ function bestPresentation(address: string): string {
 
 const IPv6: IPv6Interface = {
   best: bestPresentation,
+  noConflict: () => IPv6,
 };
 
 export default IPv6

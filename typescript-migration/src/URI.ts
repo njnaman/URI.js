@@ -1209,21 +1209,21 @@ URI.noConflict = function (removeAll?: boolean): any {
 
     // In ES module context, these global references are not available
     // but we keep the method for API compatibility
-    if (typeof window !== 'undefined' && window.URITemplate && typeof window.URITemplate.noConflict === 'function') {
+    if (typeof window !== 'undefined' && window.URITemplate && typeof window.URITemplate != "string" && typeof window.URITemplate.noConflict === 'function') {
       unconflicted.URITemplate = window.URITemplate.noConflict();
     }
 
-    if (typeof window !== 'undefined' && window.IPv6 && typeof window.IPv6.noConflict === 'function') {
+    if (typeof window !== 'undefined' && window.IPv6 && typeof window.IPv6 != "string" && typeof window.IPv6.noConflict === 'function') {
       unconflicted.IPv6 = window.IPv6.noConflict();
     }
 
-    if (typeof window !== 'undefined' && window.SecondLevelDomains && typeof window.SecondLevelDomains.noConflict === 'function') {
+    if (typeof window !== 'undefined' && window.SecondLevelDomains && typeof window.SecondLevelDomains != "string" && typeof window.SecondLevelDomains.noConflict === 'function') {
       unconflicted.SecondLevelDomains = window.SecondLevelDomains.noConflict();
     }
 
     return unconflicted;
-  } else if (window.URI === this){
-      window.URI = _URI
+  } else if (window.URI === this) {
+    window.URI = _URI
   }
   return this;
 };
