@@ -64,8 +64,10 @@
     "node": ">=14.0.0"
   },
   "scripts": {
+    "build": "npm run clean && npm run type-check && tsc && npm run rollup",
+    "clean": "rm -rf dist",
     "test": "ts-node test-runner.ts",
-    "build": "tsc && npm run rollup",
-    "rollup" : "rollup -c"
+    "type-check": "tsc --noEmit",
+    "rollup": "rollup -c"
   }
 }

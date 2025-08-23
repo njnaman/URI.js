@@ -6,6 +6,8 @@
     "outDir": "./dist",
     "allowUmdGlobalAccess": true,
     "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
     "declaration": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -17,9 +19,9 @@
     "src/**/*",
     "test/**/*",
     "types/**/*",
+    "test-runner.ts"
   ],
   "exclude": [
-//    "src/URI.ts",
     "node_modules",
     "dist",
   ]
