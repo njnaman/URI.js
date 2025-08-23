@@ -1,7 +1,7 @@
 // TypeScript version of test.js
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 
-declare const QUnit: any;
+declare var QUnit: QUnitInterface;
 
 // Declare global variables that will be available after the scripts load
 declare var URI: URIStaticInterface;
@@ -248,7 +248,7 @@ declare var punycode: PunycodeInterface;
 
     // Test URL parsing with the URLs data
     for (let i = 0, t; (t = urls[i]); i++) {
-        (function (t: any) {
+        (function (t: URLTestCase) {
             test('parse ' + t.name, function () {
                 const u = new URI(t.url);
 
@@ -959,7 +959,7 @@ declare var punycode: PunycodeInterface;
 
     test('query callback', function () {
         const u = URI('?foo=bar');
-        u.query(function (data: any) {
+        u.query(function (data: Record<string, string | string[]>) {
             data.foo = 'bam';
         });
         equal(u.query(), 'foo=bam', 'augment argument');
@@ -1229,7 +1229,7 @@ declare var punycode: PunycodeInterface;
         equal(u.hasQuery('list', [/ne$/], true), true, 'in array check - passing RegExp list');
 
         // comparison function
-        equal(u.hasQuery('string', function (value: any, name: any, data: any) {
+        equal(u.hasQuery('string', function (value: string, name: string, data: Record<string, string | string[]>) {
             equal(value, 'bar', 'Function check - param value');
             equal(name, 'string', 'Function check - param name');
             equal(typeof data, 'object', 'Function check - param data');
@@ -1254,7 +1254,7 @@ declare var punycode: PunycodeInterface;
     });
 
     test('normalizeHost', function () {
-        let u: any;
+        let u: URIInstanceInterface;
 
         if (typeof punycode !== 'undefined') {
             u = new URI('http://exämple.org/foobar.html');
@@ -1740,7 +1740,7 @@ declare var punycode: PunycodeInterface;
             const u = new URI(t.url);
             const b = new URI(t.base);
             let caught = false;
-            let r: any;
+            let r: URIInstanceInterface | undefined;
 
             try {
                 r = u.relativeTo(b);
@@ -1755,7 +1755,7 @@ declare var punycode: PunycodeInterface;
                 ok(!caught, t.name + ' should not throw exception');
                 equal(r + '', t.result, t.name);
 
-                const a = r.absoluteTo(t.base);
+                const a = r!.absoluteTo(t.base);
                 const n = u.clone().normalize();
                 equal(a.toString(), n.toString(), t.name + ' reversed');
             }
@@ -1868,7 +1868,7 @@ declare var punycode: PunycodeInterface;
     });
 
     test('ensureValidPort', function () {
-        function testPort(value: any) {
+        function testPort(value: unknown) {
             let result = true;
             try {
                 URI.ensureValidPort(value);
@@ -1941,7 +1941,7 @@ declare var punycode: PunycodeInterface;
     });
 
     test('setQuery', function () {
-        const o: any = {foo: 'bar'};
+        const o: Record<string, string | string[] | null> = {foo: 'bar'};
 
         URI.setQuery(o, 'foo', 'bam');
         deepEqual(o, {foo: 'bam'}, 'set name, value');
@@ -1952,7 +1952,7 @@ declare var punycode: PunycodeInterface;
         URI.setQuery(o, 'foo', 'qux');
         deepEqual(o, {foo: 'qux', array: ['one', 'two']}, 'override name, value');
 
-        const o2: any = {foo: 'bar'};
+        const o2: Record<string, string | string[] | null> = {foo: 'bar'};
         URI.setQuery(o2, {baz: 'qux'});
         deepEqual(o2, {foo: 'bar', baz: 'qux'}, 'set {name: value}');
 
@@ -1962,19 +1962,19 @@ declare var punycode: PunycodeInterface;
         URI.setQuery(o2, {foo: 'qux'});
         deepEqual(o2, {foo: 'qux', bar: ['1', '2'], baz: 'qux'}, 'override {name: value}');
 
-        const o3: any = {foo: 'bar'};
+        const o3: Record<string, string | string[] | null> = {foo: 'bar'};
         URI.setQuery(o3, {bam: null, baz: ''});
         deepEqual(o3, {foo: 'bar', bam: null, baz: ''}, 'set {name: null}');
 
-        const o4: any = {foo: 'bar'};
+        const o4: Record<string, string | string[] | null> = {foo: 'bar'};
         URI.setQuery(o4, 'empty');
         deepEqual(o4, {foo: 'bar', empty: null}, 'set undefined');
 
-        const o5: any = {foo: 'bar'};
+        const o5: Record<string, string | string[] | null> = {foo: 'bar'};
         URI.setQuery(o5, 'empty', '');
         deepEqual(o5, {foo: 'bar', empty: ''}, 'set empty string');
 
-        const o6: any = {};
+        const o6: Record<string, string | string[] | null> = {};
         URI.setQuery(o6, 'some value', 'must be encoded because of = and ? and #');
         deepEqual(o6, {'some value': 'must be encoded because of = and ? and #'}, 'encoding');
     });

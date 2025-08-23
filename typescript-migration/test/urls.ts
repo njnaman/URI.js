@@ -1,6 +1,7 @@
 // TypeScript version of urls.js
 
 interface URLParts {
+  [key: string]: string | null;
   protocol: string | null;
   username: string | null;
   password: string | null;
@@ -12,6 +13,7 @@ interface URLParts {
 }
 
 interface URLAccessors {
+  [key: string]: string | null;
   protocol: string;
   username: string;
   password: string;
@@ -36,6 +38,7 @@ interface URLAccessors {
 }
 
 interface URLIs {
+  [key: string]: boolean | null;
   urn: boolean;
   url: boolean;
   relative: boolean;

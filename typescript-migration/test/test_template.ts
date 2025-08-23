@@ -403,7 +403,7 @@ interface Levels {
   test('Parse errors', function () {
     raises(function () {
       new URITemplate('AB{var$}IJ').parse();
-    }, Error, Error, 'Failing invalid variable name');
+    }, Error, 'Failing invalid variable name');
 
     raises(function () {
       new URITemplate('AB{$var}IJ').parse();
