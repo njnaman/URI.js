@@ -4,7 +4,7 @@
 declare const QUnit: any;
 
 // Declare global variables that will be available after the scripts load
-declare var URI: any;
+declare var URI: URIStaticInterface;
 declare var IPv6: IPv6Interface;
 declare var SecondLevelDomains: SecondLevelDomainsInterface;
 declare var punycode: PunycodeInterface;
