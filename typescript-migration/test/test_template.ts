@@ -427,7 +427,7 @@ interface Levels {
     const unconflicted = URITemplate.noConflict();
 
     strictEqual(unconflicted, actual_lib, 'noConflict() returns the URITemplate object');
-    strictEqual(URITemplate, (window as any).URITemplate_pre_lib, 'noConflict() restores the `URITemplate` variable');
+    strictEqual(URITemplate, window.URITemplate_pre_lib, 'noConflict() restores the `URITemplate` variable');
 
     // restore for other tests
     window.URITemplate = actual_lib;

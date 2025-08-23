@@ -38,9 +38,9 @@ interface QueryData {
   [key: string]: string | string[] | null | undefined;
 }
 
-interface DomAttributes {
-  [nodeName: string]: string;
-}
+// interface DomAttributes {
+//   [nodeName: string]: string;
+// }
 
 interface CharacterMap {
   [char: string]: string;
@@ -1209,16 +1209,16 @@ URI.noConflict = function (removeAll?: boolean): any {
 
     // In ES module context, these global references are not available
     // but we keep the method for API compatibility
-    if (typeof window !== 'undefined' && (window as any).URITemplate && typeof (window as any).URITemplate.noConflict === 'function') {
-      unconflicted.URITemplate = (window as any).URITemplate.noConflict();
+    if (typeof window !== 'undefined' && window.URITemplate && typeof window.URITemplate.noConflict === 'function') {
+      unconflicted.URITemplate = window.URITemplate.noConflict();
     }
 
-    if (typeof window !== 'undefined' && (window as any).IPv6 && typeof (window as any).IPv6.noConflict === 'function') {
-      unconflicted.IPv6 = (window as any).IPv6.noConflict();
+    if (typeof window !== 'undefined' && window.IPv6 && typeof window.IPv6.noConflict === 'function') {
+      unconflicted.IPv6 = window.IPv6.noConflict();
     }
 
-    if (typeof window !== 'undefined' && (window as any).SecondLevelDomains && typeof (window as any).SecondLevelDomains.noConflict === 'function') {
-      unconflicted.SecondLevelDomains = (window as any).SecondLevelDomains.noConflict();
+    if (typeof window !== 'undefined' && window.SecondLevelDomains && typeof window.SecondLevelDomains.noConflict === 'function') {
+      unconflicted.SecondLevelDomains = window.SecondLevelDomains.noConflict();
     }
 
     return unconflicted;

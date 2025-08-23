@@ -1894,7 +1894,7 @@
     strictEqual(unconflicted, actual_lib, 'noConflict() returns the URI object');
 
     // In browser environment, check if URI was restored
-    strictEqual(URI, (window as any).URI_pre_lib, 'noConflict() restores the `URI` variable');
+    strictEqual(URI, window.URI_pre_lib, 'noConflict() restores the `URI` variable');
 
     // restore for other tests
     window.URI = actual_lib;
@@ -1911,10 +1911,10 @@
     const unconflicted = URI.noConflict(true);
 
     deepEqual(unconflicted, actual, 'noConflict(true) returns the { URI, URITemplate, IPv6, SecondLevelDomains } object');
-    strictEqual((window as any).URI, (window as any).URI_pre_lib, 'noConflict(true) restores the `URI` variable');
-    strictEqual((window as any).URITemplate, (window as any).URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
-    strictEqual((window as any).IPv6, (window as any).IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
-    strictEqual((window as any).SecondLevelDomains, (window as any).SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
+    strictEqual(window.URI, window.URI_pre_lib, 'noConflict(true) restores the `URI` variable');
+    strictEqual(window.URITemplate, window.URITemplate_pre_lib, 'noConflict(true) restores the `URITemplate` variable');
+    strictEqual(window.IPv6, window.IPv6_pre_lib, 'noConflict(true) restores the `IPv6` variable');
+    strictEqual(window.SecondLevelDomains, window.SecondLevelDomains_pre_lib, 'noConflict(true) restores the `SecondLevelDomains` variable');
     // restore for other tests
     window.URI = actual.URI;
     window.URITemplate = actual.URITemplate;
