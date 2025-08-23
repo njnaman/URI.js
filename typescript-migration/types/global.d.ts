@@ -27,16 +27,103 @@ declare global {
     noConflict: () => SecondLevelDomainsInterface;
   }
 
-  interface URIInterface {
-    build(deferBuild?: boolean): URIInterface;
 
-    clone(): URIInterface;
+  interface URIStaticInterface {
+    // Index signature to allow string indexing
+    [key: string]: any;
+
+    // Function call overloads (without 'new')
+    (url?: string, base?: string): URIInstanceInterface;
+    (url?: string): URIInstanceInterface;
+    (uriInst: URIInstanceInterface): URIInstanceInterface;
+    (obj: any): URIInstanceInterface;
+    (): URIInstanceInterface;
+
+    // Constructor overloads (with 'new')
+    new(url?: string, base?: string): URIInstanceInterface;
+    new(uriInst: URIInstanceInterface): URIInstanceInterface;
+    new(obj: any): URIInstanceInterface;
+    new(url?: string): URIInstanceInterface;
+    new(): URIInstanceInterface;
+
+    version: any;
+    _parts: any;
+    preventInvalidHostname: any;
+    duplicateQueryParameters: any;
+    escapeQuerySpace: any;
+    protocol_expression: any;
+    idn_expression: any;
+    punycode_expression: any;
+    ip4_expression: any;
+    ip6_expression: any;
+    find_uri_expression: any;
+    findUri: any;
+    leading_whitespace_expression: any;
+    ascii_tab_whitespace: any;
+    defaultPorts: any;
+    hostProtocols: any;
+    invalid_hostname_characters: any;
+    domAttributes: any;
+    getDomAttribute: any;
+    encode: any;
+    decode: any;
+    iso8859: any;
+    unicode: any;
+    characters: any;
+    encodeQuery: any;
+    decodeQuery: any;
+    encodePathSegment: any;
+    encodeUrnPathSegment: any;
+    decodePathSegment: any;
+    decodeUrnPathSegment: any;
+    decodePath: any;
+    decodeUrnPath: any;
+    recodePath: any;
+    recodeUrnPath: any;
+    encodeReserved: any;
+    parse: any;
+    parseHost: any;
+    parseAuthority: any;
+    parseUserinfo: any;
+    parseQuery: any;
+    build: any;
+    buildHost: any;
+    buildAuthority: any;
+    buildUserinfo: any;
+    buildQuery: any;
+    buildQueryParameter: any;
+    addQuery: any;
+    setQuery: any;
+    removeQuery: any;
+    hasQuery: any;
+    joinPaths: any;
+    commonPath: any;
+    withinString: any;
+    ensureValidHostname: any;
+    ensureValidPort: any;
+    noConflict: any;
+    expan: any;
+  }
+
+
+  interface URIInstanceInterface {
+    // Index signature to allow string indexing
+    [key: string]: any;
+    
+    // Internal properties
+    _parts: any;
+    _string: string;
+    _deferred_build: boolean;
+
+    build(deferBuild?: boolean): URIInstanceInterface;
+
+    clone(): URIInstanceInterface;
 
     toString(): string;
 
     valueOf(): string;
 
-    protocol(): (v?: any, build?: boolean) => any
+    protocol : (v?: any, build?: boolean) => any
 
     username: (v?: any, build?: boolean) => any;
     password: (v?: any, build?: boolean) => any;
@@ -68,30 +155,29 @@ declare global {
     addQuery: (name?: any, value?: any, build?: boolean) => any;
     removeQuery: (name?: any, value?: any, build?: boolean) => any;
     hasQuery: (name?: any, value?: any, withinArray?: boolean) => any;
-    setSearch:  (name?: any, value?: any, build?: boolean) => any;
-    addSearch:  (name?: any, value?: any, build?: boolean) => any;
-    removeSearch:  (name?: any, value?: any, build?: boolean) => any;
+    setSearch: (name?: any, value?: any, build?: boolean) => any;
+    addSearch: (name?: any, value?: any, build?: boolean) => any;
+    removeSearch: (name?: any, value?: any, build?: boolean) => any;
     hasSearch: (name?: any, value?: any, withinArray?: boolean) => any;
     normalize: () => any;
-    normalizeProtocol: (build?: boolean) => any ;
-    normalizeHostname: (build?: boolean) => any ;
-    normalizePort: (build?: boolean) => any ;
-    normalizePath: (build?: boolean) => any ;
-    normalizePathname: (build?: boolean) => any ;
-    normalizeQuery: (build?: boolean) => any ;
-    normalizeFragment: (build?: boolean) => any ;
-    normalizeSearch: (build?: boolean) => any ;
-    normalizeHash: (build?: boolean) => any ;
+    normalizeProtocol: (build?: boolean) => any;
+    normalizeHostname: (build?: boolean) => any;
+    normalizePort: (build?: boolean) => any;
+    normalizePath: (build?: boolean) => any;
+    normalizePathname: (build?: boolean) => any;
+    normalizeQuery: (build?: boolean) => any;
+    normalizeFragment: (build?: boolean) => any;
+    normalizeSearch: (build?: boolean) => any;
+    normalizeHash: (build?: boolean) => any;
     iso8859: () => any;
     unicode: () => any;
     readable: () => any;
-    absoluteTo: (base?: any) => any ;
+    absoluteTo: (base?: any) => any;
     relativeTo: (base?: any) => any;
     equals: (uri?: any) => boolean;
-    preventInvalidHostname: (prevent?: boolean) => any ;
+    preventInvalidHostname: (prevent?: boolean) => any;
     duplicateQueryParameters: (allow?: boolean) => any;
-    escapeQuerySpace: (escape?: boolean) => any ;
-
+    escapeQuerySpace: (escape?: boolean) => any;
   }
 
   interface Window {

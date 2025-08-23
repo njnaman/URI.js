@@ -11,7 +11,7 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
-declare const URI: URIInterface;
+declare const URI: URIStaticInterface;
 
 interface URITemplateOperator {
   prefix: string;
@@ -558,11 +558,11 @@ Data.prototype.get = function (key: string): URITemplateDataValue {
 };
 
 // hook into URI for fluid access
-(URI as any).expand = function (expression: string, data: URITemplateData): any {
+URI.expand = function (expression: string, data: URITemplateData): any {
   const template = new (URITemplate as any)(expression);
   const expansion = template.expand(data);
 
-  return new (URI as any)(expansion);
+  return new URI(expansion);
 };
 
 export default URITemplate;
