@@ -14,7 +14,6 @@ export default [
             file: 'dist/src/punycode.js',
             format: 'umd',
             name: 'punycode',
-            noConflict: true
         },
     },
     {

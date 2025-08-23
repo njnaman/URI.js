@@ -214,9 +214,6 @@ const SLD: SecondLevelDomainsInterface = {
       return null;
     }
     return domain.slice(sldOffset + 1);
-  },
-  noConflict: function (): SecondLevelDomainsInterface {
-    return SLD;
   }
 };
 
