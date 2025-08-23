@@ -82,7 +82,6 @@ declare global {
     withinString: any;
     ensureValidHostname: any;
     ensureValidPort: any;
-    noConflict: any;
     expan: any;
   }
 
