@@ -501,8 +501,12 @@ const _parts = {'encode': 'encode', 'decode': 'decode'};
 const generateAccessor = function (_group: string, _part: string): (str: string) => string {
   return function (string: string): string {
     try {
-      return URI[_part](string + '').replace(URI.characters[_group][_part].expression, function (c: string) {
-        return URI.characters[_group][_part].map[c];
+      const charGroup = URI.characters[_group][_part];
+      if (!charGroup) {
+        return string;
+      }
+      return URI[_part](string + '').replace(charGroup.expression, function (c: string) {
+        return charGroup.map[c];
       });
     } catch (e) {
       // we're not going to mess with weird encodings,
@@ -734,7 +738,8 @@ URI.parseQuery = function (string: string, escapeQuerySpace?: boolean): QueryDat
 
   for (let i = 0; i < length; i++) {
     v = splits[i].split('=');
-    name = URI.decodeQuery(v.shift(), escapeQuerySpace);
+    const nameValue = v.shift();
+    name = URI.decodeQuery(nameValue || '', escapeQuerySpace);
     // no "=" is null according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#collect-url-parameters
     value = v.length ? URI.decodeQuery(v.join('='), escapeQuerySpace) : null;
 
@@ -1332,7 +1337,7 @@ p.href = function (href?: any, build?: boolean): any {
   const _object = typeof href === 'object' && (href.hostname || href.path || href.pathname);
   if (href.nodeName) {
     const attribute = URI.getDomAttribute(href);
-    href = href[attribute] || '';
+    href = (attribute ? href[attribute] : '') || '';
     // _object = false;
   }
 
@@ -2006,7 +2011,7 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
 };
 
 // enhanced query method
-const q = p.query;
+const q: any = p.query;
 p.query = function (v?: any, build?: boolean): any {
   if (v === true) {
     return URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
