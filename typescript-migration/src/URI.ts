@@ -956,22 +956,24 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
       // true if exists (but may be empty)
       return (name as string) in data;
 
-    case 'Boolean':
+    case 'Boolean': {
       // true if exists and non-empty
       const _booly = Boolean(isArray(data[name as string]) ? (data[name as string] as any[]).length : data[name as string]);
       return value === _booly;
+    }
 
     case 'Function':
       // allow complex comparison
       return !!value(data[name as string], name, data);
 
-    case 'Array':
+    case 'Array': {
       if (!isArray(data[name as string])) {
         return false;
       }
 
       const op = withinArray ? arrayContains : arraysEqual;
       return op(data[name as string] as any[], value);
+    }
 
     case 'RegExp':
       if (!isArray(data[name as string])) {
@@ -1008,13 +1010,13 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
 
 
 // Add joinPaths method
-URI.joinPaths = function (): URIInstanceInterface {
+URI.joinPaths = function (...args: any[]): URIInstanceInterface {
   const input: any[] = [];
   const segments: string[] = [];
   let nonEmptySegments = 0;
 
-  for (let i = 0; i < arguments.length; i++) {
-    const url = new URI(arguments[i]);
+  for (let i = 0; i < args.length; i++) {
+    const url = new URI(args[i]);
     input.push(url);
     const _segments = url.segment();
     for (let s = 0; s < _segments.length; s++) {
@@ -1074,11 +1076,8 @@ URI.withinString = function (string: string, callback: (uri: string, start: numb
   const _attributeOpen = /[a-z0-9-]=["']?$/i;
 
   _start.lastIndex = 0;
-  while (true) {
-    const match = _start.exec(string);
-    if (!match) {
-      break;
-    }
+  let match: RegExpExecArray | null;
+  while ((match = _start.exec(string)) !== null) {
 
     const start = match.index;
     if (options.ignoreHtml) {
@@ -1093,11 +1092,8 @@ URI.withinString = function (string: string, callback: (uri: string, start: numb
     let slice = string.slice(start, end);
     // make sure we include well balanced parens
     let parensEnd = -1;
-    while (true) {
-      const parensMatch = _parens.exec(slice);
-      if (!parensMatch) {
-        break;
-      }
+    let parensMatch: RegExpExecArray | null;
+    while ((parensMatch = _parens.exec(slice)) !== null) {
 
       const parensMatchEnd = parensMatch.index + parensMatch[0].length;
       parensEnd = Math.max(parensEnd, parensMatchEnd);
@@ -1553,13 +1549,11 @@ p.userinfo = function (v?: any, build?: boolean): any {
 };
 
 p.resource = function (v?: any, build?: boolean): any {
-  let parts: any;
-
   if (v === undefined) {
     return this.path() + this.search() + this.hash();
   }
 
-  parts = URI.parse(v);
+  const parts = URI.parse(v);
   this._parts.path = parts.path;
   this._parts.query = parts.query;
   this._parts.fragment = parts.fragment;
@@ -1831,15 +1825,14 @@ p.suffix = function (v?: any, build?: boolean): any {
 
     const filename = this.filename();
     const pos = filename.lastIndexOf('.');
-    let s: string, res: string;
 
     if (pos === -1) {
       return '';
     }
 
     // suffix may only contain alnum characters (yup, I made this up.)
-    s = filename.substring(pos + 1);
-    res = (/^[a-z0-9%]+$/i).test(s) ? s : '';
+    const s = filename.substring(pos + 1);
+    const res = (/^[a-z0-9%]+$/i).test(s) ? s : '';
     return v ? URI.decodePathSegment(res) : res;
   } else {
     if (v.charAt(0) === '.') {
@@ -2350,17 +2343,16 @@ p.absoluteTo = function (base?: any): any {
 
 p.relativeTo = function (base?: any): any {
   const relative = this.clone().normalize();
-  let relativeParts: any, baseParts: any, common: string, relativePath: string, basePath: string;
 
   if (relative._parts.urn) {
     throw new Error('URNs do not have any generally defined hierarchical components');
   }
 
   base = new URI(base).normalize();
-  relativeParts = relative._parts;
-  baseParts = base._parts;
-  relativePath = relative.path();
-  basePath = base.path();
+  const relativeParts = relative._parts;
+  const baseParts = base._parts;
+  const relativePath = relative.path();
+  const basePath = base.path();
 
   if (relativePath.charAt(0) !== '/') {
     throw new Error('URI is already relative');
@@ -2395,7 +2387,7 @@ p.relativeTo = function (base?: any): any {
   }
 
   // determine common sub path
-  common = URI.commonPath(relativePath, basePath);
+  const common = URI.commonPath(relativePath, basePath);
 
   // If the paths have nothing in common, return a relative URL with the absolute path.
   if (!common) {
@@ -2407,7 +2399,7 @@ p.relativeTo = function (base?: any): any {
     .replace(/[^\/]*$/, '')
     .replace(/.*?\//g, '../');
 
-  relativeParts.path = (parents + relativeParts.path.substring(common.length)) || './';
+  relativeParts.path = (parents + (relativeParts.path || '').substring(common.length)) || './';
 
   return relative.build();
 };
@@ -2417,7 +2409,7 @@ p.equals = function (uri?: any): boolean {
   const one = this.clone();
   const two = new URI(uri);
   const checked: any = {};
-  let one_query: string, two_query: string, key: string;
+  let key: string;
 
   one.normalize();
   two.normalize();
@@ -2428,8 +2420,8 @@ p.equals = function (uri?: any): boolean {
   }
 
   // extract query string
-  one_query = one.query();
-  two_query = two.query();
+  const one_query = one.query();
+  const two_query = two.query();
   one.query('');
   two.query('');
 
