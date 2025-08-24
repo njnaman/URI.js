@@ -4,9 +4,13 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
     project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
   plugins: ['@typescript-eslint'],
-  extends: [],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
   rules: {},
   env: {
     node: true,

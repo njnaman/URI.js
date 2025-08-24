@@ -17,7 +17,28 @@
 // furi.pathname('/hello.html');
 // uri.toString() === "http://example.org/#!/hello.html"
 
-const p = URI.prototype;
+
+// Interface for FragmentURI specific methods and properties
+
+interface FragmentURISpecific {
+
+  fragmentPrefix(prefix?: string): FragmentURIInterface;
+
+  // Override fragment method to handle FragmentURI specific behavior
+  fragment(v?: string | QueryData | boolean, build?: boolean): FragmentURIInterface;
+
+  // Override build method to handle parent URI updates
+  build(deferBuild?: boolean): FragmentURIInterface;
+
+  // Add fragment-specific properties
+  _parentURI?: FragmentURIInterface;
+  _fragmentURI?: FragmentURIInterface;
+}
+
+// Union type combining URIInstanceInterface with FragmentURI specific overrides
+type FragmentURIInterface = Omit<URIInstanceInterface, keyof FragmentURISpecific> & FragmentURISpecific;
+
+const p: FragmentURIInterface = URI.prototype;
 // old handlers we need to wrap
 const f = p.fragment;
 const b = p.build;
@@ -25,34 +46,34 @@ const b = p.build;
 // make fragmentPrefix configurable
 URI.fragmentPrefix = '!';
 const _parts = URI._parts;
-URI._parts = function (): any {
+URI._parts = function (): URIParts {
   const parts = _parts();
   parts.fragmentPrefix = URI.fragmentPrefix;
   return parts;
 };
 
-p.fragmentPrefix = function (v: string): any {
+p.fragmentPrefix = function (v: string): FragmentURIInterface {
   this._parts.fragmentPrefix = v;
   return this;
 };
 
 // add fragment(true) and fragment(URI) signatures
-p.fragment = function (v?: any, build?: boolean): any {
-  const prefix = this._parts.fragmentPrefix;
+p.fragment = function (v?: string | FragmentURIInterface | boolean, build?: boolean): FragmentURIInterface {
+  const prefix = this._parts?.fragmentPrefix || '';
   const fragment = this._parts.fragment || '';
-  let furi: any;
+  let furi: FragmentURIInterface;
 
   if (v === true) {
     if (fragment.substring(0, prefix.length) !== prefix) {
-      furi = URI('');
+      furi = URI('') as unknown as FragmentURIInterface;
     } else {
-      furi = new URI(fragment.substring(prefix.length));
+      furi = new URI(fragment.substring(prefix.length)) as unknown as FragmentURIInterface;
     }
-
     this._fragmentURI = furi;
     furi._parentURI = this;
     return furi;
   } else if (v !== undefined && typeof v !== 'string') {
+    v = v as FragmentURIInterface
     this._fragmentURI = v;
     v._parentURI = v;
     this._parts.fragment = prefix + v.toString();
@@ -66,7 +87,7 @@ p.fragment = function (v?: any, build?: boolean): any {
 };
 
 // make .build() of the actual URI aware of the FragmentURI
-p.build = function (deferBuild?: boolean): any {
+p.build = function (deferBuild?: boolean): FragmentURIInterface {
   const t = b.call(this, deferBuild);
 
   if (deferBuild !== false && this._parentURI) {

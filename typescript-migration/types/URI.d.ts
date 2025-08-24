@@ -184,10 +184,7 @@ declare global {
     query(returnAsObject: true): QueryData;
     query(returnAsObject: boolean): QueryData | string;
 
-    fragment(): string;
-    fragment(v: string | QueryData, build?: boolean): URIInstanceInterface;
-    fragment(returnAsObject: true): URIInstanceInterface;
-    fragment(returnAsObject: boolean): URIInstanceInterface | QueryData | string;
+    fragment(v?: string | QueryData | boolean, build?: boolean): URIInstanceInterface;
 
     search(): string;
     search(v: string | QueryData, build?: boolean): string | URIInstanceInterface;
@@ -306,7 +303,6 @@ declare global {
     escapeQuerySpace(escape: boolean): URIInstanceInterface;
 
     // Fragment extension methods (from URI.fragmentQuery and URI.fragmentURI)
-    fragmentPrefix(prefix?: string): URIInstanceInterface;
     addFragment(name: string, value?: string): URIInstanceInterface;
     removeFragment(name: string): URIInstanceInterface;
     setFragment(name: string, value?: string): URIInstanceInterface;
