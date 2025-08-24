@@ -116,7 +116,7 @@ function escapeRegEx(string: string): string {
   return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
 }
 
-function getType(value: any): string {
+function getType(value: unknown): string {
   // IE8 doesn't return [Object Undefined] but [Object Object] for undefined value
   if (value === undefined) {
     return 'Undefined';
@@ -125,7 +125,7 @@ function getType(value: any): string {
   return String(Object.prototype.toString.call(value)).slice(8, -1);
 }
 
-function isArray(obj: any): boolean {
+function isArray(obj: unknown): boolean {
   return getType(obj) === 'Array';
 }
 
