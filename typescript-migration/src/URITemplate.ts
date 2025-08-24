@@ -239,7 +239,7 @@ const operators: { [key: string]: URITemplateOperator } = {
 // storage for already parsed templates
 URITemplate._cache = {};
 // pattern to identify expressions [operator, variable-list] in template
-URITemplate.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^\}]+)(\}|$)/g;
+URITemplate.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^}]+)(\}|$)/g;
 // pattern to identify variables [name, explode, maxlength] in variable-list
 URITemplate.VARIABLE_PATTERN = /^([^*:.](?:\.?[^*:.])*)((\*)|:(\d+))?$/;
 // pattern to verify variable name integrity
