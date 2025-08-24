@@ -45,12 +45,6 @@ interface QueryData {
 interface CharacterMap {
   [char: string]: string;
 }
-
-interface CharacterConfig {
-  expression: RegExp;
-  map: CharacterMap;
-}
-
 interface WithinStringOptions {
   start?: RegExp;
   end?: RegExp;

@@ -185,14 +185,14 @@ let uriSizzle: any;
 const pseudoArgs = /^([a-zA-Z]+)\s*([\^\$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/;
 
 function uriPseudo(elem: Element, text: string): boolean {
-  let match: RegExpMatchArray | null, property: string, uri: any;
+  let property: string;
 
   // skip anything without src|href|action and bad :uri() syntax
   if (!getUriProperty(elem) || !text) {
     return false;
   }
 
-  match = text.match(pseudoArgs);
+  const match = text.match(pseudoArgs);
 
   if (!match || (!match[5] && match[2] !== ':' && !compare[match[2]])) {
     // abort because the given selector cannot be executed
@@ -200,7 +200,7 @@ function uriPseudo(elem: Element, text: string): boolean {
     return false;
   }
 
-  uri = $(elem).uri();
+  const uri = $(elem).uri();
 
   if (match[5]) {
     return uri.is(match[5]);

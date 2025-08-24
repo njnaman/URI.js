@@ -272,8 +272,6 @@ function encode(input: string): string {
     let t: number;
     let currentValue: number;
     const output: string[] = [];
-    /** `inputLength` will hold the number of code points in `input`. */
-    let inputLength: number;
     /** Cached calculation results */
     let handledCPCountPlusOne: number;
     let baseMinusT: number;
@@ -283,7 +281,7 @@ function encode(input: string): string {
     const inputArray = ucs2decode(input);
 
     // Cache the length
-    inputLength = inputArray.length;
+    const inputLength = inputArray.length;
 
     // Initialize the state
     n = initialN;

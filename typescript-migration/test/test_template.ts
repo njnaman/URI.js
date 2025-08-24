@@ -12,7 +12,7 @@ interface ExpressionsData {
 }
 
 interface TestValues {
-    [key: string]: any;
+    [key: string]: string | string[] | object | null;
 }
 
 interface LevelData {
@@ -358,7 +358,7 @@ interface Levels {
         test(levelName, function () {
             let combinedExpression = '';
             let combinedExpansion = '';
-            let template: any;
+            let template: URITemplateInstanceInterface;
             let expansion: string;
             let lastType = '';
 

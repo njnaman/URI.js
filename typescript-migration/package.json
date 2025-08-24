@@ -69,6 +69,7 @@
     "test": "ts-node test-runner.ts",
     "lint": "eslint src/**/*.ts test/**/*.ts --fix",
     "type-check": "tsc --noEmit",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "dev" : "npm run build && npm run test"
   }
 }

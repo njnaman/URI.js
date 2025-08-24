@@ -34,7 +34,7 @@ interface URITemplateExpression {
 }
 
 interface URITemplateData {
-  [key: string]: any;
+  [key: string]: string;
 }
 
 interface URITemplateExpandOptions {
@@ -69,7 +69,7 @@ const URITemplate = function (this: URITemplateInstanceInterface, expression: st
 
   // Allow instantiation without the 'new' keyword
   if (!(this instanceof URITemplate)) {
-    return new (URITemplate as any)(expression);
+    return new URITemplate(expression);
   }
 
   this.expression = expression;
