@@ -295,11 +295,8 @@ declare global {
     equals(uri: string | URIInstanceInterface): boolean;
 
     // Configuration methods
-    preventInvalidHostname(): boolean;
     preventInvalidHostname(prevent: boolean): URIInstanceInterface;
-    duplicateQueryParameters(): boolean;
     duplicateQueryParameters(allow: boolean): URIInstanceInterface;
-    escapeQuerySpace(): boolean;
     escapeQuerySpace(escape: boolean): URIInstanceInterface;
 
     // Fragment extension methods (from URI.fragmentQuery and URI.fragmentURI)

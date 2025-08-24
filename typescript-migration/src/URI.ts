@@ -2444,7 +2444,7 @@ p.equals = function (uri?: any): boolean {
         if (one_map_parsed[key] !== two_map_parsed[key]) {
           return false;
         }
-      } else if (!isArray(two_map_parsed[key]) || !arraysEqual(one_map_parsed[key] as any[], two_map_parsed[key] as any[])) {
+      } else if (!isArray(two_map_parsed[key]) || !arraysEqual(one_map_parsed[key] as unknown[], two_map_parsed[key] as unknown[])) {
         return false;
       }
 
@@ -2465,17 +2465,17 @@ p.equals = function (uri?: any): boolean {
 };
 
 // state configuration methods
-p.preventInvalidHostname = function (prevent?: boolean): any {
+p.preventInvalidHostname = function (prevent?: boolean): URIInstanceInterface {
   this._parts.preventInvalidHostname = !!prevent;
   return this;
 };
 
-p.duplicateQueryParameters = function (allow?: boolean): any {
+p.duplicateQueryParameters = function (allow?: boolean): URIInstanceInterface {
   this._parts.duplicateQueryParameters = !!allow;
   return this;
 };
 
-p.escapeQuerySpace = function (escape?: boolean): any {
+p.escapeQuerySpace = function (escape?: boolean): URIInstanceInterface {
   this._parts.escapeQuerySpace = !!escape;
   return this;
 };
