@@ -145,7 +145,7 @@ function filterArrayValues<T extends number | symbol | string>(data: T[], value:
 
   for (i = 0, length = data.length; i < length; i++) {
     /*jshint laxbreak: true */
-    const _match = lookup && (lookup as any)[String(data[i])] !== undefined
+    const _match = lookup && lookup[data[i]] !== undefined
       || !lookup && (value as RegExp).test(String(data[i]));
     /*jshint laxbreak: false */
     if (_match) {
