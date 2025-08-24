@@ -41,10 +41,6 @@ interface QueryData {
 // interface DomAttributes {
 //   [nodeName: string]: string;
 // }
-
-interface CharacterMap {
-  [char: string]: string;
-}
 interface WithinStringOptions {
   start?: RegExp;
   end?: RegExp;
@@ -180,7 +176,7 @@ function arrayContains<T>(list: T[], value: T | T[] | RegExp): boolean {
   const _type = getType(value);
   for (i = 0, length = list.length; i < length; i++) {
     if (_type === 'RegExp') {
-      if (typeof list[i] === 'string' && (list[i] as any).match(value as RegExp)) {
+      if (typeof list[i] === 'string' && (list[i] as string ).match(value as RegExp)) {
         return true;
       }
     } else if (list[i] === value) {
@@ -468,7 +464,7 @@ URI.decodeQuery = function (string: string, escapeQuerySpace?: boolean): string 
   }
 };
 
-const _parts = {'encode': 'encode', 'decode': 'decode'};
+const _parts = {'encode': 'encode', 'decode': 'decode'} as Record<string, string>;
 
 const generateAccessor = function (_group: string, _part: string): (str: string) => string {
   return function (string: string): string {
@@ -490,8 +486,8 @@ const generateAccessor = function (_group: string, _part: string): (str: string)
   };
 };
 for (const _part in _parts) {
-  (URI as any)[_part + 'PathSegment'] = generateAccessor('pathname', (_parts as any)[_part]);
-  (URI as any)[_part + 'UrnPathSegment'] = generateAccessor('urnpath', (_parts as any)[_part]);
+  URI[_part + 'PathSegment'] = generateAccessor('pathname', _parts[_part]);
+  URI[_part + 'UrnPathSegment'] = generateAccessor('urnpath', _parts[_part]);
 }
 
 const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: string, _innerCodingFuncName?: string): (str: string) => string {
@@ -821,8 +817,8 @@ URI.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolean, 
     } else if (hasOwn.call(data, key)) {
       if (isArray(data[key])) {
         unique = {};
-        for (i = 0, length = (data[key] as any[]).length; i < length; i++) {
-          if ((data[key] as any[])[i] !== undefined && unique[(data[key] as any[])[i] + ''] === undefined) {
+        for (i = 0, length = (data[key] as unknown[]).length; i < length; i++) {
+          if ((data[key] as unknown[])[i] !== undefined && unique[(data[key] as unknown[])[i] + ''] === undefined) {
             t += '&' + URI.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
             if (duplicateQueryParameters !== true) {
               unique[(data[key] as any[])[i] + ''] = true;
@@ -875,7 +871,7 @@ URI.setQuery = function (data: QueryData, name: string | QueryData, value?: stri
   if (typeof name === 'object') {
     for (const key in name) {
       if (hasOwn.call(name, key)) {
-        URI.setQuery(data, key, (name as any)[key]);
+        URI.setQuery(data, key, name[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -2420,8 +2416,6 @@ p.relativeTo = function (base?: any): any {
 p.equals = function (uri?: any): boolean {
   const one = this.clone();
   const two = new URI(uri);
-  const one_map: any = {};
-  const two_map: any = {};
   const checked: any = {};
   let one_query: string, two_query: string, key: string;
 
