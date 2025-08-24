@@ -15,7 +15,9 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-non-null-assertion": "error"
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "no-useless-escape": "off",
+    "no-control-regex": "off"
   },
   env: {
     node: true,

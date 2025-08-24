@@ -500,7 +500,7 @@ const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: s
     if (!_innerCodingFuncName) {
       actualCodingFunc = URI[_codingFuncName];
     } else {
-      actualCodingFunc = function (string: string) {
+      actualCodingFunc = function (string: string) : string {
         return URI[_codingFuncName](URI[_innerCodingFuncName](string));
       };
     }
