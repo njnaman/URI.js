@@ -216,13 +216,13 @@ function uriPseudo(elem: Element, text: string): boolean {
 if ($.expr.createPseudo) {
   // jQuery >= 1.8
   uriSizzle = $.expr.createPseudo(function (text: string) {
-    return function (elem: Element) {
+    return function (elem: Element) : boolean {
       return uriPseudo(elem, text);
     };
   });
 } else {
   // jQuery < 1.8
-  uriSizzle = function (elem: Element, i?: number, match?: RegExpMatchArray) {
+  uriSizzle = function (elem: Element, i?: number, match?: RegExpMatchArray) : boolean {
     return uriPseudo(elem, match?.[3] || '');
   };
 }

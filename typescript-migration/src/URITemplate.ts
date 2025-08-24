@@ -320,14 +320,16 @@ URITemplate.expandNamed = function (d: URITemplateDataValue, options: URITemplat
       _value = URI[encode](d.val[i][1].substring(0, length));
       if (d.type === 2) {
         // apply maxlength to keys of objects as well
-        _name = URI[encode](d.val[i][0]!.substring(0, length));
+        const key = d.val[i][0];
+        _name = key ? URI[encode](key.substring(0, length)) : '';
       }
     } else if (_encode) {
       // encode value
       _value = URI[encode](d.val[i][1]);
       if (d.type === 2) {
         // encode name and cache encoded value
-        _name = URI[encode](d.val[i][0]!);
+        const key = d.val[i][0];
+        _name = key ? URI[encode](key) : '';
         (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).push([_name, _value]);
       } else {
         // cache encoded value
@@ -337,7 +339,8 @@ URITemplate.expandNamed = function (d: URITemplateDataValue, options: URITemplat
       // values are already encoded and can be pulled from cache
       _value = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][1];
       if (d.type === 2) {
-        _name = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0]!;
+        const cachedKey = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0];
+        _name = cachedKey || '';
       }
     }
 
@@ -349,7 +352,7 @@ URITemplate.expandNamed = function (d: URITemplateDataValue, options: URITemplat
     if (!explode) {
       if (!i) {
         // first element, so prepend variable name
-        result += URI[encode](name!) + (empty_name_separator || _value ? '=' : '');
+        result += URI[encode](name || '') + (empty_name_separator || _value ? '=' : '');
       }
 
       if (d.type === 2) {
@@ -387,7 +390,7 @@ URITemplate.expandUnnamed = function (d: URITemplateDataValue, options: URITempl
       // encode and cache value
       _value = URI[encode](d.val[i][1]);
       (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).push([
-        d.type === 2 ? URI[encode](d.val[i][0]!) : undefined,
+        d.type === 2 && d.val[i][0] ? URI[encode](d.val[i][0]) : undefined,
         _value
       ]);
     } else {
@@ -403,10 +406,12 @@ URITemplate.expandUnnamed = function (d: URITemplateDataValue, options: URITempl
     if (d.type === 2) {
       if (length) {
         // maxlength also applies to keys of objects
-        _name = URI[encode](d.val[i][0]!.substring(0, length));
+        const key = d.val[i][0];
+        _name = key ? URI[encode](key.substring(0, length)) : '';
       } else {
         // at this point the name must already be encoded
-        _name = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0]!;
+        const cachedKey = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0];
+        _name = cachedKey || '';
       }
 
       result += _name;

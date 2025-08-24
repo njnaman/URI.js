@@ -298,6 +298,7 @@
       u.protocol('f:t');
       ok(false, 'do not accept invalid protocol');
     } catch (e) {
+      // Expected exception - intentionally empty
     }
 
     u.protocol(null);
@@ -1740,9 +1741,11 @@
         ok(!caught, t.name + ' should not throw exception');
         equal(r + '', t.result, t.name);
 
-        const a = r!.absoluteTo(t.base);
-        const n = u.clone().normalize();
-        equal(a.toString(), n.toString(), t.name + ' reversed');
+        if (r) {
+          const a = r.absoluteTo(t.base);
+          const n = u.clone().normalize();
+          equal(a.toString(), n.toString(), t.name + ' reversed');
+        }
       }
     }
 
@@ -1791,7 +1794,7 @@
   });
 
   test('withinString - ignore', function () {
-    const decorate = function (url: string) {
+    const decorate = function (url: string): string {
       return '<a>' + url + '</a>';
     };
     /*jshint laxbreak: true */
@@ -2064,12 +2067,14 @@
       decodeURIComponent('%%20');
       ok(false, 'decodeURIComponent() must throw URIError: URI malformed');
     } catch (e) {
+      // Expected exception - intentionally empty
     }
 
     try {
       URI.decode('%%20');
       ok(false, 'URI.decode() must throw URIError: URI malformed');
     } catch (e) {
+      // Expected exception - intentionally empty
     }
 
     equal(URI.decodeQuery('%%20'), '%%20', 'malformed URI component returned');
