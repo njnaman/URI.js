@@ -1978,7 +1978,7 @@ p.query = function (v?: any, build?: boolean): any {
 };
 
 // query manipulation methods
-p.setQuery = function (name?: any, value?: any, build?: boolean): any {
+p.setQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 
   if (typeof name === 'string' || name instanceof String) {
@@ -2002,7 +2002,7 @@ p.setQuery = function (name?: any, value?: any, build?: boolean): any {
   return this;
 };
 
-p.addQuery = function (name?: any, value?: any, build?: boolean): any {
+p.addQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   URI.addQuery(data, name, value === undefined ? null : value);
   this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
@@ -2014,7 +2014,7 @@ p.addQuery = function (name?: any, value?: any, build?: boolean): any {
   return this;
 };
 
-p.removeQuery = function (name?: any, value?: any, build?: boolean): any {
+p.removeQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   URI.removeQuery(data, name, value);
   this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
@@ -2038,7 +2038,7 @@ p.removeSearch = p.removeQuery;
 p.hasSearch = p.hasQuery;
 
 // normalization methods
-p.normalize = function (): any {
+p.normalize = function (): URIInstanceInterface {
   if (this._parts.urn) {
     return this
       .normalizeProtocol(false)
@@ -2058,7 +2058,7 @@ p.normalize = function (): any {
     .build();
 };
 
-p.normalizeProtocol = function (build?: boolean): any {
+p.normalizeProtocol = function (build?: boolean): URIInstanceInterface {
   if (typeof this._parts.protocol === 'string') {
     this._parts.protocol = this._parts.protocol.toLowerCase();
     this.build(!build);
@@ -2067,7 +2067,7 @@ p.normalizeProtocol = function (build?: boolean): any {
   return this;
 };
 
-p.normalizeHostname = function (build?: boolean): any {
+p.normalizeHostname = function (build?: boolean): URIInstanceInterface {
   if (this._parts.hostname) {
     if (this.is('IDN') && punycode) {
       this._parts.hostname = punycode.toASCII(this._parts.hostname);
@@ -2082,7 +2082,7 @@ p.normalizeHostname = function (build?: boolean): any {
   return this;
 };
 
-p.normalizePort = function (build?: boolean): any {
+p.normalizePort = function (build?: boolean): URIInstanceInterface {
   // remove port if it's the protocol's default
   if (typeof this._parts.protocol === 'string' && this._parts.port === URI.defaultPorts[this._parts.protocol]) {
     this._parts.port = null;
@@ -2092,7 +2092,7 @@ p.normalizePort = function (build?: boolean): any {
   return this;
 };
 
-p.normalizePath = function (build?: boolean): any {
+p.normalizePath = function (build?: boolean): URIInstanceInterface {
   let _path = this._parts.path;
   if (!_path) {
     return this;
@@ -2173,7 +2173,7 @@ p.normalizePath = function (build?: boolean): any {
 
 p.normalizePathname = p.normalizePath;
 
-p.normalizeQuery = function (build?: boolean): any {
+p.normalizeQuery = function (build?: boolean): URIInstanceInterface {
   if (typeof this._parts.query === 'string') {
     if (!this._parts.query.length) {
       this._parts.query = null;
@@ -2187,7 +2187,7 @@ p.normalizeQuery = function (build?: boolean): any {
   return this;
 };
 
-p.normalizeFragment = function (build?: boolean): any {
+p.normalizeFragment = function (build?: boolean): URIInstanceInterface {
   if (!this._parts.fragment) {
     this._parts.fragment = null;
     this.build(!build);
@@ -2200,7 +2200,7 @@ p.normalizeSearch = p.normalizeQuery;
 p.normalizeHash = p.normalizeFragment;
 
 // encoding methods
-p.iso8859 = function (): any {
+p.iso8859 = function (): URIInstanceInterface {
   // expect unicode input, iso8859 output
   const e = URI.encode;
   const d = URI.decode;
@@ -2216,7 +2216,7 @@ p.iso8859 = function (): any {
   return this;
 };
 
-p.unicode = function (): any {
+p.unicode = function (): URIInstanceInterface {
   // expect iso8859 input, unicode output
   const e = URI.encode;
   const d = URI.decode;
@@ -2277,7 +2277,7 @@ p.readable = function (): string {
 };
 
 // resolving relative and absolute URLs
-p.absoluteTo = function (base?: any): any {
+p.absoluteTo = function (base?: string | URIInstanceInterface): URIInstanceInterface {
   const resolved = this.clone();
   const properties = ['protocol', 'username', 'password', 'hostname', 'port'];
   let basedir: string, i: number, prop: string;
@@ -2302,7 +2302,7 @@ p.absoluteTo = function (base?: any): any {
   }
 
   for (i = 0; (prop = properties[i]); i++) {
-    (resolved._parts as any)[prop] = (base._parts as any)[prop];
+    resolved._parts[prop] = base._parts[prop];
   }
 
   if (!resolved._parts.path) {
