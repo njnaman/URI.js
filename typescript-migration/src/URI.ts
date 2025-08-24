@@ -55,9 +55,9 @@ interface WithinStringOptions {
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
 /*jshint camelcase: false */
 
-const _URI: any = (typeof window !== 'undefined' && window.URI) || undefined;
+const _URI: string | URIStaticInterface = (typeof window !== 'undefined' && window.URI) || "";
 
-const URI = function (this: URIInstanceInterface, url?: any, base?: string): URIInstanceInterface {
+const URI = function (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface {
   const _urlSupplied = arguments.length >= 1;
   const _baseSupplied = arguments.length >= 2;
 
