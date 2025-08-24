@@ -496,7 +496,7 @@ const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: s
     // definitions of some functions (but in particular, URI.decode) will occasionally change due
     // to URI.js having ISO8859 and Unicode modes. Passing in the name and getting it will ensure
     // that the functions we use here are "fresh".
-    let actualCodingFunc: Function;
+    let actualCodingFunc: (string: string) => string;
     if (!_innerCodingFuncName) {
       actualCodingFunc = URI[_codingFuncName];
     } else {
@@ -809,7 +809,7 @@ URI.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolean, 
   // see http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type
 
   let t = '';
-  let unique: any, key: string, i: number, length: number;
+  let unique: Record<string, boolean>, key: string, i: number, length: number;
   for (key in data) {
     if (key === '__proto__') {
       // ignore attempt at exploiting JavaScript internals
