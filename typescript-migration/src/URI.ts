@@ -2407,10 +2407,10 @@ p.relativeTo = function (base?: any): any {
 };
 
 // comparing URIs
-p.equals = function (uri?: any): boolean {
+p.equals = function (uri: URIInstanceInterface): boolean {
   const one = this.clone();
   const two = new URI(uri);
-  const checked: any = {};
+  const checked: Record<string, boolean> = {};
   let key: string;
 
   one.normalize();
