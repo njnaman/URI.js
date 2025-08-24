@@ -57,12 +57,14 @@ interface WithinStringOptions {
 
 const _URI: string | URIStaticInterface = (typeof window !== 'undefined' && window.URI) || "";
 
-const URI = function (this: URIInstanceInterface, url?: string, base?: string): URIInstanceInterface {
+const URI = function (this: URIInstanceInterface, url?: string | URIInstanceInterface, base?: string): URIInstanceInterface {
   const _urlSupplied = arguments.length >= 1;
   const _baseSupplied = arguments.length >= 2;
 
+
+
   // Allow instantiation without the 'new' keyword
-  if (!(this instanceof URI)) {
+  if (!(this instanceof URI) && typeof url != 'object') {
     if (_urlSupplied) {
       if (_baseSupplied) {
         return new URI(url, base);
