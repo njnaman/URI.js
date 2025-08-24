@@ -238,13 +238,7 @@ declare global {
 
     port(v: string | number | boolean | null, build?: boolean): URIInstanceInterface;
 
-    query(): string;
-
-    query(v: string | QueryData | ((data: any) => QueryData | void), build?: boolean): URIInstanceInterface;
-
-    query(returnAsObject: true): QueryData;
-
-    query(returnAsObject: boolean): QueryData | string;
+    query(v?: string | boolean | QueryData | ((data: any) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 
     fragment(v?: string | QueryData | boolean, build?: boolean): URIInstanceInterface;
 
@@ -355,7 +349,7 @@ declare global {
     // Query manipulation methods
     setQuery(name: string | QueryData, value?: unknown | null, build?: boolean): URIInstanceInterface;
 
-    addQuery(name: string | QueryData, value?: unknown, build?: boolean): URIInstanceInterface;
+    addQuery(name?: string | QueryData, value?: unknown, build?: boolean): URIInstanceInterface;
 
     removeQuery(name?: string | string[] | RegExp | QueryData, value?: unknown, build?: boolean): URIInstanceInterface;
 

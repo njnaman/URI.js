@@ -19,9 +19,7 @@ declare const SecondLevelDomains: SecondLevelDomainsInterface;
 // Use the imported SecondLevelDomains as SLD
 const SLD: SecondLevelDomainsInterface = SecondLevelDomains
 
-// interface DomAttributes {
-//   [nodeName: string]: string;
-// }
+
 interface WithinStringOptions {
   start?: RegExp;
   end?: RegExp;
@@ -32,9 +30,7 @@ interface WithinStringOptions {
 }
 
 // Import dependencies
-/*global location, escape, unescape */
 // FIXME: v2.0.0 renamce non-camelCase properties to uppercase
-/*jshint camelcase: false */
 
 const _URI: string | URIStaticInterface = (typeof window !== 'undefined' && window.URI) || "";
 
@@ -2406,8 +2402,8 @@ p.equals = function (uri: URIInstanceInterface): boolean {
   }
 
   // extract query string
-  const one_query = one.query();
-  const two_query = two.query();
+  const one_query = one.query() as string;
+  const two_query = two.query() as string;
   one.query('');
   two.query('');
 

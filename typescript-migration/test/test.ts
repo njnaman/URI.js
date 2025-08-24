@@ -65,7 +65,7 @@
     ok(typeof u.query() === 'string', 'query is string');
     equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
     equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    deepEqual(u.query(true), {foo: 'bar', bar: 'foo'}, 'query(true) value');
+    deepEqual(u.query(true) as QueryData, {foo: 'bar', bar: 'foo'}, 'query(true) value');
     deepEqual(u.search(true), {foo: 'bar', bar: 'foo'}, 'search(true) value');
   });
 
@@ -79,7 +79,7 @@
     ok(typeof u.query() === 'string', 'query is string');
     equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
     equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    deepEqual(u.query(true), {foo: 'bar', bar: 'foo'}, 'query(true) value');
+    deepEqual(u.query(true) as QueryData, {foo: 'bar', bar: 'foo'}, 'query(true) value');
     deepEqual(u.search(true), {foo: 'bar', bar: 'foo'}, 'search(true) value');
   });
 
@@ -93,7 +93,7 @@
     ok(typeof u.query() === 'string', 'query is string');
     equal(u.query(), 'foo=bar&bar=foo', 'query has right value');
     equal(u.search(), '?foo=bar&bar=foo', 'search has right value');
-    deepEqual(u.query(true), {foo: 'bar', bar: 'foo'}, 'query(true) value');
+    deepEqual(u.query(true) as QueryData, {foo: 'bar', bar: 'foo'}, 'query(true) value');
     deepEqual(u.search(true), {foo: 'bar', bar: 'foo'}, 'search(true) value');
   });
 
@@ -449,23 +449,23 @@
 
     u.search('foo=&foo=bar');
     equal(u.query(), 'foo=&foo=bar', 'search: foo=&foo=bar');
-    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['', 'bar']}), 'parsed query: {foo:["", "bar"]}');
+    equal(JSON.stringify(u.query(true) as QueryData), JSON.stringify({foo: ['', 'bar']}), 'parsed query: {foo:["", "bar"]}');
 
     u.search('foo=bar&foo=');
     equal(u.query(), 'foo=bar&foo=', 'search: foo=bar&foo=');
-    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', '']}), 'parsed query: {foo:["bar", ""]}');
+    equal(JSON.stringify(u.query(true) as QueryData), JSON.stringify({foo: ['bar', '']}), 'parsed query: {foo:["bar", ""]}');
 
     u.search('foo=bar&foo');
     equal(u.query(), 'foo=bar&foo', 'search: foo=bar&foo');
-    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: ['bar', null]}), 'parsed query: {foo:["bar", null]}');
+    equal(JSON.stringify(u.query(true) as QueryData), JSON.stringify({foo: ['bar', null]}), 'parsed query: {foo:["bar", null]}');
 
     u.search('foo&foo=bar');
     equal(u.query(), 'foo&foo=bar', 'search: foo&foo=bar');
-    equal(JSON.stringify(u.query(true)), JSON.stringify({foo: [null, 'bar']}), 'parsed query: {foo:[null, "bar"]}');
+    equal(JSON.stringify(u.query(true) as QueryData), JSON.stringify({foo: [null, 'bar']}), 'parsed query: {foo:[null, "bar"]}');
 
     u.search('__proto__=hasOwnProperty&__proto__=eviltwin&uuid');
     equal(u.query(), '__proto__=hasOwnProperty&__proto__=eviltwin&uuid', 'search: __proto__=hasOwnProperty&__proto__=eviltwin&uuid');
-    equal(JSON.stringify(u.query(true)), '{"uuid":null}', 'parsed query: {uuid: null}');
+    equal(JSON.stringify(u.query(true) as QueryData), '{"uuid":null}', 'parsed query: {uuid: null}');
   });
 
   test('fragment', function () {
@@ -928,7 +928,7 @@
   module('mutating query strings');
   test('mutating object', function () {
     const u = new URI('?foo=bar&baz=bam&baz=bau');
-    const q = u.query(true);
+    const q = u.query(true) as QueryData;
 
     q.something = ['new', 'and', 'funky'];
     u.query(q);
@@ -988,7 +988,7 @@
     u.query('');
     u.setQuery('some value', 'must be encoded because of = and ? and #');
     equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    equal(u.query(true)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal((u.query(true) as QueryData)['some value'], 'must be encoded because of = and ? and #', 'decoding');
 
     u.query('?foo=bar');
     u.setQuery('__proto__', 'hasOwnProperty');
@@ -1029,7 +1029,7 @@
     u.query('');
     u.addQuery('some value', 'must be encoded because of = and ? and #');
     equal(u.query(), 'some+value=must+be+encoded+because+of+%3D+and+%3F+and+%23', 'encoding');
-    equal(u.query(true)['some value'], 'must be encoded because of = and ? and #', 'decoding');
+    equal((u.query(true) as QueryData)['some value'], 'must be encoded because of = and ? and #', 'decoding');
   });
 
   test('removeQuery', function () {
@@ -1051,13 +1051,13 @@
     u.removeQuery('bar', ['1']);
     equal(u.query(), 'obj=bam', 'removing the last value via name, singleton array');
 
-    u.query('?foo=one&foo=two').removeQuery('foo', ['one', 'two']);
+    (u.query('?foo=one&foo=two') as URIInstanceInterface).removeQuery('foo', ['one', 'two']);
     equal(u.query(), '', 'removing name, array, finishes empty');
 
-    u.query('?foo=one,two').removeQuery('foo', ['one', 'two']);
+    (u.query('?foo=one,two') as URIInstanceInterface).removeQuery('foo', ['one', 'two']);
     equal(u.query(), 'foo=one%2Ctwo', 'not removing name, array');
 
-    u.query('?foo=one,two').removeQuery('foo', ['one,two']);
+    (u.query('?foo=one,two') as URIInstanceInterface).removeQuery('foo', ['one,two']);
     equal(u.query(), '', 'removing name, singleton array with comma in value');
 
     u.query('?foo=bar&foo=baz&foo=bam&obj=bam&bar=1&bar=2&bar=3');
@@ -1125,18 +1125,18 @@
 
   test('escapeQuerySpace', function () {
     let u = new URI('?bar=foo+bar&bam+baz=foo');
-    let data = u.query(true);
+    let data = u.query(true) as QueryData;
 
     equal(data.bar, 'foo bar', 'value un-spac-escaped');
     equal(data['bam baz'], 'foo', 'name un-spac-escaped');
 
     u.escapeQuerySpace(false);
-    data = u.query(true);
+    data = u.query(true) as QueryData;
     equal(data.bar, 'foo+bar', 'value not un-spac-escaped');
     equal(data['bam+baz'], 'foo', 'name not un-spac-escaped');
 
     u.escapeQuerySpace(true);
-    data = u.query(true);
+    data = u.query(true) as QueryData;
 
     equal(data.bar, 'foo bar', 'value un-spac-escaped again');
     equal(data['bam baz'], 'foo', 'name un-spac-escaped again');
@@ -1148,7 +1148,7 @@
 
     URI.escapeQuerySpace = false;
     u = new URI('?bar=foo+bar&bam+baz=foo');
-    data = u.query(true);
+    data = u.query(true) as QueryData;
     equal(data.bar, 'foo+bar', 'value not un-spac-escaped by default');
     equal(data['bam+baz'], 'foo', 'name not un-spac-escaped by default');
 
@@ -1394,16 +1394,16 @@
     u.normalizeQuery();
     equal(u + '', 'http://example.org/foobar.html', 'dropping empty query sign');
 
-    u.query('?&foo=bar&&baz=bam&').normalizeQuery();
+    (u.query('?&foo=bar&&baz=bam&') as URIInstanceInterface).normalizeQuery();
     equal(u.query(), 'foo=bar&baz=bam', 'bad query resolution');
 
-    u.query('?&foo=bar&&baz=bam&&baz=bau&').normalizeQuery();
+    (u.query('?&foo=bar&&baz=bam&&baz=bau&') as URIInstanceInterface).normalizeQuery();
     equal(u.query(), 'foo=bar&baz=bam&baz=bau', 'bad query resolution');
 
-    u.query('?&foo=bar&foo=bar').normalizeQuery();
+    (u.query('?&foo=bar&foo=bar') as URIInstanceInterface).normalizeQuery();
     equal(u.query(), 'foo=bar', 'duplicate key=value resolution');
 
-    u.query('?=bar').normalizeQuery();
+    (u.query('?=bar') as URIInstanceInterface).normalizeQuery();
     equal(u.query(), '=bar', 'query without key');
   });
 
@@ -2050,13 +2050,13 @@
 
   test('bad charset in QueryString', function () {
     const uri = new URI('http://www.google.com.hk/search?q=pennytel%20downloads&sa=%20%CB%D1%20%CB%F7%20&forid=1&prog=aff&ie=GB2312&oe=GB2312&safe=active&source=sdo_sb_html&hl=zh-CN');
-    let data = uri.query(true);
+    let data = uri.query(true) as QueryData;
 
     equal(data.sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
     equal(data.forid, '1', 'decodable value returned');
 
     uri.normalizeQuery();
-    data = uri.query(true);
+    data = uri.query(true) as QueryData;
     equal(data.sa, '%20%CB%D1%20%CB%F7%20', 'undecodable value returned');
     equal(data.forid, '1', 'decodable value returned');
   });
