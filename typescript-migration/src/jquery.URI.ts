@@ -13,29 +13,12 @@
  */
 
 
-
-interface JQuery {
-  first(): JQuery;
-
-  get(index: number): Element;
-
-  data(key: string): any;
-
-  data(key: string, value: any): JQuery;
-
-  attr(name: string): string;
-
-  uri(): any;
-
-  uri(uri: string | any): any;
-}
-
 interface CompareFunction {
   (value: string, target: string, property?: string): boolean;
 }
 
 interface URICompareFunctions {
-  [key: string]: CompareFunction | ((uri: any, target: string) => boolean);
+  [key: string]: CompareFunction | ((uri: URIInstanceInterface, target: string) => boolean);
 }
 
 declare let $: JQueryStatic;
@@ -66,17 +49,17 @@ const compare: URICompareFunctions = {
 
     return !!(value + '').match(new RegExp(escapeRegEx(target), 'i'));
   },
-  'equals:': function (uri: any, target: string): boolean {
+  'equals:': function (uri: URIInstanceInterface, target: string): boolean {
     return uri.equals(target);
   },
-  'is:': function (uri: any, target: string): boolean {
-    return uri.is(target);
+  'is:': function (uri: URIInstanceInterface, target: string): boolean {
+    return uri.is(target) ?? false;
   }
 };
 
 function escapeRegEx(string: string): string {
   // https://github.com/medialize/URI.js/commit/85ac21783c11f8ccab06106dba9735a31a86924d#commitcomment-821963
-  return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
+  return string.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1');
 }
 
 function getUriProperty(elem: Element): string | undefined {
@@ -93,12 +76,15 @@ function getUriProperty(elem: Element): string | undefined {
   return property;
 }
 
-function generateAccessor(property: string): any {
+function generateAccessor(property: string): {
+  get: (elem: Element) => URIInstanceInterface;
+  set: (elem: Element, value: string | URIInstanceInterface) => string | URIInstanceInterface
+} {
   return {
-    get: function (elem: Element): any {
+    get: function (elem: Element): URIInstanceInterface {
       return $(elem).uri()[property]();
     },
-    set: function (elem: Element, value: any): any {
+    set: function (elem: Element, value: string | URIInstanceInterface): string | URIInstanceInterface {
       $(elem).uri()[property](value);
       return value;
     }
@@ -113,10 +99,10 @@ $.each('origin authority directory domain filename fragment hash host hostname h
 
 // pipe $.attr('src') and $.attr('href') through URI.js
 const _attrHooks = {
-  get: function (elem: Element): any {
+  get: function (elem: Element): URIInstanceInterface {
     return $(elem).uri();
   },
-  set: function (elem: Element, value: any): string {
+  set: function (elem: Element, value: string | URIInstanceInterface): string {
     return $(elem).uri().href(value).toString();
   }
 };
@@ -128,7 +114,7 @@ $.each(['src', 'href', 'action', 'uri', 'cite'], function (k: number, v: string)
 $.attrHooks.uri.get = _attrHooks.get;
 
 // general URI accessor
-$.fn.uri = function (uri?: any): any {
+$.fn.uri = function (uri?: string | URIInstanceInterface): URIInstanceInterface {
   const $this = this.first();
   const elem = $this.get(0);
   const property = getUriProperty(elem);
@@ -137,6 +123,8 @@ $.fn.uri = function (uri?: any): any {
     throw new Error('Element "' + elem.nodeName + '" does not have either property: href, src, action, cite');
   }
 
+  let uriInstance: URIInstanceInterface;
+
   if (uri !== undefined) {
     const old = $this.data('uri');
     if (old) {
@@ -144,26 +132,28 @@ $.fn.uri = function (uri?: any): any {
     }
 
     if (!(uri instanceof URI)) {
-      uri = URI(uri || '');
+      uriInstance = URI(uri || '');
+    } else {
+      uriInstance = uri;
     }
   } else {
-    uri = $this.data('uri');
-    if (uri) {
-      return uri;
+    uriInstance = $this.data('uri');
+    if (uriInstance) {
+      return uriInstance;
     } else {
-      uri = URI($this.attr(property) || '');
+      uriInstance = URI($this.attr(property) || '');
     }
   }
 
-  uri._dom_element = elem;
-  uri._dom_attribute = property;
-  uri.normalize();
-  $this.data('uri', uri);
-  return uri;
+  uriInstance._dom_element = elem;
+  uriInstance._dom_attribute = property;
+  uriInstance.normalize();
+  $this.data('uri', uriInstance);
+  return uriInstance;
 };
 
 // overwrite URI.build() to update associated DOM element if necessary
-URI.prototype.build = function (deferBuild?: boolean): any {
+URI.prototype.build = function (deferBuild?: boolean): URIInstanceInterface {
   if (this._dom_element) {
     // cannot defer building when hooked into a DOM element
     this._string = URI.build(this._parts);
@@ -181,8 +171,8 @@ URI.prototype.build = function (deferBuild?: boolean): any {
 };
 
 // add :uri() pseudo class selector to sizzle
-let uriSizzle: any;
-const pseudoArgs = /^([a-zA-Z]+)\s*([\^\$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/;
+let uriSizzle: ((elem: Element, i?: number, match?: RegExpMatchArray) => boolean) | ((text: string) => (elem: Element) => boolean);
+const pseudoArgs = /^([a-zA-Z]+)\s*([\^$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/;
 
 function uriPseudo(elem: Element, text: string): boolean {
   let property: string;
@@ -219,7 +209,7 @@ function uriPseudo(elem: Element, text: string): boolean {
       return false;
     }
 
-    return (compare[match[2]] as CompareFunction)(uri[property](), match[4], property);
+    return (compare[match[2]])(uri[property](), match[4], property);
   }
 }
 
@@ -232,8 +222,8 @@ if ($.expr.createPseudo) {
   });
 } else {
   // jQuery < 1.8
-  uriSizzle = function (elem: Element, i: number, match: RegExpMatchArray) {
-    return uriPseudo(elem, match[3]);
+  uriSizzle = function (elem: Element, i?: number, match?: RegExpMatchArray) {
+    return uriPseudo(elem, match?.[3] || '');
   };
 }
 
