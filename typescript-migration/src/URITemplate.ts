@@ -11,6 +11,8 @@
  *   MIT License http://www.opensource.org/licenses/mit-license
  *
  */
+
+
 declare const URI: URIStaticInterface;
 
 interface URITemplateOperator {
@@ -47,7 +49,7 @@ interface URITemplateDataValue {
   encode: Array<[string | undefined, string]>;
   encodeReserved: Array<[string | undefined, string]>;
 
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface DataInterface {
@@ -78,9 +80,86 @@ const URITemplate = function (this: URITemplateInstanceInterface, expression: st
 } as URITemplateStaticInterface;
 
 
-function Data(this: any, data: URITemplateData): void {
-  this.data = data;
-  this.cache = {};
+class Data implements DataInterface {
+  data: URITemplateData;
+  cache: { [key: string]: URITemplateDataValue } = {};
+
+  constructor(data: URITemplateData) {
+    this.data = data;
+  }
+
+  get(key: string): URITemplateDataValue {
+    // performance crap
+    const data = this.data;
+    // cache for processed data-point
+    const d: URITemplateDataValue = {
+      // type of data 0: undefined/null, 1: string, 2: object, 3: array
+      type: 0,
+      // original values (except undefined/null)
+      val: [],
+      // cache for encoded values (only for non-maxlength expansion)
+      encode: [],
+      encodeReserved: []
+    };
+    let i: number, l: number, value: unknown;
+
+    if (this.cache[key] !== undefined) {
+      // we've already processed this key
+      return this.cache[key];
+    }
+
+    this.cache[key] = d;
+
+    if (String(Object.prototype.toString.call(data)) === '[object Function]') {
+      // data itself is a callback (global callback)
+      value = (data as unknown as (key: string) => unknown)(key);
+    } else if (String(Object.prototype.toString.call((data as Record<string, unknown>)[key])) === '[object Function]') {
+      // data is a map of callbacks (local callback)
+      value = ((data as Record<string, unknown>)[key] as (key: string) => unknown)(key);
+    } else {
+      // data is a map of data
+      value = (data as Record<string, unknown>)[key];
+    }
+
+    // generalize input into [ [name1, value1], [name2, value2], … ]
+    // so expansion has to deal with a single data structure only
+    if (value === undefined || value === null) {
+      // undefined and null values are to be ignored completely
+      return d;
+    } else if (String(Object.prototype.toString.call(value)) === '[object Array]') {
+      const arrayValue = value as unknown[];
+      for (i = 0, l = arrayValue.length; i < l; i++) {
+        if (arrayValue[i] !== undefined && arrayValue[i] !== null) {
+          // arrays don't have names
+          d.val.push([undefined, String(arrayValue[i])]);
+        }
+      }
+
+      if (d.val.length) {
+        // only treat non-empty arrays as arrays
+        d.type = 3; // array
+      }
+    } else if (String(Object.prototype.toString.call(value)) === '[object Object]') {
+      const objectValue = value as Record<string, unknown>;
+      for (const key in objectValue) {
+        if (Object.prototype.hasOwnProperty.call(objectValue, key) && objectValue[key] !== undefined && objectValue[key] !== null) {
+          // objects have keys, remember them for named expansion
+          d.val.push([key, String(objectValue[key])]);
+        }
+      }
+
+      if (d.val.length) {
+        // only treat non-empty objects as objects
+        d.type = 2; // object
+      }
+    } else {
+      d.type = 1; // primitive string (could've been string, number, boolean and objects with a toString())
+      // arrays don't have names
+      d.val.push([undefined, String(value)]);
+    }
+
+    return d;
+  }
 }
 
 const p = URITemplate.prototype;
@@ -202,13 +281,14 @@ URITemplate.expand = function (expression: URITemplateExpression, data: DataInte
     }
 
     // expand the given variable
-    buffer.push((URITemplate as any)['expand' + type](
-        d,
-        options,
-        variable.explode,
-        variable.explode && options.separator || ',',
-        variable.maxlength,
-        variable.name
+    const expandMethod = URITemplate['expand' + type] as (d: URITemplateDataValue, options: URITemplateOperator, explode: boolean, separator: string, maxlength?: number, name?: string) => string;
+    buffer.push(expandMethod(
+      d,
+      options,
+      variable.explode,
+      variable.explode && options.separator || ',',
+      variable.maxlength,
+      variable.name
     ));
   }
 
@@ -228,36 +308,36 @@ URITemplate.expandNamed = function (d: URITemplateDataValue, options: URITemplat
   const encode = options.encode;
   const empty_name_separator = options.empty_name_separator;
   // flag noting if values are already encoded
-  const _encode = !d[encode].length;
+  const _encode = !(d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).length;
   // key for named expansion
-  let _name = d.type === 2 ? '' : (URI as any)[encode](name);
+  let _name = d.type === 2 ? '' : URI[encode](name);
   let _value: string, i: number, l: number;
 
   // for each found value
   for (i = 0, l = d.val.length; i < l; i++) {
     if (length) {
       // maxlength must be determined before encoding can happen
-      _value = (URI as any)[encode](d.val[i][1].substring(0, length));
+      _value = URI[encode](d.val[i][1].substring(0, length));
       if (d.type === 2) {
         // apply maxlength to keys of objects as well
-        _name = (URI as any)[encode](d.val[i][0]!.substring(0, length));
+        _name = URI[encode](d.val[i][0]!.substring(0, length));
       }
     } else if (_encode) {
       // encode value
-      _value = (URI as any)[encode](d.val[i][1]);
+      _value = URI[encode](d.val[i][1]);
       if (d.type === 2) {
         // encode name and cache encoded value
-        _name = (URI as any)[encode](d.val[i][0]!);
-        (d as any)[encode].push([_name, _value]);
+        _name = URI[encode](d.val[i][0]!);
+        (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).push([_name, _value]);
       } else {
         // cache encoded value
-        (d as any)[encode].push([undefined, _value]);
+        (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).push([undefined, _value]);
       }
     } else {
       // values are already encoded and can be pulled from cache
-      _value = (d as any)[encode][i][1];
+      _value = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][1];
       if (d.type === 2) {
-        _name = (d as any)[encode][i][0]!;
+        _name = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0]!;
       }
     }
 
@@ -269,7 +349,7 @@ URITemplate.expandNamed = function (d: URITemplateDataValue, options: URITemplat
     if (!explode) {
       if (!i) {
         // first element, so prepend variable name
-        result += (URI as any)[encode](name!) + (empty_name_separator || _value ? '=' : '');
+        result += URI[encode](name!) + (empty_name_separator || _value ? '=' : '');
       }
 
       if (d.type === 2) {
@@ -295,24 +375,24 @@ URITemplate.expandUnnamed = function (d: URITemplateDataValue, options: URITempl
   const encode = options.encode;
   const empty_name_separator = options.empty_name_separator;
   // flag noting if values are already encoded
-  const _encode = !d[encode].length;
+  const _encode = !(d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).length;
   let _name: string, _value: string, i: number, l: number;
 
   // for each found value
   for (i = 0, l = d.val.length; i < l; i++) {
     if (length) {
       // maxlength must be determined before encoding can happen
-      _value = (URI as any)[encode](d.val[i][1].substring(0, length));
+      _value = URI[encode](d.val[i][1].substring(0, length));
     } else if (_encode) {
       // encode and cache value
-      _value = (URI as any)[encode](d.val[i][1]);
-      (d as any)[encode].push([
-        d.type === 2 ? (URI as any)[encode](d.val[i][0]!) : undefined,
+      _value = URI[encode](d.val[i][1]);
+      (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>).push([
+        d.type === 2 ? URI[encode](d.val[i][0]!) : undefined,
         _value
       ]);
     } else {
       // value already encoded, pull from cache
-      _value = (d as any)[encode][i][1];
+      _value = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][1];
     }
 
     if (result) {
@@ -323,10 +403,10 @@ URITemplate.expandUnnamed = function (d: URITemplateDataValue, options: URITempl
     if (d.type === 2) {
       if (length) {
         // maxlength also applies to keys of objects
-        _name = (URI as any)[encode](d.val[i][0]!.substring(0, length));
+        _name = URI[encode](d.val[i][0]!.substring(0, length));
       } else {
         // at this point the name must already be encoded
-        _name = (d as any)[encode][i][0]!;
+        _name = (d[encode as keyof URITemplateDataValue] as Array<[string | undefined, string]>)[i][0]!;
       }
 
       result += _name;
@@ -357,16 +437,16 @@ p.expand = function (data: URITemplateData | DataInterface, opts?: URITemplateEx
   if (!(data instanceof Data)) {
     // make given data available through the
     // optimized data handling thingie
-    data = new (Data as any)(data as URITemplateData);
+    data = new Data(data as URITemplateData);
   }
 
   for (let i = 0, l = this.parts.length; i < l; i++) {
     /*jshint laxbreak: true */
     result += typeof this.parts[i] === 'string'
-        // literal string
-        ? this.parts[i]
-        // expression
-        : URITemplate.expand(this.parts[i] as URITemplateExpression, data as DataInterface, opts);
+      // literal string
+      ? this.parts[i]
+      // expression
+      : URITemplate.expand(this.parts[i] as URITemplateExpression, data, opts);
     /*jshint laxbreak: false */
   }
 
@@ -399,6 +479,7 @@ p.parse = function (): URITemplateInstanceInterface {
   ePattern.lastIndex = 0;
   // I don't like while(foo = bar()) loops,
   // to make things simpler I go while(true) and break when required
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     eMatch = ePattern.exec(expression);
     if (eMatch === null) {
@@ -457,81 +538,11 @@ p.parse = function (): URITemplateInstanceInterface {
   return this;
 };
 
-// simplify data structures
-Data.prototype.get = function (key: string): URITemplateDataValue {
-  // performance crap
-  const data = this.data;
-  // cache for processed data-point
-  const d: URITemplateDataValue = {
-    // type of data 0: undefined/null, 1: string, 2: object, 3: array
-    type: 0,
-    // original values (except undefined/null)
-    val: [],
-    // cache for encoded values (only for non-maxlength expansion)
-    encode: [],
-    encodeReserved: []
-  };
-  let i: number, l: number, value: any;
 
-  if (this.cache[key] !== undefined) {
-    // we've already processed this key
-    return this.cache[key];
-  }
-
-  this.cache[key] = d;
-
-  if (String(Object.prototype.toString.call(data)) === '[object Function]') {
-    // data itself is a callback (global callback)
-    value = data(key);
-  } else if (String(Object.prototype.toString.call(data[key])) === '[object Function]') {
-    // data is a map of callbacks (local callback)
-    value = data[key](key);
-  } else {
-    // data is a map of data
-    value = data[key];
-  }
-
-  // generalize input into [ [name1, value1], [name2, value2], … ]
-  // so expansion has to deal with a single data structure only
-  if (value === undefined || value === null) {
-    // undefined and null values are to be ignored completely
-    return d;
-  } else if (String(Object.prototype.toString.call(value)) === '[object Array]') {
-    for (i = 0, l = value.length; i < l; i++) {
-      if (value[i] !== undefined && value[i] !== null) {
-        // arrays don't have names
-        d.val.push([undefined, String(value[i])]);
-      }
-    }
-
-    if (d.val.length) {
-      // only treat non-empty arrays as arrays
-      d.type = 3; // array
-    }
-  } else if (String(Object.prototype.toString.call(value)) === '[object Object]') {
-    for (const key in value) {
-      if (Object.prototype.hasOwnProperty.call(value, key) && value[key] !== undefined && value[key] !== null) {
-        // objects have keys, remember them for named expansion
-        d.val.push([key, String(value[key])]);
-      }
-    }
-
-    if (d.val.length) {
-      // only treat non-empty objects as objects
-      d.type = 2; // object
-    }
-  } else {
-    d.type = 1; // primitive string (could've been string, number, boolean and objects with a toString())
-    // arrays don't have names
-    d.val.push([undefined, String(value)]);
-  }
-
-  return d;
-};
 
 // hook into URI for fluid access
-URI.expand = function (expression: string, data: URITemplateData): any {
-  const template = new (URITemplate as any)(expression);
+URI.expand = function (expression: string, data: URITemplateData): URIInstanceInterface {
+  const template = new URITemplate(expression);
   const expansion = template.expand(data);
 
   return new URI(expansion);
