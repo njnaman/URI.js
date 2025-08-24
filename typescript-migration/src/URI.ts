@@ -18,22 +18,6 @@ declare const SecondLevelDomains: SecondLevelDomainsInterface;
 
 // Use the imported SecondLevelDomains as SLD
 const SLD: SecondLevelDomainsInterface = SecondLevelDomains
-
-interface URIParts {
-  protocol: string | null;
-  username: string | null;
-  password: string | null;
-  hostname: string | null;
-  urn: boolean | null;
-  port: string | null;
-  path: string | null;
-  query: string | null;
-  fragment: string | null;
-  preventInvalidHostname: boolean;
-  duplicateQueryParameters: boolean;
-  escapeQuerySpace: boolean;
-}
-
 interface QueryData {
   [key: string]: string | string[] | null | undefined;
 }
@@ -2343,7 +2327,7 @@ p.absoluteTo = function (base?: any): any {
   return resolved;
 };
 
-p.relativeTo = function (base?: any): any {
+p.relativeTo = function (base?: string | URIInstanceInterface): URIInstanceInterface {
   const relative = this.clone().normalize();
 
   if (relative._parts.urn) {
@@ -2396,12 +2380,15 @@ p.relativeTo = function (base?: any): any {
     return relative.build();
   }
 
-  const parents = baseParts.path
-    .substring(common.length)
-    .replace(/[^\/]*$/, '')
-    .replace(/.*?\//g, '../');
+  if ( baseParts.path != null){
+    const parents = baseParts.path
+      .substring(common.length)
+      .replace(/[^\/]*$/, '')
+      .replace(/.*?\//g, '../');
 
-  relativeParts.path = (parents + (relativeParts.path || '').substring(common.length)) || './';
+    relativeParts.path = (parents + (relativeParts.path || '').substring(common.length)) || './';
+
+  }
 
   return relative.build();
 };

@@ -72,14 +72,14 @@ declare global {
     [key: string]: any;
 
     // Function call overloads (without 'new')
-    (url?: string | null, base?: string): URIInstanceInterface;
+    (url?: string | URIInstanceInterface, base?: string): URIInstanceInterface;
     (url?: string | null): URIInstanceInterface;
     (uriInst: URIInstanceInterface): URIInstanceInterface;
     (obj: object | null): URIInstanceInterface;
     (): URIInstanceInterface;
 
     // Constructor overloads (with 'new')
-    new(url?: string | null, base?: string): URIInstanceInterface;
+    new(url?: string | URIInstanceInterface, base?: string): URIInstanceInterface;
     new(uriInst: URIInstanceInterface): URIInstanceInterface;
     new(obj: object | null): URIInstanceInterface;
     new(url?: string | null): URIInstanceInterface;
