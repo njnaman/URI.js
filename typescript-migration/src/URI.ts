@@ -18,9 +18,6 @@ declare const SecondLevelDomains: SecondLevelDomainsInterface;
 
 // Use the imported SecondLevelDomains as SLD
 const SLD: SecondLevelDomainsInterface = SecondLevelDomains
-interface QueryData {
-  [key: string]: string | string[] | null | undefined;
-}
 
 // interface DomAttributes {
 //   [nodeName: string]: string;
@@ -1978,7 +1975,7 @@ p.query = function (v?: any, build?: boolean): any {
 };
 
 // query manipulation methods
-p.setQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
+p.setQuery = function (name?: string | QueryData, value?: unknown, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 
   if (typeof name === 'string' || name instanceof String) {
@@ -1995,38 +1992,38 @@ p.setQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInt
 
   this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean;
   }
 
   this.build(!build);
   return this;
 };
 
-p.addQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
+p.addQuery = function (name: string | QueryData, value?: unknown, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   URI.addQuery(data, name, value === undefined ? null : value);
   this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean;
   }
 
   this.build(!build);
   return this;
 };
 
-p.removeQuery = function (name?: any, value?: any, build?: boolean): URIInstanceInterface {
+p.removeQuery = function (name?: string | string[] | RegExp | QueryData, value?: unknown, build?: boolean): URIInstanceInterface {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   URI.removeQuery(data, name, value);
   this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
   if (typeof name !== 'string') {
-    build = value;
+    build = value as boolean;
   }
 
   this.build(!build);
   return this;
 };
 
-p.hasQuery = function (name?: any, value?: any, withinArray?: boolean): boolean {
+p.hasQuery = function (name?: string | RegExp | QueryData, value?: unknown, withinArray?: boolean): boolean {
   const data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   return URI.hasQuery(data, name, value, withinArray);
 };
