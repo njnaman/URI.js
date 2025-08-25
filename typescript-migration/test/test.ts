@@ -831,7 +831,7 @@
 
   test('segment', function () {
     let u = new URI('http://www.example.org/some/directory/foo.html');
-    const s = u.segment();
+    const s = u.segment() as string[];
 
     equal(s.join('||'), 'some||directory||foo.html', 'segment get array');
 
@@ -862,13 +862,13 @@
     equal(u.path(), '/some/directory/world.html', 'segment set -1');
 
     u = new URI('someurn:foo:bar:baz');
-    equal(u.segment().join('||'), 'foo||bar||baz', 'segment get array URN');
+    equal((u.segment() as string[]).join('||'), 'foo||bar||baz', 'segment get array URN');
     u.segment(1, 'mars');
     equal(u.path(), 'foo:mars:baz', 'segment set 1 URN');
     equal(u.toString(), 'someurn:foo:mars:baz', 'segment set 1 URN');
 
     u = new URI('/foo/');
-    equal(u.segment().join('||'), 'foo||', 'segment get array trailing empty');
+    equal((u.segment() as string[]).join('||'), 'foo||', 'segment get array trailing empty');
 
     u.segment('test');
     equal(u.path(), '/foo/test', 'segment append trailing empty');
@@ -894,7 +894,7 @@
 
   test('segmentCoded', function () {
     const u = new URI('http://www.example.org/some%20thing/directory/foo.html');
-    const s = u.segmentCoded();
+    const s = u.segmentCoded() as string[];
 
     equal(s.join('||'), 'some thing||directory||foo.html', 'segmentCoded get array');
 

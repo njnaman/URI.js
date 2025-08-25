@@ -946,7 +946,7 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
 
     case 'Function':
       // allow complex comparison
-      return !!(value as Function)(data[name], name, data);
+      return !!(value as (dataValue: unknown, name: string, data: QueryData) => boolean)(data[name], name, data);
 
     case 'Array': {
       if (!isArray(data[name])) {
@@ -1000,7 +1000,7 @@ URI.joinPaths = function (...args: (string | URIInstanceInterface)[]): URIInstan
   for (let i = 0; i < args.length; i++) {
     const url = new URI(args[i]);
     input.push(url);
-    const _segments = url.segment();
+    const _segments = url.segment() as string[];
     for (let s = 0; s < _segments.length; s++) {
       if (typeof _segments[s] === 'string') {
         segments.push(_segments[s]);
@@ -1016,7 +1016,7 @@ URI.joinPaths = function (...args: (string | URIInstanceInterface)[]): URIInstan
     return new URI('');
   }
 
-  const uri = new URI('').segment(segments);
+  const uri = new URI('').segment(segments) as URIInstanceInterface;
 
   if (input[0].path() === '' || input[0].path().slice(0, 1) === '/') {
     uri.path('/' + uri.path());
@@ -1852,14 +1852,14 @@ p.suffix = function (v?: string | boolean, build?: boolean): string | URIInstanc
 };
 
 // segment methods
-p.segment = function (segment?: any, v?: any, build?: boolean): any {
+p.segment = function (segment?: number | string | string[], v?: string | string[] | null, build?: boolean): string | string[] | URIInstanceInterface {
   const separator = this._parts.urn ? ':' : '/';
-  const path = this.path();
+  const path = this.path() as string;
   const absolute = path.substring(0, 1) === '/';
   let segments = path.split(separator);
 
   if (segment !== undefined && typeof segment !== 'number') {
-    build = v;
+    build = v as unknown as boolean;
     v = segment;
     segment = undefined;
   }
@@ -1872,7 +1872,7 @@ p.segment = function (segment?: any, v?: any, build?: boolean): any {
     segments.shift();
   }
 
-  if (segment < 0) {
+  if (segment !== undefined && segment < 0) {
     // allow negative indexes to address from the end
     segment = Math.max(segments.length + segment, 0);
   }
@@ -1883,8 +1883,9 @@ p.segment = function (segment?: any, v?: any, build?: boolean): any {
       ? segments
       : segments[segment];
     /*jshint laxbreak: false */
-  } else if (segment === null || segments[segment] === undefined) {
+  } else if (segment === null || segment === undefined ||  segments[segment] === undefined) {
     if (isArray(v)) {
+      v = v as string[]
       segments = [];
       // collapse empty elements within array
       for (let i = 0, l = v.length; i < l; i++) {
@@ -1899,7 +1900,7 @@ p.segment = function (segment?: any, v?: any, build?: boolean): any {
         segments.push(trimSlashes(v[i]));
       }
     } else if (v || typeof v === 'string') {
-      v = trimSlashes(v);
+      v = trimSlashes(v as string);
       if (segments[segments.length - 1] === '') {
         // empty trailing elements have to be overwritten
         // to prevent results such as /foo//bar
@@ -1908,9 +1909,9 @@ p.segment = function (segment?: any, v?: any, build?: boolean): any {
         segments.push(v);
       }
     }
-  } else {
+  } else if (segment !== undefined) {
     if (v) {
-      segments[segment] = trimSlashes(v);
+      segments[segment] = trimSlashes(v as string);
     } else {
       segments.splice(segment, 1);
     }
@@ -1923,37 +1924,38 @@ p.segment = function (segment?: any, v?: any, build?: boolean): any {
   return this.path(segments.join(separator), build);
 };
 
-p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
-  let segments: any, i: number, l: number;
+p.segmentCoded = function (segment?: number | string | string[], v?: string | string[] | null, build?: boolean): string | string[] | URIInstanceInterface {
+  let segments: string | string[] | undefined, i: number, l: number;
 
   if (typeof segment !== 'number') {
-    build = v;
+    build = v as unknown as boolean;
     v = segment;
     segment = undefined;
   }
 
   if (v === undefined) {
-    segments = this.segment(segment, v, build);
+    segments = this.segment(segment, v, build) as string | string[];
     if (!isArray(segments)) {
-      segments = segments !== undefined ? URI.decode(segments) : undefined;
+      segments = segments !== undefined ? URI.decode(segments as string) : undefined;
     } else {
-      for (i = 0, l = segments.length; i < l; i++) {
-        segments[i] = URI.decode(segments[i]);
+      for (i = 0, l = (segments as string[]).length; i < l; i++) {
+        (segments as string[])[i] = URI.decode((segments as string[])[i]);
       }
     }
 
-    return segments;
+    return segments as string | string[];
   }
 
   if (!isArray(v)) {
     v = (typeof v === 'string' || v instanceof String) ? URI.encode(String(v)) : v;
   } else {
+    v = v as string[]
     for (i = 0, l = v.length; i < l; i++) {
       v[i] = URI.encode(v[i]);
     }
   }
 
-  return this.segment(segment, v, build);
+  return this.segment(segment, v, build) as URIInstanceInterface;
 };
 
 // enhanced query method

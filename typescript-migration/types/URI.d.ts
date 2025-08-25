@@ -282,21 +282,9 @@ declare global {
 
     suffix(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
-    segment(): string[];
+    segment(segment?: number | string | string[], v?: string | string[] | null, build?: boolean): string | string[] | URIInstanceInterface;
 
-    segment(segment: number): string;
-
-    segment(segment: number, v: string | string[] | null, build?: boolean): URIInstanceInterface;
-
-    segment(v: string | string[], build?: boolean): URIInstanceInterface;
-
-    segmentCoded(): string[];
-
-    segmentCoded(segment: number): string;
-
-    segmentCoded(segment: number, v: string | string[] | null, build?: boolean): URIInstanceInterface;
-
-    segmentCoded(v: string | string[], build?: boolean): URIInstanceInterface;
+    segmentCoded(segment?: number | string | string[], v?: string | string[] | null, build?: boolean): string | string[] | URIInstanceInterface;
 
     // Query manipulation methods
     setQuery(name: string | QueryData, value?: unknown | null, build?: boolean): URIInstanceInterface;
