@@ -15,7 +15,7 @@ test('storing URLs in fragment', function () {
   ok(u.fragment(true) instanceof URI, 'URI instance for empty fragment');
 
   u = URI('http://example.org/#!/foo/bar/baz.html');
-  const f = u.fragment(true);
+  const f = u.fragment(true) as URIInstanceInterface;
   equal(f.pathname(), '/foo/bar/baz.html', 'reading path of FragmentURI');
   equal(f.filename(), 'baz.html', 'reading filename of FragmentURI');
 

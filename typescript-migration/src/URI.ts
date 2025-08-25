@@ -11,7 +11,7 @@
  *
  */
 
-// Declare global dependencies (will be provided by UMD modules)
+
 declare const punycode: PunycodeInterface;
 declare const IPv6: IPv6Interface;
 declare const SecondLevelDomains: SecondLevelDomainsInterface;
@@ -1211,8 +1211,8 @@ function generateSimpleAccessor(_part: string): (v?: string | null, build?: bool
   };
 }
 
-function generatePrefixAccessor(_part: string, _key: string): any {
-  return function (this: any, v?: any, build?: boolean): any {
+function generatePrefixAccessor(_part: string, _key: string): (v?: string | boolean | QueryData, build?: boolean) => string | URIInstanceInterface {
+  return function (this: URIInstanceInterface, v?: string | boolean | QueryData, build?: boolean): string | URIInstanceInterface {
     if (v === undefined) {
       return this._parts[_part] || '';
     } else {
@@ -1955,7 +1955,7 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
 
 // enhanced query method
 const q = p.query;
-p.query = function (v?: string | boolean | QueryData | ((data: any) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface {
+p.query = function (v?: string | boolean | QueryData | ((data: QueryData) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface {
   if (v === true) {
     return URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   } else if (typeof v === 'function') {

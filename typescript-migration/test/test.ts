@@ -945,7 +945,7 @@
 
   test('query callback', function () {
     const u = URI('?foo=bar');
-    u.query(function (data: Record<string, string | string[]>) {
+    u.query(function (data: QueryData) {
       data.foo = 'bam';
     });
     equal(u.query(), 'foo=bam', 'augment argument');

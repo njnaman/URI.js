@@ -230,12 +230,11 @@ declare global {
 
     hostname(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-
     port(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-    query(v?: string | boolean | QueryData | ((data: any) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
+    query(v?: string | boolean | QueryData | ((data: QueryData) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 
-    fragment(v?: string | QueryData | boolean, build?: boolean): URIInstanceInterface;
+    fragment(v?: string | QueryData | boolean, build?: boolean): string | URIInstanceInterface;
 
     search(): string;
 
