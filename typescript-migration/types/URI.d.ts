@@ -278,15 +278,9 @@ declare global {
 
     directory(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
-
     filename(v?: string | null | boolean | number, build?: boolean): string | URIInstanceInterface;
 
-
-    suffix(): string;
-
-    suffix(v: string, build?: boolean): URIInstanceInterface;
-
-    suffix(decode: true): string;
+    suffix(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
     segment(): string[];
 

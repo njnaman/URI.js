@@ -1797,7 +1797,7 @@ p.filename = function (v?: string | null | boolean | number, build?: boolean): s
   }
 };
 
-p.suffix = function (v?: any, build?: boolean): any {
+p.suffix = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1819,6 +1819,7 @@ p.suffix = function (v?: any, build?: boolean): any {
     const res = (/^[a-z0-9%]+$/i).test(s) ? s : '';
     return v ? URI.decodePathSegment(res) : res;
   } else {
+    v = v as string
     if (v.charAt(0) === '.') {
       v = v.substring(1);
     }
@@ -1837,7 +1838,7 @@ p.suffix = function (v?: any, build?: boolean): any {
     } else if (!v) {
       replace = new RegExp(escapeRegEx('.' + suffix) + '$');
     } else {
-      replace = new RegExp(escapeRegEx(suffix) + '$');
+      replace = new RegExp(escapeRegEx(suffix as string) + '$');
     }
 
     if (replace && this._parts.path) {
