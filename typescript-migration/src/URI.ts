@@ -1207,7 +1207,7 @@ p.valueOf = p.toString = function (): string {
 function generateSimpleAccessor(_part: string): (v?: string | null, build?: boolean) => URIInstanceInterface | string {
   return function (this: URIInstanceInterface, v?: string | null, build?: boolean): URIInstanceInterface | string {
     if (v === undefined) {
-      return this._parts[_part] || '';
+      return (this._parts[_part] || '' ) as string;
     } else {
       this._parts[_part] = v || null;
       this.build(!build);
@@ -1219,7 +1219,7 @@ function generateSimpleAccessor(_part: string): (v?: string | null, build?: bool
 function generatePrefixAccessor(_part: string, _key: string): (v?: string | boolean | QueryData, build?: boolean) => string | URIInstanceInterface {
   return function (this: URIInstanceInterface, v?: string | boolean | QueryData, build?: boolean): string | URIInstanceInterface {
     if (v === undefined) {
-      return this._parts[_part] || '';
+      return (this._parts[_part] || '' ) as string;
     } else {
       if (v !== null) {
         v = v + '';

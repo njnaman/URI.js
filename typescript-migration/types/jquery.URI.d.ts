@@ -1,12 +1,17 @@
 declare global {
   interface JQueryStatic {
-    (selector: any): JQuery;
+    (selector: string | Element): JQuery;
 
-    each(obj: any, callback: (index: any, value: any) => void): void;
+    each(obj: string[], callback: (index: number, value: string) => void): void;
 
-    attrHooks: { [key: string]: any };
+    attrHooks: {
+      [key: string]: {
+        get?: (elem: Element) => URIInstanceInterface;
+        set?: (elem: Element, value: string | URIInstanceInterface) => string | URIInstanceInterface
+      }
+    };
     expr: any;
-    fn: any;
+    fn: Record<string, (uri?: string | URIInstanceInterface) => URIInstanceInterface>;
   }
 }
 export {};

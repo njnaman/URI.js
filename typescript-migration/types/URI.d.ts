@@ -15,7 +15,7 @@ declare global {
     duplicateQueryParameters: boolean;
     escapeQuerySpace: boolean;
 
-    [key: string]: any; // Allow additional properties for flexibility
+    [key: string]: string | boolean | null; // Allow additional properties for flexibility
   }
 
   interface QueryData {
