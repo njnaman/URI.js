@@ -67,7 +67,7 @@
     "build": "npm run clean && npm run type-check && tsc && npm run rollup",
     "clean": "rm -rf dist",
     "test": "ts-node test-runner.ts",
-    "lint": "eslint src/**/*.ts test/**/*.ts --fix",
+    "lint": "eslint src/**/*.ts test/**/*.ts types/**/*.ts --fix",
     "type-check": "tsc --noEmit",
     "rollup": "rollup -c",
     "dev" : "npm run build && npm run test"
