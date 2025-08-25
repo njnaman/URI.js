@@ -184,7 +184,7 @@ declare global {
 
     hasQuery(data: QueryData, name?: string | RegExp | QueryData, value?: unknown, withinArray?: boolean): boolean;
 
-    joinPaths(...args: unknown[]): URIInstanceInterface;
+    joinPaths(...args: (string | URIInstanceInterface)[]): URIInstanceInterface;
 
     commonPath(one: string, two: string): string;
 
@@ -196,7 +196,7 @@ declare global {
 
     expand(expression: string, data: unknown): URIInstanceInterface;
 
-    noConflict(removeAll?: boolean): unknown;
+    noConflict(removeAll?: boolean): URIStaticInterface;
   }
 
   interface URIInstanceInterface {

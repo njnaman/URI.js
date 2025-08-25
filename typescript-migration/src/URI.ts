@@ -991,8 +991,8 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
 
 
 // Add joinPaths method
-URI.joinPaths = function (...args: any[]): URIInstanceInterface {
-  const input: any[] = [];
+URI.joinPaths = function (...args: (string | URIInstanceInterface)[]): URIInstanceInterface {
+  const input: URIInstanceInterface[] = [];
   const segments: string[] = [];
   let nonEmptySegments = 0;
 
@@ -1151,7 +1151,7 @@ URI.ensureValidPort = function (v: string): void {
 };
 
 // Add noConflict method
-URI.noConflict = function (removeAll?: boolean): any {
+URI.noConflict = function (removeAll?: boolean): URIStaticInterface {
   if (removeAll) {
     const unconflicted: any = {
       URI: this.noConflict()
@@ -1179,7 +1179,7 @@ URI.noConflict = function (removeAll?: boolean): any {
 };
 
 // Add essential prototype methods for basic functionality
-p.build = function (deferBuild?: boolean): any {
+p.build = function (deferBuild?: boolean): URIInstanceInterface {
   if (deferBuild === true) {
     this._deferred_build = true;
   } else if (deferBuild === undefined || this._deferred_build) {
@@ -1190,7 +1190,7 @@ p.build = function (deferBuild?: boolean): any {
   return this;
 };
 
-p.clone = function (): any {
+p.clone = function (): URIInstanceInterface {
   return new URI(this);
 };
 
