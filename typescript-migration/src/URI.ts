@@ -823,9 +823,10 @@ URI.buildQueryParameter = function (name: string, value: string | null, escapeQu
 // Add missing static query manipulation methods
 URI.addQuery = function (data: QueryData, name: string | QueryData, value?: string | string[]): void {
   if (typeof name === 'object') {
+    name = name as QueryData;
     for (const key in name) {
       if (hasOwn.call(name, key)) {
-        URI.addQuery(data, key, (name as any)[key]);
+        URI.addQuery(data, key, name[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -833,7 +834,7 @@ URI.addQuery = function (data: QueryData, name: string | QueryData, value?: stri
       data[name] = value ?? null;
       return;
     } else if (typeof data[name] === 'string') {
-      data[name] = [data[name] as string];
+      data[name] = [data[name]];
     }
 
     if (!isArray(value)) {
@@ -900,7 +901,7 @@ URI.removeQuery = function (data: QueryData, name?: string | string[] | RegExp |
   }
 };
 
-URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, value?: any, withinArray?: boolean): boolean {
+URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, value?: unknown, withinArray?: boolean): boolean {
   switch (getType(name)) {
     case 'String':
       // Nothing to do here
@@ -917,9 +918,10 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
       return false;
 
     case 'Object':
-      for (const _key in name as any) {
+      name = name as QueryData
+      for (const _key in name) {
         if (hasOwn.call(name, _key)) {
-          if (!URI.hasQuery(data, _key, (name as any)[_key])) {
+          if (!URI.hasQuery(data, _key, name[_key])) {
             return false;
           }
         }
@@ -943,7 +945,7 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
 
     case 'Function':
       // allow complex comparison
-      return !!value(data[name as string], name, data);
+      return !!(value as Function)(data[name as string], name, data);
 
     case 'Array': {
       if (!isArray(data[name as string])) {
@@ -951,12 +953,12 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
       }
 
       const op = withinArray ? arrayContains : arraysEqual;
-      return op(data[name as string] as any[], value);
+      return op(data[name as string] as any[], value as any[]);
     }
 
     case 'RegExp':
       if (!isArray(data[name as string])) {
-        return Boolean(data[name as string] && (data[name as string] as string).match(value));
+        return Boolean(data[name as string] && (data[name as string] as string).match(value as any));
       }
 
       if (!withinArray) {
@@ -1951,8 +1953,8 @@ p.segmentCoded = function (segment?: any, v?: any, build?: boolean): any {
 };
 
 // enhanced query method
-const q: any = p.query;
-p.query = function (v?: any, build?: boolean): any {
+const q = p.query;
+p.query = function (v?: string | boolean | QueryData | ((data: any) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface {
   if (v === true) {
     return URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
   } else if (typeof v === 'function') {
@@ -1962,7 +1964,7 @@ p.query = function (v?: any, build?: boolean): any {
     this.build(!build);
     return this;
   } else if (v !== undefined && typeof v !== 'string') {
-    this._parts.query = URI.buildQuery(v, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
+    this._parts.query = URI.buildQuery(v as QueryData, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace);
     this.build(!build);
     return this;
   } else {
