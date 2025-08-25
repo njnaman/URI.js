@@ -10,7 +10,10 @@ declare global {
         set?: (elem: Element, value: string | URIInstanceInterface) => string | URIInstanceInterface
       }
     };
-    expr: any;
+    expr: {
+      createPseudo?: (fn: (text: string) => (elem: Element) => boolean) => (elem: Element, i?: number, match?: RegExpMatchArray) => boolean;
+      [':']: Record<string, (elem: Element, i?: number, match?: RegExpMatchArray) => boolean>;
+    };
     fn: Record<string, (uri?: string | URIInstanceInterface) => URIInstanceInterface>;
   }
 }
