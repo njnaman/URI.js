@@ -1432,19 +1432,19 @@ p.port = function (v?: string | null, build?: boolean): URIInstanceInterface | s
 };
 
 
-p.hostname = function (v?: any, build?: boolean): any {
+p.hostname = function (v?: string | null, build?: boolean): URIInstanceInterface | string {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
 
   if (v !== undefined) {
-    const x: any = {preventInvalidHostname: this._parts.preventInvalidHostname};
-    const res = URI.parseHost(v, x);
+    const x : Record<string, string | boolean> = {preventInvalidHostname: this._parts.preventInvalidHostname};
+    const res = URI.parseHost(v!, x);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
     }
 
-    v = x.hostname;
+    v = x.hostname as string;
     if (this._parts.preventInvalidHostname) {
       URI.ensureValidHostname(v, this._parts.protocol);
     }
@@ -1454,7 +1454,7 @@ p.hostname = function (v?: any, build?: boolean): any {
 };
 
 // compound accessors
-p.origin = function (v?: any, build?: boolean): any {
+p.origin = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1469,15 +1469,15 @@ p.origin = function (v?: any, build?: boolean): any {
     return (protocol ? protocol + '://' : '') + this.authority();
   } else {
     const origin = new URI(v);
-    (this
+    ((this
       .protocol(origin.protocol() as string) as URIInstanceInterface)
-      .authority(origin.authority())
+      .authority(origin.authority() as string) as URIInstanceInterface)
       .build(!build);
     return this;
   }
 };
 
-p.host = function (v?: any, build?: boolean): any {
+p.host = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1495,7 +1495,7 @@ p.host = function (v?: any, build?: boolean): any {
   }
 };
 
-p.authority = function (v?: any, build?: boolean): any {
+p.authority = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1513,7 +1513,7 @@ p.authority = function (v?: any, build?: boolean): any {
   }
 };
 
-p.userinfo = function (v?: any, build?: boolean): any {
+p.userinfo = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1532,7 +1532,7 @@ p.userinfo = function (v?: any, build?: boolean): any {
   }
 };
 
-p.resource = function (v?: any, build?: boolean): any {
+p.resource = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (v === undefined) {
     return this.path() as string + this.search() + this.hash();
   }

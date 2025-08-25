@@ -1750,16 +1750,16 @@
     }
 
     equal('b/c',
-      (new URI('http://example.org/a/b/c')
+      ((new URI('http://example.org/a/b/c')
         .scheme('') as URIInstanceInterface)
-        .authority('')
+        .authority('') as URIInstanceInterface)
         .relativeTo('/a/')
         .toString(),
       'bug #103');
 
     equal('b/c',
-      new URI('//example.org/a/b/c')
-        .authority('')
+      (new URI('//example.org/a/b/c')
+        .authority('') as URIInstanceInterface)
         .relativeTo('/a/')
         .toString(),
       'bug #103 (2)');

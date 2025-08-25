@@ -230,7 +230,7 @@ declare global {
 
     hostname(v?: string | null, build?: boolean): URIInstanceInterface | string
 
-    port(v?: string | number| null, build?: boolean): URIInstanceInterface | string
+    port(v?: string | number | null, build?: boolean): URIInstanceInterface | string
 
     query(v?: string | boolean | QueryData | ((data: QueryData) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 
@@ -253,25 +253,20 @@ declare global {
 
     scheme(v?: string | null, build?: boolean): URIInstanceInterface | string
 
-    origin(): string;
 
-    origin(v: string, build?: boolean): URIInstanceInterface;
+    origin(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    host(): string;
 
-    host(v: string, build?: boolean): URIInstanceInterface;
+    host(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    authority(): string;
 
-    authority(v: string, build?: boolean): URIInstanceInterface;
+    authority(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    userinfo(): string;
 
-    userinfo(v: string, build?: boolean): URIInstanceInterface;
+    userinfo(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    resource(): string;
 
-    resource(v: string, build?: boolean): URIInstanceInterface;
+    resource(v?: string, build?: boolean): string | URIInstanceInterface;
 
     subdomain(): string;
 
