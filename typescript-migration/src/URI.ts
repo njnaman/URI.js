@@ -1420,13 +1420,13 @@ p.port = function (v?: string | null, build?: boolean): URIInstanceInterface | s
   }
 
   if (v !== undefined) {
-      v = v as string
-      v += '';
-      if (v.charAt(0) === ':') {
-        v = v.substring(1);
-      }
+    v = v as string
+    v += '';
+    if (v.charAt(0) === ':') {
+      v = v.substring(1);
+    }
 
-      URI.ensureValidPort(v);
+    URI.ensureValidPort(v);
   }
   return _port.call(this, v, build);
 };
@@ -1438,7 +1438,7 @@ p.hostname = function (v?: string | null, build?: boolean): URIInstanceInterface
   }
 
   if (v !== undefined) {
-    const x : Record<string, string | boolean> = {preventInvalidHostname: this._parts.preventInvalidHostname};
+    const x: Record<string, string | boolean> = {preventInvalidHostname: this._parts.preventInvalidHostname};
     const res = URI.parseHost(v, x);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
@@ -1700,7 +1700,7 @@ p.tld = function (v?: string | boolean, build?: boolean): string | URIInstanceIn
 };
 
 // path methods
-p.directory = function (v?: any, build?: boolean): any {
+p.directory = function (v: string | boolean, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1747,7 +1747,7 @@ p.directory = function (v?: any, build?: boolean): any {
       v += '/';
     }
 
-    v = URI.recodePath(v);
+    v = URI.recodePath(v as string);
     if (this._parts.path) {
       this._parts.path = this._parts.path.replace(replace, v);
     }
@@ -1756,7 +1756,7 @@ p.directory = function (v?: any, build?: boolean): any {
   }
 };
 
-p.filename = function (v?: any, build?: boolean): any {
+p.filename = function (v?: string | null | boolean | number, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1781,7 +1781,7 @@ p.filename = function (v?: any, build?: boolean): any {
       mutatedDirectory = true;
     }
 
-    const replace = new RegExp(escapeRegEx(String(this.filename())) + '$');
+    const replace = new RegExp(escapeRegEx(this.filename() as string) + '$');
     v = URI.recodePath(v);
     if (this._parts.path) {
       this._parts.path = this._parts.path.replace(replace, v);
@@ -2314,7 +2314,7 @@ p.absoluteTo = function (base?: string | URIInstanceInterface): URIInstanceInter
     }
 
     if (resolved.path().charAt(0) !== '/') {
-      basedir = base.directory();
+      basedir = base.directory() as string;
       basedir = basedir ? basedir : base.path().indexOf('/') === 0 ? '/' : '';
       resolved._parts.path = (basedir ? (basedir + '/') : '') + resolved._parts.path;
       resolved.normalizePath();

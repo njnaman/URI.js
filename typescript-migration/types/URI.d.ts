@@ -276,17 +276,11 @@ declare global {
 
     tld(v?: string | boolean, build?: boolean): string | URIInstanceInterface
 
-    directory(): string;
+    directory(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
-    directory(v: string, build?: boolean): URIInstanceInterface;
 
-    directory(decode: true): string;
+    filename(v?: string | null | boolean | number, build?: boolean): string | URIInstanceInterface;
 
-    filename(): string;
-
-    filename(v: string | null | boolean | number, build?: boolean): URIInstanceInterface;
-
-    filename(decode: true): string;
 
     suffix(): string;
 
