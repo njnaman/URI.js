@@ -156,7 +156,7 @@ declare global {
 
     parse(string: string, parts?: Partial<URIParts>): URIParts;
 
-    parseHost(string: string, parts: Partial<URIParts>): string;
+    parseHost(string: string | null, parts: Partial<URIParts>): string;
 
     parseAuthority(string: string, parts: Partial<URIParts>): string;
 
@@ -268,21 +268,13 @@ declare global {
 
     resource(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    subdomain(): string;
 
-    subdomain(v: string, build?: boolean): URIInstanceInterface;
+    subdomain(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    domain(): string;
+    domain(v?: string | boolean, build?: boolean): string | URIInstanceInterface
 
-    domain(v: string, build?: boolean): URIInstanceInterface;
 
-    domain(tld: boolean): string;
-
-    tld(): string;
-
-    tld(v: string, build?: boolean): URIInstanceInterface;
-
-    tld(tld: boolean): string;
+    tld(v?: string | boolean, build?: boolean): string | URIInstanceInterface
 
     directory(): string;
 

@@ -571,7 +571,7 @@ URI.parse = function (string: string, parts?: Partial<URIParts>): URIParts {
   return parts as URIParts;
 };
 
-URI.parseHost = function (string: string, parts: Partial<URIParts>): string {
+URI.parseHost = function (string: string | null, parts: Partial<URIParts>): string {
   if (!string) {
     string = '';
   }
@@ -1439,7 +1439,7 @@ p.hostname = function (v?: string | null, build?: boolean): URIInstanceInterface
 
   if (v !== undefined) {
     const x : Record<string, string | boolean> = {preventInvalidHostname: this._parts.preventInvalidHostname};
-    const res = URI.parseHost(v!, x);
+    const res = URI.parseHost(v, x);
     if (res !== '/') {
       throw new TypeError('Hostname "' + v + '" contains characters other than [A-Z0-9.-]');
     }
@@ -1546,7 +1546,7 @@ p.resource = function (v?: string, build?: boolean): string | URIInstanceInterfa
 };
 
 // domain methods
-p.subdomain = function (v?: any, build?: boolean): any {
+p.subdomain = function (v?: string, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1589,7 +1589,7 @@ p.subdomain = function (v?: any, build?: boolean): any {
   }
 };
 
-p.domain = function (v?: any, build?: boolean): any {
+p.domain = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1613,7 +1613,7 @@ p.domain = function (v?: any, build?: boolean): any {
 
     // grab tld and add another segment
     const hostname = this._parts.hostname;
-    const tld = this.tld(build as boolean);
+    const tld = this.tld(build);
     if (!hostname || !tld) return '';
     const end = hostname.length - tld.length - 1;
     const endPos = hostname.lastIndexOf('.', end - 1) + 1;
@@ -1632,7 +1632,7 @@ p.domain = function (v?: any, build?: boolean): any {
     if (!this._parts.hostname || this.is('IP')) {
       this._parts.hostname = v;
     } else {
-      const replace = new RegExp(escapeRegEx(this.domain()) + '$');
+      const replace = new RegExp(escapeRegEx(this.domain() as string) + '$');
       if (this._parts.hostname) {
         this._parts.hostname = this._parts.hostname.replace(replace, v);
       }
@@ -1643,7 +1643,7 @@ p.domain = function (v?: any, build?: boolean): any {
   }
 };
 
-p.tld = function (v?: any, build?: boolean): any {
+p.tld = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
@@ -1662,7 +1662,7 @@ p.tld = function (v?: any, build?: boolean): any {
     const pos = this._parts.hostname.lastIndexOf('.');
     const tld = this._parts.hostname.substring(pos + 1);
 
-    if (build !== true && SLD && (SLD as any).list[tld.toLowerCase()]) {
+    if (build !== true && SLD && SLD.list[tld.toLowerCase()]) {
       return SLD.get(this._parts.hostname) || tld;
     }
 
@@ -1674,7 +1674,7 @@ p.tld = function (v?: any, build?: boolean): any {
       throw new TypeError('cannot set TLD empty');
     } else if (v.match(/[^a-zA-Z0-9-]/)) {
       if (SLD && SLD.is(v)) {
-        replace = new RegExp(escapeRegEx(this.tld()) + '$');
+        replace = new RegExp(escapeRegEx(this.tld() as string) + '$');
         if (this._parts.hostname) {
           if (this._parts.hostname) {
             this._parts.hostname = this._parts.hostname.replace(replace, v);
@@ -1686,7 +1686,7 @@ p.tld = function (v?: any, build?: boolean): any {
     } else if (!this._parts.hostname || this.is('IP')) {
       throw new ReferenceError('cannot set TLD on non-domain host');
     } else {
-      replace = new RegExp(escapeRegEx(this.tld()) + '$');
+      replace = new RegExp(escapeRegEx(this.tld() as string) + '$');
       if (this._parts.hostname) {
         if (this._parts.hostname) {
           this._parts.hostname = this._parts.hostname.replace(replace, v);
