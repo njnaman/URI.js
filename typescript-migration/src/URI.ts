@@ -1154,7 +1154,12 @@ URI.ensureValidPort = function (v: string): void {
 // Add noConflict method
 URI.noConflict = function (removeAll?: boolean): URIStaticInterface {
   if (removeAll) {
-    const unconflicted: any = {
+    const unconflicted: {
+      URI? : URIStaticInterface;
+      URITemplate? : URITemplateStaticInterface;
+      IPv6? : IPv6Interface;
+      SecondLevelDomains? : SecondLevelDomainsInterface
+    } = {
       URI: this.noConflict()
     };
 
@@ -1172,7 +1177,7 @@ URI.noConflict = function (removeAll?: boolean): URIStaticInterface {
       unconflicted.SecondLevelDomains = window.SecondLevelDomains.noConflict();
     }
 
-    return unconflicted;
+    return unconflicted as unknown as URIStaticInterface;
   } else if (window.URI === this) {
     window.URI = _URI
   }
