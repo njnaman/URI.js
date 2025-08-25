@@ -120,7 +120,7 @@ declare global {
     domAttributes: DomAttributes;
 
     // Static methods
-    getDomAttribute(node: Element | null | undefined): string | undefined;
+    getDomAttribute(node: URIInstanceInterface): string | undefined;
 
     encode(str: string): string;
 
@@ -245,9 +245,8 @@ declare global {
 
     path(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
-    href(): string;
 
-    href(href: string | String | URIInstanceInterface, build?: boolean): URIInstanceInterface;
+    href(href?: string | URIInstanceInterface, build?: boolean): string | URIInstanceInterface;
 
     is(what: string): boolean | null;
 

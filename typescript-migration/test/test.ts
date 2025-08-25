@@ -596,7 +596,7 @@
     equal(u.href(), '../path/index.html', 'href removed url');
 
     /*jshint -W053 */
-    u.href(new String('/narf'));
+    u.href(String('/narf'));
     /*jshint +W053 */
     equal(u.pathname(), '/narf', 'href from String instance');
   });

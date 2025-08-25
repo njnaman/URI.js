@@ -284,14 +284,14 @@ URI.domAttributes = {
   'audio': 'src',
   'video': 'src'
 };
-URI.getDomAttribute = function (node: Element | null | undefined): string | undefined {
+URI.getDomAttribute = function (node: URIInstanceInterface): string | undefined {
   if (!node || !node.nodeName) {
     return undefined;
   }
 
   const nodeName = node.nodeName.toLowerCase();
   // <input> should only expose src for type="image"
-  if (nodeName === 'input' && (node as HTMLInputElement).type !== 'image') {
+  if (nodeName === 'input' && node.type !== 'image') {
     return undefined;
   }
 
@@ -1274,7 +1274,7 @@ p.pathname = function (v?: string | boolean, build?: boolean): string | URIInsta
 };
 p.path = p.pathname;
 
-p.href = function (href?: any, build?: boolean): any {
+p.href = function (href?: string | URIInstanceInterface, build?: boolean): string | URIInstanceInterface {
   let key: string;
 
   if (href === undefined) {
@@ -1285,12 +1285,14 @@ p.href = function (href?: any, build?: boolean): any {
   this._parts = URI._parts();
 
   const _URI = href instanceof URI;
+  href = href as URIInstanceInterface
   const _object = typeof href === 'object' && (href.hostname || href.path || href.pathname);
   if (href.nodeName) {
     const attribute = URI.getDomAttribute(href);
     href = (attribute ? href[attribute] : '') || '';
     // _object = false;
   }
+  href = href as URIInstanceInterface
 
   // window.location is reported to be an object, but it's not the sort
   // of object we're looking for:
@@ -1299,7 +1301,7 @@ p.href = function (href?: any, build?: boolean): any {
   // * location.hash != object.fragment
   // simply serializing the unknown object should do the trick
   // (for location, not for everything...)
-  if (!_URI && _object && href.pathname !== undefined) {
+  if (!_URI && _object && href !== undefined && href.pathname !== undefined) {
     href = href.toString();
   }
 
@@ -1312,11 +1314,11 @@ p.href = function (href?: any, build?: boolean): any {
         continue;
       }
       if (hasOwn.call(this._parts, key)) {
-        (this._parts as any)[key] = (src as any)[key];
+        this._parts[key] = src[key];
       }
     }
     if (src.query) {
-      this.query(src.query, false);
+      this.query(src.query as string, false);
     }
   } else {
     throw new TypeError('invalid input');
