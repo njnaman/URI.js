@@ -1244,11 +1244,11 @@ p.query = generatePrefixAccessor('query', '?');
 
 p.fragment = generatePrefixAccessor('fragment', '#');
 
-p.search = function (v?: any, build?: boolean): any {
+p.search = function (v?: string | boolean | QueryData, build?: boolean): string | QueryData | URIInstanceInterface {
   const t = this.query(v, build);
-  return typeof t === 'string' && (t as string).length ? ('?' + t) : t;
+  return typeof t === 'string' && t.length ? ('?' + t) : t;
 };
-p.hash = function (v?: any, build?: boolean): any {
+p.hash = function (v?: string, build?: boolean): string | URIInstanceInterface {
   const t = this.fragment(v, build);
   return typeof t === 'string' && (t as string).length ? ('#' + t) : t;
 };
@@ -2268,7 +2268,7 @@ p.readable = function (): string {
     t += '?' + q.substring(1);
   }
 
-  t += URI.decodeQuery(uri.hash(), true);
+  t += URI.decodeQuery(uri.hash() as string, true);
   return t;
 };
 

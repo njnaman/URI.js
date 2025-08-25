@@ -236,17 +236,10 @@ declare global {
 
     fragment(v?: string | QueryData | boolean, build?: boolean): string | URIInstanceInterface;
 
-    search(): string;
+    search(v?: string | boolean| QueryData, build?: boolean): string | QueryData | URIInstanceInterface;
 
-    search(v: string | QueryData, build?: boolean): string | URIInstanceInterface;
 
-    search(returnAsObject: true): QueryData;
-
-    search(returnAsObject: boolean): QueryData | string;
-
-    hash(): string;
-
-    hash(v: string, build?: boolean): URIInstanceInterface;
+    hash(v?: string, build?: boolean): string | URIInstanceInterface;
 
     pathname(): string;
 
