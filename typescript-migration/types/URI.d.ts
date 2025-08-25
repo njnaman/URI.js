@@ -230,7 +230,7 @@ declare global {
 
     hostname(v?: string | null, build?: boolean): URIInstanceInterface | string
 
-    port(v?: string | null, build?: boolean): URIInstanceInterface | string
+    port(v?: string | number| null, build?: boolean): URIInstanceInterface | string
 
     query(v?: string | boolean | QueryData | ((data: QueryData) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 

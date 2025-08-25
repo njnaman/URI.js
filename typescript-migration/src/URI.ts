@@ -1155,10 +1155,10 @@ URI.ensureValidPort = function (v: string): void {
 URI.noConflict = function (removeAll?: boolean): URIStaticInterface {
   if (removeAll) {
     const unconflicted: {
-      URI? : URIStaticInterface;
-      URITemplate? : URITemplateStaticInterface;
-      IPv6? : IPv6Interface;
-      SecondLevelDomains? : SecondLevelDomainsInterface
+      URI?: URIStaticInterface;
+      URITemplate?: URITemplateStaticInterface;
+      IPv6?: IPv6Interface;
+      SecondLevelDomains?: SecondLevelDomainsInterface
     } = {
       URI: this.noConflict()
     };
@@ -1258,7 +1258,7 @@ p.hash = function (v?: string, build?: boolean): string | URIInstanceInterface {
   return typeof t === 'string' && (t as string).length ? ('#' + t) : t;
 };
 
-p.pathname = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface  {
+p.pathname = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface {
   if (v === undefined || v === true) {
     const res = this._parts.path || (this._parts.hostname ? '/' : '');
     return v ? (this._parts.urn ? URI.decodeUrnPath : URI.decodePath)(res) : res;
@@ -1399,7 +1399,7 @@ const _protocol = generateSimpleAccessor('protocol');
 const _port = generateSimpleAccessor('port');
 const _hostname = generateSimpleAccessor('hostname');
 
-p.protocol = function (v?: any, build?: boolean): any {
+p.protocol = function (v?: string | null, build?: boolean): URIInstanceInterface | string {
   if (v) {
     // accept trailing ://
     v = v.replace(/:(\/\/)?$/, '');
@@ -1414,24 +1414,19 @@ p.protocol = function (v?: any, build?: boolean): any {
 p.scheme = p.protocol;
 
 
-p.port = function (v?: any, build?: boolean): any {
+p.port = function (v?: string | null, build?: boolean): URIInstanceInterface | string {
   if (this._parts.urn) {
     return v === undefined ? '' : this;
   }
 
   if (v !== undefined) {
-    if (v === 0) {
-      v = null;
-    }
-
-    if (v) {
+      v = v as string
       v += '';
       if (v.charAt(0) === ':') {
         v = v.substring(1);
       }
 
       URI.ensureValidPort(v);
-    }
   }
   return _port.call(this, v, build);
 };
