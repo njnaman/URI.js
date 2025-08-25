@@ -1282,25 +1282,25 @@
     u.normalizePath();
     equal(u.path(), '/food/bar/baz.html', 'absolute path without change');
 
-    u.path('food/bar/baz.html').normalizePath();
+    (u.path('food/bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), 'food/bar/baz.html', 'relative path without change');
 
-    u.path('/food/../bar/baz.html').normalizePath();
+    (u.path('/food/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/bar/baz.html', 'single parent');
 
-    u.path('/food/woo/../../bar/baz.html').normalizePath();
+    (u.path('/food/woo/../../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/bar/baz.html', 'double parent');
 
-    u.path('/food/woo/../bar/../baz.html').normalizePath();
+    (u.path('/food/woo/../bar/../baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/food/baz.html', 'split double parent');
 
-    u.path('/food/woo/.././../baz.html').normalizePath();
+    (u.path('/food/woo/.././../baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/baz.html', 'cwd-split double parent');
 
-    u.path('food/woo/../bar/baz.html').normalizePath();
+    (u.path('food/woo/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), 'food/bar/baz.html', 'relative parent');
 
-    u.path('./food/woo/../bar/baz.html').normalizePath();
+    (u.path('./food/woo/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), 'food/bar/baz.html', 'dot-relative parent');
 
     // absolute URL
@@ -1308,28 +1308,28 @@
     u.normalizePath();
     equal(u.path(), '/foo/bar/baz.html', 'URL: absolute path without change');
 
-    u.path('foo/bar/baz.html').normalizePath();
+    (u.path('foo/bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/foo/bar/baz.html', 'URL: relative path without change');
 
-    u.path('/foo/../bar/baz.html').normalizePath();
+    (u.path('/foo/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/bar/baz.html', 'URL: single parent');
 
-    u.path('/foo/woo/../../bar/baz.html').normalizePath();
+    (u.path('/foo/woo/../../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/bar/baz.html', 'URL: double parent');
 
-    u.path('/foo/woo/../bar/../baz.html').normalizePath();
+    (u.path('/foo/woo/../bar/../baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/foo/baz.html', 'URL: split double parent');
 
-    u.path('/foo/woo/.././../baz.html').normalizePath();
+    (u.path('/foo/woo/.././../baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/baz.html', 'URL: cwd-split double parent');
 
-    u.path('foo/woo/../bar/baz.html').normalizePath();
+    (u.path('foo/woo/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/foo/bar/baz.html', 'URL: relative parent');
 
-    u.path('./foo/woo/../bar/baz.html').normalizePath();
+    (u.path('./foo/woo/../bar/baz.html') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/foo/bar/baz.html', 'URL: dot-relative parent');
 
-    u.path('/.//').normalizePath();
+    (u.path('/.//') as URIInstanceInterface ).normalizePath();
     equal(u.path(), '/', 'root /.//');
 
     // encoding

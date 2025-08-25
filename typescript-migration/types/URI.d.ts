@@ -219,39 +219,31 @@ declare global {
 
     // URI component accessors - overloaded to return string when getting, URIInstanceInterface when setting
 
-    protocol(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    protocol(v?: string | null, build?: boolean): URIInstanceInterface | string
 
 
-    username(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    username(v?: string | null, build?: boolean): URIInstanceInterface | string
 
 
-    password(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    password(v?: string | null, build?: boolean): URIInstanceInterface | string
 
 
-    hostname(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    hostname(v?: string | null, build?: boolean): URIInstanceInterface | string
 
-    port(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    port(v?: string | null, build?: boolean): URIInstanceInterface | string
 
     query(v?: string | boolean | QueryData | ((data: QueryData) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 
     fragment(v?: string | QueryData | boolean, build?: boolean): string | URIInstanceInterface;
 
-    search(v?: string | boolean| QueryData, build?: boolean): string | QueryData | URIInstanceInterface;
+    search(v?: string | boolean | QueryData, build?: boolean): string | QueryData | URIInstanceInterface;
 
 
     hash(v?: string, build?: boolean): string | URIInstanceInterface;
 
-    pathname(): string;
+    pathname(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
-    pathname(v: string, build?: boolean): URIInstanceInterface;
-
-    pathname(decode: true): string;
-
-    path(): string;
-
-    path(v: string, build?: boolean): URIInstanceInterface;
-
-    path(decode: true): string;
+    path(v?: string | boolean, build?: boolean): string | URIInstanceInterface;
 
     href(): string;
 
@@ -260,7 +252,7 @@ declare global {
     is(what: string): boolean | null;
 
 
-    scheme(v?: string | null, build?: boolean) : URIInstanceInterface | string
+    scheme(v?: string | null, build?: boolean): URIInstanceInterface | string
 
     origin(): string;
 

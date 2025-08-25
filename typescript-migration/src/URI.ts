@@ -1258,7 +1258,7 @@ p.hash = function (v?: string, build?: boolean): string | URIInstanceInterface {
   return typeof t === 'string' && (t as string).length ? ('#' + t) : t;
 };
 
-p.pathname = function (v?: any, build?: boolean): any {
+p.pathname = function (v?: string | boolean, build?: boolean): string | URIInstanceInterface  {
   if (v === undefined || v === true) {
     const res = this._parts.path || (this._parts.hostname ? '/' : '');
     return v ? (this._parts.urn ? URI.decodeUrnPath : URI.decodePath)(res) : res;
@@ -1537,7 +1537,7 @@ p.userinfo = function (v?: any, build?: boolean): any {
 
 p.resource = function (v?: any, build?: boolean): any {
   if (v === undefined) {
-    return this.path() + this.search() + this.hash();
+    return this.path() as string + this.search() + this.hash();
   }
 
   const parts = URI.parse(v);
@@ -2374,7 +2374,7 @@ p.relativeTo = function (base?: string | URIInstanceInterface): URIInstanceInter
   }
 
   // determine common sub path
-  const common = URI.commonPath(relativePath, basePath);
+  const common = URI.commonPath(relativePath as string, basePath as string);
 
   // If the paths have nothing in common, return a relative URL with the absolute path.
   if (!common) {
