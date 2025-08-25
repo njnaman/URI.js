@@ -218,25 +218,20 @@ declare global {
     valueOf(): string;
 
     // URI component accessors - overloaded to return string when getting, URIInstanceInterface when setting
-    protocol(): string;
 
-    protocol(v: string | null, build?: boolean): URIInstanceInterface;
+    protocol(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-    username(): string;
 
-    username(v: string | null, build?: boolean): URIInstanceInterface;
+    username(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-    password(): string;
 
-    password(v: string | null, build?: boolean): URIInstanceInterface;
+    password(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-    hostname(): string;
 
-    hostname(v: string | null, build?: boolean): URIInstanceInterface;
+    hostname(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
-    port(): string;
 
-    port(v: string | number | boolean | null, build?: boolean): URIInstanceInterface;
+    port(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
     query(v?: string | boolean | QueryData | ((data: any) => QueryData | void), build?: boolean): string | QueryData | URIInstanceInterface;
 
@@ -272,9 +267,8 @@ declare global {
 
     is(what: string): boolean | null;
 
-    scheme(): string;
 
-    scheme(v: string, build?: boolean): URIInstanceInterface;
+    scheme(v?: string | null, build?: boolean) : URIInstanceInterface | string
 
     origin(): string;
 

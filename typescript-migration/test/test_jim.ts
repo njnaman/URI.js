@@ -33,7 +33,7 @@
     equal(u.hostname(), 'example.com', 'port() has modified hostname');
     equal(u.port(), 99, 'port() has set an invalid port');
 
-    u.port(false);
+    u.port('', false);
     equal(u.port(), '', 'port() has set an invalid port');
 
     // RFC 3986 says nothing about "16-bit unsigned" http://tools.ietf.org/html/rfc3986#section-3.2.3

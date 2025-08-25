@@ -39,7 +39,6 @@ const URI = function (this: URIInstanceInterface, url?: string | URIInstanceInte
   const _baseSupplied = arguments.length >= 2;
 
 
-
   // Allow instantiation without the 'new' keyword
   if (!(this instanceof URI) && typeof url != 'object') {
     if (_urlSupplied) {
@@ -155,7 +154,7 @@ function arrayContains<T>(list: T[], value: T | T[] | RegExp): boolean {
   const _type = getType(value);
   for (i = 0, length = list.length; i < length; i++) {
     if (_type === 'RegExp') {
-      if (typeof list[i] === 'string' && (list[i] as string ).match(value as RegExp)) {
+      if (typeof list[i] === 'string' && (list[i] as string).match(value as RegExp)) {
         return true;
       }
     } else if (list[i] === value) {
@@ -479,7 +478,7 @@ const generateSegmentedPathFunction = function (_sep: string, _codingFuncName: s
     if (!_innerCodingFuncName) {
       actualCodingFunc = URI[_codingFuncName];
     } else {
-      actualCodingFunc = function (string: string) : string {
+      actualCodingFunc = function (string: string): string {
         return URI[_codingFuncName](URI[_innerCodingFuncName](string));
       };
     }
@@ -798,9 +797,9 @@ URI.buildQuery = function (data: QueryData, duplicateQueryParameters?: boolean, 
         unique = {};
         for (i = 0, length = (data[key] as unknown[]).length; i < length; i++) {
           if ((data[key] as unknown[])[i] !== undefined && unique[(data[key] as unknown[])[i] + ''] === undefined) {
-            t += '&' + URI.buildQueryParameter(key, (data[key] as any[])[i], escapeQuerySpace);
+            t += '&' + URI.buildQueryParameter(key, (data[key] as string[])[i], escapeQuerySpace);
             if (duplicateQueryParameters !== true) {
-              unique[(data[key] as any[])[i] + ''] = true;
+              unique[(data[key] as string[])[i] + ''] = true;
             }
           }
         }
@@ -875,9 +874,10 @@ URI.removeQuery = function (data: QueryData, name?: string | string[] | RegExp |
       }
     }
   } else if (typeof name === 'object') {
-    for (key in name as any) {
+    name = name as QueryData
+    for (key in name) {
       if (hasOwn.call(name, key)) {
-        URI.removeQuery(data, key, (name as any)[key]);
+        URI.removeQuery(data, key, name[key]);
       }
     }
   } else if (typeof name === 'string') {
@@ -888,7 +888,7 @@ URI.removeQuery = function (data: QueryData, name?: string | string[] | RegExp |
         } else {
           data[name] = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
         }
-      } else if (data[name] === String(value) && (!isArray(value) || (value as unknown as any[]).length === 1)) {
+      } else if (data[name] === String(value) && (!isArray(value) || (value as unknown as string[]).length === 1)) {
         data[name] = undefined;
       } else if (isArray(data[name])) {
         data[name] = filterArrayValues(data[name] as string[], value as string | string[] | RegExp);
@@ -931,41 +931,42 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
     default:
       throw new TypeError('URI.hasQuery() accepts a string, regular expression or object as the name parameter');
   }
+  name = name as string
 
   switch (getType(value)) {
     case 'Undefined':
       // true if exists (but may be empty)
-      return (name as string) in data;
+      return name in data;
 
     case 'Boolean': {
       // true if exists and non-empty
-      const _booly = Boolean(isArray(data[name as string]) ? (data[name as string] as any[]).length : data[name as string]);
+      const _booly = Boolean(isArray(data[name]) ? (data[name] as string[]).length : data[name]);
       return value === _booly;
     }
 
     case 'Function':
       // allow complex comparison
-      return !!(value as Function)(data[name as string], name, data);
+      return !!(value as Function)(data[name], name, data);
 
     case 'Array': {
-      if (!isArray(data[name as string])) {
+      if (!isArray(data[name])) {
         return false;
       }
 
       const op = withinArray ? arrayContains : arraysEqual;
-      return op(data[name as string] as any[], value as any[]);
+      return op(data[name] as string[], value as string[]);
     }
 
     case 'RegExp':
-      if (!isArray(data[name as string])) {
-        return Boolean(data[name as string] && (data[name as string] as string).match(value as any));
+      if (!isArray(data[name])) {
+        return Boolean(data[name] && (data[name] as string).match(value as RegExp));
       }
 
       if (!withinArray) {
         return false;
       }
 
-      return arrayContains(data[name as string] as any[], value);
+      return arrayContains(data[name] as string[], value);
 
     case 'Number':
       value = String(value);
@@ -979,7 +980,7 @@ URI.hasQuery = function (data: QueryData, name?: string | RegExp | QueryData, va
         return false;
       }
 
-      return arrayContains(data[name as string] as any[], value);
+      return arrayContains(data[name] as string[], value);
 
     default:
       throw new TypeError('URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter');
@@ -1198,8 +1199,8 @@ p.valueOf = p.toString = function (): string {
   return this.build(false)._string;
 };
 
-function generateSimpleAccessor(_part: string): any {
-  return function (this: any, v?: any, build?: boolean): any {
+function generateSimpleAccessor(_part: string): (v?: string | null, build?: boolean) => URIInstanceInterface | string {
+  return function (this: URIInstanceInterface, v?: string | null, build?: boolean): URIInstanceInterface | string {
     if (v === undefined) {
       return this._parts[_part] || '';
     } else {
@@ -1466,8 +1467,8 @@ p.origin = function (v?: any, build?: boolean): any {
     return (protocol ? protocol + '://' : '') + this.authority();
   } else {
     const origin = new URI(v);
-    this
-      .protocol(origin.protocol())
+    (this
+      .protocol(origin.protocol() as string) as URIInstanceInterface)
       .authority(origin.authority())
       .build(!build);
     return this;
@@ -2230,7 +2231,7 @@ p.unicode = function (): URIInstanceInterface {
 p.readable = function (): string {
   const uri = this.clone();
   // removing username, password, because they shouldn't be displayed according to RFC 3986
-  uri.username('').password('').normalize();
+  (uri.username('') as URIInstanceInterface).password('').normalize();
   let t = '';
   if (uri._parts.protocol) {
     t += uri._parts.protocol + '://';
@@ -2375,7 +2376,7 @@ p.relativeTo = function (base?: string | URIInstanceInterface): URIInstanceInter
     return relative.build();
   }
 
-  if ( baseParts.path != null){
+  if (baseParts.path != null) {
     const parents = baseParts.path
       .substring(common.length)
       .replace(/[^\/]*$/, '')

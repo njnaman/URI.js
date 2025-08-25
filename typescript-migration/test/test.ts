@@ -272,8 +272,8 @@
 
   module('serializing');
   test('scheme and relative path', function () {
-    const u = new URI('')
-      .protocol('food')
+    const u = (new URI('')
+      .protocol('food') as URIInstanceInterface)
       .path('test/file.csv');
 
     equal(u.toString(), 'food:///test/file.csv', 'relative-path with scheme but no authority');
@@ -331,7 +331,7 @@
     equal(u.password(), '', 'changed passowrd ""');
     equal(u + '', 'http://hello@example.org/foo.html', 'changed url ""');
 
-    u.username('').password('hahaha');
+    (u.username('') as URIInstanceInterface).password('hahaha');
     equal(u.username(), '', 'changed username - password without username');
     equal(u.password(), 'hahaha', 'changed password - password without username');
     equal(u + '', 'http://:hahaha@example.org/foo.html', 'changed url - password without username');
@@ -1750,8 +1750,8 @@
     }
 
     equal('b/c',
-      new URI('http://example.org/a/b/c')
-        .scheme('')
+      (new URI('http://example.org/a/b/c')
+        .scheme('') as URIInstanceInterface)
         .authority('')
         .relativeTo('/a/')
         .toString(),
